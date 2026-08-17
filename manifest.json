@@ -2,21 +2,31 @@
   "name": "CasinoX",
   "short_name": "CasinoX",
   "description": "CasinoX — plataforma social de jogos virtuais.",
-  "start_url": "./",
+  "start_url": "/casinox/",
+  "scope": "/casinox/",
   "display": "standalone",
   "background_color": "#080b12",
   "theme_color": "#080b12",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/casinox/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/casinox/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/casinox/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
