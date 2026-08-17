@@ -1,93 +1,235 @@
 /* =========================================================
-   CASINOX
-   VERSION 0.2
+   CASINOX — v0.3
    MOBILE FIRST
+   LOBBY + PROVEDORES + CATEGORIAS + FAVORITOS
    ========================================================= */
 
 
 /* =========================================================
-   CONFIGURAÇÃO DOS JOGOS
-========================================================= */
+   JOGOS DEMONSTRATIVOS
+   ========================================================= */
 
 const games = [
 
   {
-    id: "slots",
+    id: "lucky-stars",
     name: "Lucky Stars",
+    provider: "PG",
+    category: "slots",
     icon: "🎰",
-    description: "Slot social",
     tag: "Popular"
   },
 
   {
-    id: "roulette",
-    name: "Roleta Royale",
+    id: "fortune-gems",
+    name: "Fortune Gems",
+    provider: "Fortunes",
+    category: "slots",
+    icon: "💎",
+    tag: "Popular"
+  },
+
+  {
+    id: "royal-roulette",
+    name: "Royal Roulette",
+    provider: "Evolution",
+    category: "casino",
     icon: "🎡",
-    description: "Roleta virtual",
     tag: "Clássico"
   },
 
   {
-    id: "blackjack",
+    id: "blackjack-pro",
     name: "Blackjack Pro",
+    provider: "Evolution",
+    category: "casino",
     icon: "🃏",
-    description: "21 contra a banca",
     tag: "Clássico"
   },
 
   {
-    id: "crash",
+    id: "rocket-crash",
     name: "Rocket Crash",
+    provider: "PG",
+    category: "popular",
     icon: "🚀",
-    description: "Suba o multiplicador",
     tag: "Novo"
   },
 
   {
-    id: "baccarat",
-    name: "Baccarat",
-    icon: "♠️",
-    description: "Mesa clássica",
+    id: "fortune-crown",
+    name: "Fortune Crown",
+    provider: "Fortunes",
+    category: "slots",
+    icon: "👑",
+    tag: "Novo"
+  },
+
+  {
+    id: "golden-dragon",
+    name: "Golden Dragon",
+    provider: "PG",
+    category: "slots",
+    icon: "🐉",
     tag: "Premium"
   },
 
   {
-    id: "dice",
-    name: "Dice",
-    icon: "🎲",
-    description: "Dados virtuais",
-    tag: "Rápido"
+    id: "diamond-wheel",
+    name: "Diamond Wheel",
+    provider: "Pragmatic Play",
+    category: "popular",
+    icon: "💠",
+    tag: "Popular"
   },
 
   {
-    id: "poker",
-    name: "Poker Social",
-    icon: "♣️",
-    description: "Mesa demonstrativa",
-    tag: "Social"
+    id: "mega-fruit",
+    name: "Mega Fruit",
+    provider: "Pragmatic Play",
+    category: "slots",
+    icon: "🍒",
+    tag: "Slots"
   },
 
   {
-    id: "wheel",
-    name: "Prize Wheel",
+    id: "live-blackjack",
+    name: "Live Blackjack",
+    provider: "Evolution",
+    category: "casino",
+    icon: "♠️",
+    tag: "Live"
+  },
+
+  {
+    id: "fortune-wheel",
+    name: "Fortune Wheel",
+    provider: "Fortunes",
+    category: "popular",
     icon: "🎯",
-    description: "Gire a roda",
     tag: "Bônus"
+  },
+
+  {
+    id: "super-seven",
+    name: "Super Seven",
+    provider: "PG",
+    category: "slots",
+    icon: "7️⃣",
+    tag: "Novo"
   }
 
 ];
 
 
 /* =========================================================
-   ESTADO DO JOGADOR
+   PROVEDORES
 ========================================================= */
 
-let balance = Number(
-  localStorage.getItem("casinox_balance") || 10000
-);
+const providers = [
+
+  {
+    id: "all",
+    name: "Todos",
+    icon: "✨"
+  },
+
+  {
+    id: "PG",
+    name: "PG",
+    icon: "🎰"
+  },
+
+  {
+    id: "Fortunes",
+    name: "Fortunes",
+    icon: "💎"
+  },
+
+  {
+    id: "Pragmatic Play",
+    name: "Pragmatic",
+    icon: "🔥"
+  },
+
+  {
+    id: "Evolution",
+    name: "Evolution",
+    icon: "♠️"
+  }
+
+];
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+const categories = [
+
+  {
+    id: "all",
+    name: "Todos",
+    icon: "✨"
+  },
+
+  {
+    id: "popular",
+    name: "Mais jogados",
+    icon: "🔥"
+  },
+
+  {
+    id: "slots",
+    name: "Slots",
+    icon: "🎰"
+  },
+
+  {
+    id: "casino",
+    name: "Cassino",
+    icon: "🃏"
+  }
+
+];
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+let balance =
+  Number(
+    localStorage.getItem(
+      "casinox_balance"
+    ) || 10000
+  );
+
 
 let playerName =
-  localStorage.getItem("casinox_player") || "";
+  localStorage.getItem(
+    "casinox_player"
+  ) || "";
+
+
+let favorites =
+  JSON.parse(
+    localStorage.getItem(
+      "casinox_favorites"
+    ) || "[]"
+  );
+
+
+let currentProvider =
+  "all";
+
+
+let currentCategory =
+  "all";
+
+
+let searchTerm =
+  "";
 
 
 /* =========================================================
@@ -97,14 +239,20 @@ let playerName =
 const app =
   document.getElementById("app");
 
+
 const balanceElement =
   document.getElementById("balance");
+
 
 const loginButton =
   document.getElementById("login");
 
+
 const mobileProfile =
-  document.getElementById("mobile-profile");
+  document.getElementById(
+    "mobile-profile"
+  );
+
 
 const toastElement =
   document.getElementById("toast");
@@ -123,7 +271,7 @@ function formatCredits(value) {
 
 
 /* =========================================================
-   SALVAR ESTADO
+   ESTADO
 ========================================================= */
 
 function saveState() {
@@ -133,10 +281,20 @@ function saveState() {
     balance
   );
 
+
   localStorage.setItem(
     "casinox_player",
     playerName
   );
+
+
+  localStorage.setItem(
+    "casinox_favorites",
+    JSON.stringify(
+      favorites
+    )
+  );
+
 
   updateBalance();
 
@@ -144,7 +302,7 @@ function saveState() {
 
 
 /* =========================================================
-   ATUALIZAR SALDO
+   SALDO
 ========================================================= */
 
 function updateBalance() {
@@ -160,7 +318,7 @@ function updateBalance() {
 
 
 /* =========================================================
-   NOTIFICAÇÃO
+   TOAST
 ========================================================= */
 
 function showToast(message) {
@@ -169,17 +327,27 @@ function showToast(message) {
     return;
   }
 
+
   toastElement.textContent =
     message;
 
-  toastElement.classList.add("show");
 
-  clearTimeout(window.casinoXToast);
+  toastElement.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    window.casinoXToast
+  );
+
 
   window.casinoXToast =
     setTimeout(() => {
 
-      toastElement.classList.remove("show");
+      toastElement.classList.remove(
+        "show"
+      );
 
     }, 2300);
 
@@ -187,50 +355,714 @@ function showToast(message) {
 
 
 /* =========================================================
-   CARTÕES DOS JOGOS
+   FAVORITOS
 ========================================================= */
 
-function renderGameCards(list = games) {
+function isFavorite(gameId) {
 
-  return list.map(game => {
+  return favorites.includes(
+    gameId
+  );
 
-    return `
+}
 
-      <article
-        class="card"
-        data-game="${game.id}"
-        tabindex="0"
-      >
 
-        <div class="art">
+function toggleFavorite(gameId) {
 
-          ${game.icon}
+  if (
+    isFavorite(gameId)
+  ) {
 
-        </div>
+    favorites =
+      favorites.filter(
+        id => id !== gameId
+      );
 
-        <h3>
-          ${game.name}
-        </h3>
+    showToast(
+      "Removido dos favoritos."
+    );
 
-        <p>
-          ${game.description}
-        </p>
+  }
 
-        <span class="tag">
-          ${game.tag}
-        </span>
+  else {
 
-      </article>
+    favorites.push(
+      gameId
+    );
 
-    `;
+    showToast(
+      "⭐ Adicionado aos favoritos."
+    );
 
-  }).join("");
+  }
+
+
+  saveState();
+
+  renderLobby();
 
 }
 
 
 /* =========================================================
-   MENU ATIVO
+   FILTRAR JOGOS
+========================================================= */
+
+function getFilteredGames() {
+
+  return games.filter(game => {
+
+    const providerOK =
+      currentProvider === "all" ||
+      game.provider === currentProvider;
+
+
+    const categoryOK =
+      currentCategory === "all" ||
+      game.category === currentCategory;
+
+
+    const searchOK =
+      !searchTerm ||
+      game.name
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        ) ||
+      game.provider
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
+        );
+
+
+    return (
+      providerOK &&
+      categoryOK &&
+      searchOK
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   CARD DO JOGO
+========================================================= */
+
+function gameCard(game) {
+
+  const favorite =
+    isFavorite(game.id);
+
+
+  return `
+
+    <article
+      class="card"
+      data-game="${game.id}"
+      tabindex="0"
+    >
+
+      <div
+        class="art"
+        style="position:relative;"
+      >
+
+        ${game.icon}
+
+
+        <button
+          class="favorite-btn"
+          data-favorite="${game.id}"
+          aria-label="Favoritar ${game.name}"
+          style="
+            position:absolute;
+            top:7px;
+            right:7px;
+            width:32px;
+            height:32px;
+            border:0;
+            border-radius:50%;
+            background:rgba(0,0,0,.45);
+            color:#fff;
+            font-size:16px;
+            z-index:2;
+          "
+        >
+          ${favorite ? "⭐" : "☆"}
+        </button>
+
+      </div>
+
+
+      <h3>
+        ${game.name}
+      </h3>
+
+
+      <p>
+        ${game.provider}
+      </p>
+
+
+      <span class="tag">
+        ${game.tag}
+      </span>
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+function renderGameCards(list) {
+
+  if (!list.length) {
+
+    return `
+
+      <div
+        style="
+          grid-column:1/-1;
+          padding:35px 15px;
+          text-align:center;
+          color:var(--muted);
+        "
+      >
+
+        <div
+          style="font-size:45px;"
+        >
+          🔎
+        </div>
+
+        <h3>
+          Nenhum jogo encontrado
+        </h3>
+
+        <p>
+          Tente outro nome, categoria
+          ou provedor.
+        </p>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return list
+    .map(gameCard)
+    .join("");
+
+}
+
+
+/* =========================================================
+   BOTÕES DE PROVEDORES
+========================================================= */
+
+function renderProviders() {
+
+  return providers
+    .map(provider => {
+
+      const active =
+        currentProvider === provider.id;
+
+
+      return `
+
+        <button
+          class="provider-btn"
+          data-provider="${provider.id}"
+          style="
+            min-height:42px;
+            padding:8px 13px;
+            border:1px solid ${
+              active
+                ? "var(--gold)"
+                : "var(--line)"
+            };
+            border-radius:11px;
+            background:${
+              active
+                ? "rgba(245,196,81,.12)"
+                : "var(--panel)"
+            };
+            color:${
+              active
+                ? "var(--gold-light)"
+                : "var(--muted)"
+            };
+            white-space:nowrap;
+          "
+        >
+
+          ${provider.icon}
+          ${provider.name}
+
+        </button>
+
+      `;
+
+    })
+    .join("");
+
+}
+
+
+/* =========================================================
+   BOTÕES DE CATEGORIA
+========================================================= */
+
+function renderCategories() {
+
+  return categories
+    .map(category => {
+
+      const active =
+        currentCategory === category.id;
+
+
+      return `
+
+        <button
+          class="category-btn"
+          data-category="${category.id}"
+          style="
+            min-height:40px;
+            padding:8px 13px;
+            border:0;
+            border-radius:10px;
+            background:${
+              active
+                ? "var(--gold)"
+                : "rgba(255,255,255,.05)"
+            };
+            color:${
+              active
+                ? "#111"
+                : "var(--muted)"
+            };
+            white-space:nowrap;
+            font-weight:700;
+          "
+        >
+
+          ${category.icon}
+          ${category.name}
+
+        </button>
+
+      `;
+
+    })
+    .join("");
+
+}
+
+
+/* =========================================================
+   LOBBY
+========================================================= */
+
+function renderLobby() {
+
+  const filtered =
+    getFilteredGames();
+
+
+  app.innerHTML = `
+
+    <section class="hero">
+
+      <div>
+
+        <div class="eyebrow">
+          CASINO SOCIAL • v0.3
+        </div>
+
+        <h1>
+          Jogue.<br>
+          Divirta-se.
+        </h1>
+
+        <p>
+          Explore nosso lobby de jogos
+          com créditos virtuais.
+        </p>
+
+        <button
+          class="primary"
+          id="heroGames"
+        >
+          Ver jogos →
+        </button>
+
+      </div>
+
+
+      <div class="hero-art">
+
+        <div class="chip">
+          🎰
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="section">
+
+      <div class="head">
+
+        <div>
+
+          <h2>
+            🎮 Lobby
+          </h2>
+
+          <p>
+            Escolha seu jogo.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- BUSCA -->
+
+      <input
+        id="gameSearch"
+        type="search"
+        placeholder="🔎 Buscar jogo ou provedor..."
+        value="${searchTerm}"
+        style="
+          width:100%;
+          min-height:46px;
+          padding:12px 14px;
+          margin-bottom:14px;
+          border:1px solid var(--line);
+          border-radius:12px;
+          background:#0d1321;
+          color:#fff;
+          font-size:14px;
+          outline:none;
+        "
+      >
+
+
+      <!-- PROVEDORES -->
+
+      <div
+        style="
+          display:flex;
+          gap:8px;
+          overflow-x:auto;
+          padding-bottom:7px;
+          margin-bottom:13px;
+          scrollbar-width:none;
+        "
+      >
+
+        ${renderProviders()}
+
+      </div>
+
+
+      <!-- CATEGORIAS -->
+
+      <div
+        style="
+          display:flex;
+          gap:7px;
+          overflow-x:auto;
+          padding-bottom:5px;
+          margin-bottom:18px;
+          scrollbar-width:none;
+        "
+      >
+
+        ${renderCategories()}
+
+      </div>
+
+
+      <!-- JOGOS -->
+
+      <div
+        class="grid"
+        id="gamesGrid"
+      >
+
+        ${renderGameCards(filtered)}
+
+      </div>
+
+    </section>
+
+
+    <section class="section">
+
+      <div class="features">
+
+        <div class="feature">
+
+          <h3>
+            ⭐ Favoritos
+          </h3>
+
+          <p>
+            Salve seus jogos preferidos
+            neste dispositivo.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <h3>
+            🎮 Provedores
+          </h3>
+
+          <p>
+            Lobby preparado para futuras
+            integrações licenciadas.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <h3>
+            📱 Mobile First
+          </h3>
+
+          <p>
+            Interface desenvolvida
+            pensando primeiro no celular.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  `;
+
+
+  bindLobbyEvents();
+
+}
+
+
+/* =========================================================
+   EVENTOS DO LOBBY
+========================================================= */
+
+function bindLobbyEvents() {
+
+
+  /* Busca */
+
+  const search =
+    document.getElementById(
+      "gameSearch"
+    );
+
+
+  if (search) {
+
+    search.addEventListener(
+      "input",
+      event => {
+
+        searchTerm =
+          event.target.value;
+
+        const grid =
+          document.getElementById(
+            "gamesGrid"
+          );
+
+
+        if (grid) {
+
+          grid.innerHTML =
+            renderGameCards(
+              getFilteredGames()
+            );
+
+          bindGameEvents();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* Provedores */
+
+  document
+    .querySelectorAll(
+      "[data-provider]"
+    )
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        currentProvider =
+          button.dataset.provider;
+
+        renderLobby();
+
+      };
+
+    });
+
+
+  /* Categorias */
+
+  document
+    .querySelectorAll(
+      "[data-category]"
+    )
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        currentCategory =
+          button.dataset.category;
+
+        renderLobby();
+
+      };
+
+    });
+
+
+  /* Hero */
+
+  const heroGames =
+    document.getElementById(
+      "heroGames"
+    );
+
+
+  if (heroGames) {
+
+    heroGames.onclick = () => {
+
+      document
+        .getElementById(
+          "gameSearch"
+        )
+        ?.focus();
+
+    };
+
+  }
+
+
+  bindGameEvents();
+
+}
+
+
+/* =========================================================
+   EVENTOS DOS JOGOS
+========================================================= */
+
+function bindGameEvents() {
+
+  document
+    .querySelectorAll(
+      "[data-game]"
+    )
+    .forEach(card => {
+
+      card.onclick =
+        event => {
+
+          if (
+            event.target.closest(
+              "[data-favorite]"
+            )
+          ) {
+
+            return;
+
+          }
+
+
+          openGame(
+            card.dataset.game
+          );
+
+        };
+
+
+      card.onkeydown =
+        event => {
+
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+
+            event.preventDefault();
+
+            openGame(
+              card.dataset.game
+            );
+
+          }
+
+        };
+
+    });
+
+
+  document
+    .querySelectorAll(
+      "[data-favorite]"
+    )
+    .forEach(button => {
+
+      button.onclick =
+        event => {
+
+          event.stopPropagation();
+
+          toggleFavorite(
+            button.dataset.favorite
+          );
+
+        };
+
+    });
+
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
 ========================================================= */
 
 function setActiveMenu(viewName) {
@@ -251,13 +1083,12 @@ function setActiveMenu(viewName) {
 }
 
 
-/* =========================================================
-   NAVEGAÇÃO
-========================================================= */
-
 function navigate(viewName) {
 
-  setActiveMenu(viewName);
+  setActiveMenu(
+    viewName
+  );
+
 
   window.scrollTo({
     top: 0,
@@ -265,310 +1096,182 @@ function navigate(viewName) {
   });
 
 
-  /* =====================================================
-     HOME
-  ===================================================== */
+  if (
+    viewName === "home" ||
+    viewName === "casino"
+  ) {
 
-  if (viewName === "home") {
+    renderLobby();
 
-    app.innerHTML = `
+  }
 
-      <section class="hero">
+
+  else if (
+    viewName === "promos"
+  ) {
+
+    renderPromos();
+
+  }
+
+
+  else if (
+    viewName === "ranking"
+  ) {
+
+    renderRanking();
+
+  }
+
+}
+
+
+/* =========================================================
+   PROMOÇÕES
+========================================================= */
+
+function renderPromos() {
+
+  app.innerHTML = `
+
+    <div class="title">
+
+      <h1>
+        🎁 Promoções
+      </h1>
+
+      <p>
+        Recompensas da versão demonstrativa.
+      </p>
+
+    </div>
+
+
+    <div class="list">
+
+      <div class="row">
 
         <div>
 
-          <div class="eyebrow">
-            CASSINO SOCIAL • VERSÃO 0.2
-          </div>
-
-          <h1>
-            Entre na mesa.<br>
-            Jogue por diversão.
-          </h1>
+          <b>
+            🎉 Boas-vindas
+          </b>
 
           <p>
-            Experimente uma plataforma moderna
-            de cassino usando apenas créditos
-            virtuais.
-          </p>
-
-          <button
-            class="primary"
-            id="exploreGames"
-          >
-            Explorar jogos →
-          </button>
-
-        </div>
-
-
-        <div class="hero-art">
-
-          <div class="chip">
-            🎰
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <section class="section">
-
-        <div class="head">
-
-          <div>
-
-            <h2>
-              🔥 Jogos em destaque
-            </h2>
-
-            <p>
-              Toque em um jogo para começar.
-            </p>
-
-          </div>
-
-
-          <button
-            class="primary"
-            id="showAllGames"
-          >
-            Ver todos
-          </button>
-
-        </div>
-
-
-        <div class="grid">
-
-          ${renderGameCards(
-            games.slice(0, 4)
-          )}
-
-        </div>
-
-      </section>
-
-
-      <section class="section features">
-
-        <div class="feature">
-
-          <h3>
-            💎 Créditos virtuais
-          </h3>
-
-          <p>
-            Comece com 10.000 créditos
-            para testar a plataforma.
+            Você começa com
+            10.000 créditos virtuais.
           </p>
 
         </div>
 
+        <span class="tag">
+          ATIVO
+        </span>
 
-        <div class="feature">
+      </div>
 
-          <h3>
-            🏆 Ranking social
-          </h3>
+
+      <div class="row">
+
+        <div>
+
+          <b>
+            🎁 Giro diário
+          </b>
 
           <p>
-            Compare suas pontuações
-            com outros jogadores.
+            Receba 500 créditos
+            virtuais por dia.
           </p>
 
         </div>
 
-
-        <div class="feature">
-
-          <h3>
-            📱 Mobile First
-          </h3>
-
-          <p>
-            Interface preparada para
-            smartphones e toque.
-          </p>
-
-        </div>
-
-      </section>
-
-    `;
-
-  }
-
-
-  /* =====================================================
-     JOGOS
-  ===================================================== */
-
-  else if (viewName === "casino") {
-
-    app.innerHTML = `
-
-      <div class="title">
-
-        <h1>
-          🎰 Jogos
-        </h1>
-
-        <p>
-          Escolha um jogo e toque para abrir.
-        </p>
+        <button
+          class="primary"
+          id="dailyReward"
+        >
+          Resgatar
+        </button>
 
       </div>
 
+    </div>
 
-      <div class="grid">
-
-        ${renderGameCards()}
-
-      </div>
-
-    `;
-
-  }
+  `;
 
 
-  /* =====================================================
-     PROMOÇÕES
-  ===================================================== */
+  document
+    .getElementById(
+      "dailyReward"
+    )
+    ?.addEventListener(
+      "click",
+      claimDailyReward
+    );
 
-  else if (viewName === "promos") {
-
-    app.innerHTML = `
-
-      <div class="title">
-
-        <h1>
-          🎁 Promoções
-        </h1>
-
-        <p>
-          Recompensas da versão demonstrativa.
-        </p>
-
-      </div>
+}
 
 
-      <div class="list">
+/* =========================================================
+   RANKING
+========================================================= */
+
+function renderRanking() {
+
+  const ranking = [
+
+    [
+      "1",
+      "LuckyPlayer",
+      "98.420"
+    ],
+
+    [
+      "2",
+      "Queen21",
+      "87.650"
+    ],
+
+    [
+      "3",
+      "RocketBR",
+      "81.300"
+    ],
+
+    [
+      "4",
+      "CasinoFan",
+      "76.210"
+    ],
+
+    [
+      "5",
+      playerName || "Você",
+      formatCredits(balance)
+    ]
+
+  ];
 
 
-        <div class="row">
+  app.innerHTML = `
 
-          <div>
+    <div class="title">
 
-            <b>
-              Boas-vindas
-            </b>
+      <h1>
+        🏆 Ranking
+      </h1>
 
-            <p>
-              10.000 créditos virtuais iniciais.
-            </p>
+      <p>
+        Ranking social demonstrativo.
+      </p>
 
-          </div>
-
-          <span class="tag">
-            ATIVO
-          </span>
-
-        </div>
+    </div>
 
 
-        <div class="row">
+    <div class="list">
 
-          <div>
-
-            <b>
-              Giro diário
-            </b>
-
-            <p>
-              Ganhe 500 créditos virtuais
-              uma vez por dia.
-            </p>
-
-          </div>
-
-          <button
-            class="primary"
-            id="dailyReward"
-          >
-            Resgatar
-          </button>
-
-        </div>
-
-
-      </div>
-
-    `;
-
-  }
-
-
-  /* =====================================================
-     RANKING
-  ===================================================== */
-
-  else if (viewName === "ranking") {
-
-    const ranking = [
-
-      [
-        "1",
-        "LuckyPlayer",
-        "98.420"
-      ],
-
-      [
-        "2",
-        "Queen21",
-        "87.650"
-      ],
-
-      [
-        "3",
-        "RocketBR",
-        "81.300"
-      ],
-
-      [
-        "4",
-        "CasinoFan",
-        "76.210"
-      ],
-
-      [
-        "5",
-        playerName || "Você",
-        formatCredits(balance)
-      ]
-
-    ];
-
-
-    app.innerHTML = `
-
-      <div class="title">
-
-        <h1>
-          🏆 Ranking
-        </h1>
-
-        <p>
-          Ranking social demonstrativo.
-        </p>
-
-      </div>
-
-
-      <div class="list">
-
-        ${ranking.map(item => `
+      ${ranking.map(
+        item => `
 
           <div class="row">
 
@@ -583,122 +1286,24 @@ function navigate(viewName) {
 
           </div>
 
-        `).join("")}
+        `
+      ).join("")}
 
-      </div>
+    </div>
 
-    `;
-
-  }
-
-
-  bindPageEvents();
+  `;
 
 }
 
 
 /* =========================================================
-   EVENTOS DAS PÁGINAS
-========================================================= */
-
-function bindPageEvents() {
-
-
-  /* Jogos */
-
-  document
-    .querySelectorAll("[data-game]")
-    .forEach(card => {
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          openGame(
-            card.dataset.game
-          );
-
-        }
-      );
-
-
-      card.addEventListener(
-        "keydown",
-        event => {
-
-          if (
-            event.key === "Enter" ||
-            event.key === " "
-          ) {
-
-            event.preventDefault();
-
-            openGame(
-              card.dataset.game
-            );
-
-          }
-
-        }
-      );
-
-    });
-
-
-  /* Explorar */
-
-  const explore =
-    document.getElementById(
-      "exploreGames"
-    );
-
-  if (explore) {
-
-    explore.onclick =
-      () => navigate("casino");
-
-  }
-
-
-  /* Ver todos */
-
-  const all =
-    document.getElementById(
-      "showAllGames"
-    );
-
-  if (all) {
-
-    all.onclick =
-      () => navigate("casino");
-
-  }
-
-
-  /* Recompensa */
-
-  const daily =
-    document.getElementById(
-      "dailyReward"
-    );
-
-  if (daily) {
-
-    daily.onclick =
-      claimDailyReward;
-
-  }
-
-}
-
-
-/* =========================================================
-   PAGAMENTO VIRTUAL
+   CRÉDITOS
 ========================================================= */
 
 function chargeCredits(amount) {
 
-  amount = Number(amount);
+  amount =
+    Number(amount);
 
 
   if (
@@ -707,7 +1312,7 @@ function chargeCredits(amount) {
   ) {
 
     showToast(
-      "Digite um valor mínimo de 10 créditos."
+      "Mínimo de 10 créditos."
     );
 
     return false;
@@ -715,10 +1320,12 @@ function chargeCredits(amount) {
   }
 
 
-  if (amount > balance) {
+  if (
+    amount > balance
+  ) {
 
     showToast(
-      "Você não possui créditos suficientes."
+      "Créditos insuficientes."
     );
 
     return false;
@@ -729,16 +1336,14 @@ function chargeCredits(amount) {
   balance -=
     Math.floor(amount);
 
+
   saveState();
+
 
   return true;
 
 }
 
-
-/* =========================================================
-   GANHAR CRÉDITOS
-========================================================= */
 
 function addCredits(amount) {
 
@@ -751,36 +1356,15 @@ function addCredits(amount) {
 
 
 /* =========================================================
-   CAMPO DE APOSTA
-========================================================= */
-
-function stakeInput() {
-
-  return `
-
-    <input
-      id="stake"
-      type="number"
-      min="10"
-      value="100"
-      inputmode="numeric"
-      aria-label="Quantidade de créditos"
-    >
-
-  `;
-
-}
-
-
-/* =========================================================
-   MODAL DO JOGO
+   ABRIR JOGO
 ========================================================= */
 
 function openGame(gameId) {
 
   const game =
     games.find(
-      item => item.id === gameId
+      item =>
+        item.id === gameId
     );
 
 
@@ -790,7 +1374,9 @@ function openGame(gameId) {
 
 
   const modal =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   modal.className =
@@ -803,14 +1389,25 @@ function openGame(gameId) {
 
       <div class="modalhead">
 
-        <h2>
-          ${game.icon}
-          ${game.name}
-        </h2>
+        <div>
+
+          <h2>
+            ${game.icon}
+            ${game.name}
+          </h2>
+
+          <small
+            style="color:var(--muted);"
+          >
+            ${game.provider}
+          </small>
+
+        </div>
+
 
         <button
           class="close"
-          aria-label="Fechar jogo"
+          aria-label="Fechar"
         >
           ×
         </button>
@@ -835,7 +1432,9 @@ function openGame(gameId) {
 
 
   modal
-    .querySelector(".close")
+    .querySelector(
+      ".close"
+    )
     .onclick = () => {
 
       modal.remove();
@@ -849,25 +1448,34 @@ function openGame(gameId) {
     );
 
 
-  if (gameId === "slots") {
+  if (
+    gameId === "lucky-stars"
+  ) {
 
     renderSlots(stage);
 
   }
 
-  else if (gameId === "roulette") {
+  else if (
+    gameId === "royal-roulette"
+  ) {
 
     renderRoulette(stage);
 
   }
 
-  else if (gameId === "blackjack") {
+  else if (
+    gameId === "blackjack-pro" ||
+    gameId === "live-blackjack"
+  ) {
 
     renderBlackjack(stage);
 
   }
 
-  else if (gameId === "crash") {
+  else if (
+    gameId === "rocket-crash"
+  ) {
 
     renderCrash(stage);
 
@@ -886,7 +1494,29 @@ function openGame(gameId) {
 
 
 /* =========================================================
-   JOGO: SLOTS
+   INPUT DE APOSTA VIRTUAL
+========================================================= */
+
+function stakeInput() {
+
+  return `
+
+    <input
+      id="stake"
+      type="number"
+      min="10"
+      value="100"
+      inputmode="numeric"
+      aria-label="Créditos virtuais"
+    >
+
+  `;
+
+}
+
+
+/* =========================================================
+   SLOTS
 ========================================================= */
 
 function renderSlots(stage) {
@@ -935,7 +1565,9 @@ function renderSlots(stage) {
 
 
   stage
-    .querySelector("#spin")
+    .querySelector(
+      "#spin"
+    )
     .onclick = () => {
 
       const amount =
@@ -965,22 +1597,23 @@ function renderSlots(stage) {
 
 
       const reels =
-        [...stage.querySelectorAll(
-          ".reel"
-        )];
+        [
+          ...stage.querySelectorAll(
+            ".reel"
+          )
+        ];
 
 
       const result =
-        reels.map(() => {
-
-          return symbols[
-            Math.floor(
-              Math.random() *
-              symbols.length
-            )
-          ];
-
-        });
+        reels.map(
+          () =>
+            symbols[
+              Math.floor(
+                Math.random() *
+                symbols.length
+              )
+            ]
+        );
 
 
       result.forEach(
@@ -1021,9 +1654,13 @@ function renderSlots(stage) {
         amount * multiplier;
 
 
-      if (winnings > 0) {
+      if (
+        winnings > 0
+      ) {
 
-        addCredits(winnings);
+        addCredits(
+          winnings
+        );
 
       }
 
@@ -1043,7 +1680,7 @@ function renderSlots(stage) {
 
 
 /* =========================================================
-   JOGO: ROLETA
+   ROLETA
 ========================================================= */
 
 function renderRoulette(stage) {
@@ -1084,7 +1721,9 @@ function renderRoulette(stage) {
 
 
   stage
-    .querySelector("#spinRoulette")
+    .querySelector(
+      "#spinRoulette"
+    )
     .onclick = () => {
 
       const amount =
@@ -1112,13 +1751,13 @@ function renderRoulette(stage) {
 
       const winnings =
         number === 0
-
           ? amount * 10
-
           : amount * 2;
 
 
-      addCredits(winnings);
+      addCredits(
+        winnings
+      );
 
 
       stage.querySelector(
@@ -1138,7 +1777,7 @@ function renderRoulette(stage) {
 
 
 /* =========================================================
-   JOGO: BLACKJACK
+   BLACKJACK
 ========================================================= */
 
 function renderBlackjack(stage) {
@@ -1147,12 +1786,12 @@ function renderBlackjack(stage) {
 
     <div>
 
-      <div style="font-size:80px">
+      <div style="font-size:80px;">
         🃏
       </div>
 
       <p>
-        Versão demonstrativa.
+        Mesa demonstrativa.
       </p>
 
 
@@ -1179,7 +1818,9 @@ function renderBlackjack(stage) {
 
 
   stage
-    .querySelector("#deal")
+    .querySelector(
+      "#deal"
+    )
     .onclick = () => {
 
       const amount =
@@ -1219,7 +1860,9 @@ function renderBlackjack(stage) {
         );
 
 
-      if (player > 21) {
+      if (
+        player > 21
+      ) {
 
         result.textContent =
           `Você: ${player}. Estourou.`;
@@ -1237,9 +1880,11 @@ function renderBlackjack(stage) {
         const winnings =
           amount * 2;
 
+
         addCredits(
           winnings
         );
+
 
         result.textContent =
           `Você: ${player} • Banca: ${dealer}. Vitória! +${formatCredits(winnings)}.`;
@@ -1249,11 +1894,14 @@ function renderBlackjack(stage) {
       }
 
 
-      if (player === dealer) {
+      if (
+        player === dealer
+      ) {
 
         addCredits(
           amount
         );
+
 
         result.textContent =
           "Empate. Créditos devolvidos.";
@@ -1272,7 +1920,7 @@ function renderBlackjack(stage) {
 
 
 /* =========================================================
-   JOGO: CRASH
+   CRASH
 ========================================================= */
 
 function renderCrash(stage) {
@@ -1321,7 +1969,9 @@ function renderCrash(stage) {
 
 
   stage
-    .querySelector("#launch")
+    .querySelector(
+      "#launch"
+    )
     .onclick = () => {
 
       const amount =
@@ -1355,58 +2005,65 @@ function renderCrash(stage) {
 
       let current = 1;
 
+
       const crashPoint =
         1 +
         Math.random() * 4.5;
 
 
       const interval =
-        setInterval(() => {
+        setInterval(
+          () => {
 
-          current += 0.1;
-
-          multiplier.textContent =
-            current.toFixed(2) +
-            "x";
+            current += 0.1;
 
 
-          if (
-            current >= crashPoint
-          ) {
-
-            clearInterval(
-              interval
-            );
+            multiplier.textContent =
+              current.toFixed(2) +
+              "x";
 
 
-            const win =
-              Math.random() > 0.3;
+            if (
+              current >=
+              crashPoint
+            ) {
 
-
-            if (win) {
-
-              const winnings =
-                amount * current;
-
-              addCredits(
-                winnings
+              clearInterval(
+                interval
               );
 
-              result.textContent =
-                `Saída em ${current.toFixed(2)}x. +${formatCredits(winnings)} créditos.`;
+
+              if (
+                Math.random() > 0.3
+              ) {
+
+                const winnings =
+                  amount *
+                  current;
+
+
+                addCredits(
+                  winnings
+                );
+
+
+                result.textContent =
+                  `Saída em ${current.toFixed(2)}x. +${formatCredits(winnings)} créditos.`;
+
+              }
+
+              else {
+
+                result.textContent =
+                  `Crash em ${current.toFixed(2)}x.`;
+
+              }
 
             }
 
-            else {
-
-              result.textContent =
-                `Crash em ${current.toFixed(2)}x.`;
-
-            }
-
-          }
-
-        }, 70);
+          },
+          70
+        );
 
     };
 
@@ -1414,7 +2071,7 @@ function renderCrash(stage) {
 
 
 /* =========================================================
-   JOGOS FUTUROS
+   JOGOS AINDA NÃO IMPLEMENTADOS
 ========================================================= */
 
 function renderComingSoon(
@@ -1426,17 +2083,28 @@ function renderComingSoon(
 
     <div>
 
-      <div style="font-size:80px">
+      <div
+        style="font-size:80px;"
+      >
         ${game.icon}
       </div>
+
 
       <h3>
         ${game.name}
       </h3>
 
+
       <p>
-        Este jogo será desenvolvido
-        na próxima versão.
+        Provedor:
+        <b>${game.provider}</b>
+      </p>
+
+
+      <p>
+        Este jogo é um item demonstrativo
+        do lobby. A integração real deverá
+        utilizar uma fonte licenciada.
       </p>
 
     </div>
@@ -1461,7 +2129,10 @@ function claimDailyReward() {
 
 
   const oneDay =
-    24 * 60 * 60 * 1000;
+    24 *
+    60 *
+    60 *
+    1000;
 
 
   if (
@@ -1478,7 +2149,8 @@ function claimDailyReward() {
   }
 
 
-  balance += 500;
+  balance +=
+    500;
 
 
   localStorage.setItem(
@@ -1503,7 +2175,9 @@ function claimDailyReward() {
 
 function openProfile() {
 
-  if (playerName) {
+  if (
+    playerName
+  ) {
 
     showToast(
       `Olá, ${playerName}!`
@@ -1542,7 +2216,7 @@ function openProfile() {
 
 
 /* =========================================================
-   EVENTOS DO MENU
+   MENU PRINCIPAL
 ========================================================= */
 
 document
@@ -1569,7 +2243,9 @@ document
    PERFIL
 ========================================================= */
 
-if (loginButton) {
+if (
+  loginButton
+) {
 
   loginButton.onclick =
     openProfile;
@@ -1577,7 +2253,9 @@ if (loginButton) {
 }
 
 
-if (mobileProfile) {
+if (
+  mobileProfile
+) {
 
   mobileProfile.onclick =
     openProfile;
@@ -1591,4 +2269,6 @@ if (mobileProfile) {
 
 updateBalance();
 
-navigate("home");
+navigate(
+  "home"
+);
