@@ -1,282 +1,275 @@
+/* =========================================================
+   CASINOX
+   VERSION 0.2
+   MOBILE FIRST
+   ========================================================= */
+
+
+/* =========================================================
+   CONFIGURAÇÃO DOS JOGOS
+========================================================= */
+
 const games = [
+
   {
     id: "slots",
-    n: "Lucky Stars",
-    i: "🎰",
-    d: "Slot social",
-    t: "Popular"
+    name: "Lucky Stars",
+    icon: "🎰",
+    description: "Slot social",
+    tag: "Popular"
   },
+
   {
     id: "roulette",
-    n: "Roleta Royale",
-    i: "🎡",
-    d: "Roleta virtual",
-    t: "Clássico"
+    name: "Roleta Royale",
+    icon: "🎡",
+    description: "Roleta virtual",
+    tag: "Clássico"
   },
+
   {
     id: "blackjack",
-    n: "Blackjack Pro",
-    i: "🃏",
-    d: "21 contra a banca",
-    t: "Clássico"
+    name: "Blackjack Pro",
+    icon: "🃏",
+    description: "21 contra a banca",
+    tag: "Clássico"
   },
+
   {
     id: "crash",
-    n: "Rocket Crash",
-    i: "🚀",
-    d: "Suba o multiplicador",
-    t: "Novo"
+    name: "Rocket Crash",
+    icon: "🚀",
+    description: "Suba o multiplicador",
+    tag: "Novo"
   },
+
   {
     id: "baccarat",
-    n: "Baccarat",
-    i: "♠️",
-    d: "Mesa clássica",
-    t: "Premium"
+    name: "Baccarat",
+    icon: "♠️",
+    description: "Mesa clássica",
+    tag: "Premium"
   },
+
   {
     id: "dice",
-    n: "Dice",
-    i: "🎲",
-    d: "Dados virtuais",
-    t: "Rápido"
+    name: "Dice",
+    icon: "🎲",
+    description: "Dados virtuais",
+    tag: "Rápido"
   },
+
   {
     id: "poker",
-    n: "Poker Social",
-    i: "♣️",
-    d: "Mesa de demonstração",
-    t: "Social"
+    name: "Poker Social",
+    icon: "♣️",
+    description: "Mesa demonstrativa",
+    tag: "Social"
   },
+
   {
     id: "wheel",
-    n: "Prize Wheel",
-    i: "🎯",
-    d: "Gire a roda",
-    t: "Bônus"
+    name: "Prize Wheel",
+    icon: "🎯",
+    description: "Gire a roda",
+    tag: "Bônus"
   }
+
 ];
 
-let balance =
-  Number(
-    localStorage.getItem("cx_balance") || 10000
-  );
 
-let player =
-  localStorage.getItem("cx_player") || "";
+/* =========================================================
+   ESTADO DO JOGADOR
+========================================================= */
+
+let balance = Number(
+  localStorage.getItem("casinox_balance") || 10000
+);
+
+let playerName =
+  localStorage.getItem("casinox_player") || "";
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
 
 const app =
-  document.querySelector("#app");
+  document.getElementById("app");
 
-const bal =
-  document.querySelector("#balance");
+const balanceElement =
+  document.getElementById("balance");
 
-const fmt =
-  n =>
-    Math.floor(n)
-      .toLocaleString("pt-BR");
+const loginButton =
+  document.getElementById("login");
 
-function save() {
+const mobileProfile =
+  document.getElementById("mobile-profile");
+
+const toastElement =
+  document.getElementById("toast");
+
+
+/* =========================================================
+   FORMATAÇÃO
+========================================================= */
+
+function formatCredits(value) {
+
+  return Math.floor(value)
+    .toLocaleString("pt-BR");
+
+}
+
+
+/* =========================================================
+   SALVAR ESTADO
+========================================================= */
+
+function saveState() {
 
   localStorage.setItem(
-    "cx_balance",
+    "casinox_balance",
     balance
   );
 
-  bal.textContent =
-    fmt(balance);
+  localStorage.setItem(
+    "casinox_player",
+    playerName
+  );
+
+  updateBalance();
+
 }
 
-function toast(text) {
 
-  const e =
-    document.querySelector("#toast");
+/* =========================================================
+   ATUALIZAR SALDO
+========================================================= */
 
-  e.textContent = text;
+function updateBalance() {
 
-  e.classList.add("show");
-
-  clearTimeout(window.tt);
-
-  window.tt =
-    setTimeout(
-      () =>
-        e.classList.remove("show"),
-      2200
-    );
-}
-
-function cards(list = games) {
-
-  return list.map(g => `
-    <article
-      class="card"
-      data-game="${g.id}"
-    >
-
-      <div class="art">
-        ${g.i}
-      </div>
-
-      <h3>
-        ${g.n}
-      </h3>
-
-      <p>
-        ${g.d}
-      </p>
-
-      <span class="tag">
-        ${g.t}
-      </span>
-
-    </article>
-  `).join("");
-}
-
-function view(v) {
-
-  if (v === "casino") {
-
-    app.innerHTML = `
-
-      <div class="title">
-
-        <h1>🎰 Cassino</h1>
-
-        <p>
-          Jogos demonstrativos
-          com créditos virtuais.
-        </p>
-
-      </div>
-
-      <div class="grid">
-        ${cards()}
-      </div>
-
-    `;
+  if (!balanceElement) {
+    return;
   }
 
-  else if (v === "promos") {
+  balanceElement.textContent =
+    formatCredits(balance);
 
-    app.innerHTML = `
+}
 
-      <div class="title">
 
-        <h1>🎁 Promoções</h1>
+/* =========================================================
+   NOTIFICAÇÃO
+========================================================= */
 
-        <p>
-          Conteúdo demonstrativo
-          da versão 0.1.
-        </p>
+function showToast(message) {
 
-      </div>
+  if (!toastElement) {
+    return;
+  }
 
-      <div class="list">
+  toastElement.textContent =
+    message;
 
-        <div class="row">
+  toastElement.classList.add("show");
 
-          <div>
+  clearTimeout(window.casinoXToast);
 
-            <b>
-              Boas-vindas
-            </b>
+  window.casinoXToast =
+    setTimeout(() => {
 
-            <p>
-              10.000 créditos
-              virtuais iniciais.
-            </p>
+      toastElement.classList.remove("show");
 
-          </div>
+    }, 2300);
 
-          <span class="tag">
-            ATIVO
-          </span>
+}
+
+
+/* =========================================================
+   CARTÕES DOS JOGOS
+========================================================= */
+
+function renderGameCards(list = games) {
+
+  return list.map(game => {
+
+    return `
+
+      <article
+        class="card"
+        data-game="${game.id}"
+        tabindex="0"
+      >
+
+        <div class="art">
+
+          ${game.icon}
 
         </div>
 
-        <div class="row">
-
-          <div>
-
-            <b>
-              Giro diário
-            </b>
-
-            <p>
-              Uma recompensa
-              social por dia.
-            </p>
-
-          </div>
-
-          <button
-            class="primary"
-            id="daily"
-          >
-            Resgatar
-          </button>
-
-        </div>
-
-      </div>
-    `;
-  }
-
-  else if (v === "ranking") {
-
-    const players = [
-
-      ["1", "LuckyPlayer", "98.420"],
-      ["2", "Queen21", "87.650"],
-      ["3", "RocketBR", "81.300"],
-      ["4", "CasinoFan", "76.210"],
-      [
-        "5",
-        player || "Você",
-        fmt(balance)
-      ]
-
-    ];
-
-    app.innerHTML = `
-
-      <div class="title">
-
-        <h1>🏆 Ranking</h1>
+        <h3>
+          ${game.name}
+        </h3>
 
         <p>
-          Ranking demonstrativo.
+          ${game.description}
         </p>
 
-      </div>
+        <span class="tag">
+          ${game.tag}
+        </span>
 
-      <div class="list">
+      </article>
 
-        ${players.map(x => `
-
-          <div class="row">
-
-            <b>
-              #${x[0]}
-             　
-              ${x[1]}
-            </b>
-
-            <strong>
-              ${x[2]}
-            </strong>
-
-          </div>
-
-        `).join("")}
-
-      </div>
     `;
-  }
 
-  else {
+  }).join("");
+
+}
+
+
+/* =========================================================
+   MENU ATIVO
+========================================================= */
+
+function setActiveMenu(viewName) {
+
+  document
+    .querySelectorAll(
+      ".mobile-nav button[data-view]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.view === viewName
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+========================================================= */
+
+function navigate(viewName) {
+
+  setActiveMenu(viewName);
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+
+  /* =====================================================
+     HOME
+  ===================================================== */
+
+  if (viewName === "home") {
 
     app.innerHTML = `
 
@@ -285,7 +278,7 @@ function view(v) {
         <div>
 
           <div class="eyebrow">
-            Cassino social • versão 0.1
+            CASSINO SOCIAL • VERSÃO 0.2
           </div>
 
           <h1>
@@ -294,21 +287,20 @@ function view(v) {
           </h1>
 
           <p>
-            Experimente uma plataforma
-            moderna de cassino usando
-            apenas créditos virtuais.
-            Sem depósitos ou saques
-            nesta versão.
+            Experimente uma plataforma moderna
+            de cassino usando apenas créditos
+            virtuais.
           </p>
 
           <button
             class="primary"
-            id="explore"
+            id="exploreGames"
           >
             Explorar jogos →
           </button>
 
         </div>
+
 
         <div class="hero-art">
 
@@ -319,6 +311,7 @@ function view(v) {
         </div>
 
       </section>
+
 
       <section class="section">
 
@@ -331,27 +324,32 @@ function view(v) {
             </h2>
 
             <p>
-              Escolha uma mesa e comece.
+              Toque em um jogo para começar.
             </p>
 
           </div>
 
+
           <button
             class="primary"
-            id="all"
+            id="showAllGames"
           >
             Ver todos
           </button>
 
         </div>
 
+
         <div class="grid">
 
-          ${cards(games.slice(0,4))}
+          ${renderGameCards(
+            games.slice(0, 4)
+          )}
 
         </div>
 
       </section>
+
 
       <section class="section features">
 
@@ -363,10 +361,11 @@ function view(v) {
 
           <p>
             Comece com 10.000 créditos
-            para testar.
+            para testar a plataforma.
           </p>
 
         </div>
+
 
         <div class="feature">
 
@@ -375,21 +374,22 @@ function view(v) {
           </h3>
 
           <p>
-            Compare pontuações
-            fictícias.
+            Compare suas pontuações
+            com outros jogadores.
           </p>
 
         </div>
 
+
         <div class="feature">
 
           <h3>
-            🛡️ Base preparada
+            📱 Mobile First
           </h3>
 
           <p>
-            Estrutura pronta para
-            backend futuro.
+            Interface preparada para
+            smartphones e toque.
           </p>
 
         </div>
@@ -397,100 +397,405 @@ function view(v) {
       </section>
 
     `;
+
   }
 
-  bind();
 
-  document
-    .querySelector("#explore")
-    ?.addEventListener(
-      "click",
-      () => view("casino")
-    );
+  /* =====================================================
+     JOGOS
+  ===================================================== */
 
-  document
-    .querySelector("#all")
-    ?.addEventListener(
-      "click",
-      () => view("casino")
-    );
+  else if (viewName === "casino") {
 
-  document
-    .querySelector("#daily")
-    ?.addEventListener(
-      "click",
-      daily
-    );
+    app.innerHTML = `
+
+      <div class="title">
+
+        <h1>
+          🎰 Jogos
+        </h1>
+
+        <p>
+          Escolha um jogo e toque para abrir.
+        </p>
+
+      </div>
+
+
+      <div class="grid">
+
+        ${renderGameCards()}
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =====================================================
+     PROMOÇÕES
+  ===================================================== */
+
+  else if (viewName === "promos") {
+
+    app.innerHTML = `
+
+      <div class="title">
+
+        <h1>
+          🎁 Promoções
+        </h1>
+
+        <p>
+          Recompensas da versão demonstrativa.
+        </p>
+
+      </div>
+
+
+      <div class="list">
+
+
+        <div class="row">
+
+          <div>
+
+            <b>
+              Boas-vindas
+            </b>
+
+            <p>
+              10.000 créditos virtuais iniciais.
+            </p>
+
+          </div>
+
+          <span class="tag">
+            ATIVO
+          </span>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+
+            <b>
+              Giro diário
+            </b>
+
+            <p>
+              Ganhe 500 créditos virtuais
+              uma vez por dia.
+            </p>
+
+          </div>
+
+          <button
+            class="primary"
+            id="dailyReward"
+          >
+            Resgatar
+          </button>
+
+        </div>
+
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =====================================================
+     RANKING
+  ===================================================== */
+
+  else if (viewName === "ranking") {
+
+    const ranking = [
+
+      [
+        "1",
+        "LuckyPlayer",
+        "98.420"
+      ],
+
+      [
+        "2",
+        "Queen21",
+        "87.650"
+      ],
+
+      [
+        "3",
+        "RocketBR",
+        "81.300"
+      ],
+
+      [
+        "4",
+        "CasinoFan",
+        "76.210"
+      ],
+
+      [
+        "5",
+        playerName || "Você",
+        formatCredits(balance)
+      ]
+
+    ];
+
+
+    app.innerHTML = `
+
+      <div class="title">
+
+        <h1>
+          🏆 Ranking
+        </h1>
+
+        <p>
+          Ranking social demonstrativo.
+        </p>
+
+      </div>
+
+
+      <div class="list">
+
+        ${ranking.map(item => `
+
+          <div class="row">
+
+            <b>
+              #${item[0]}
+              ${item[1]}
+            </b>
+
+            <strong>
+              ${item[2]}
+            </strong>
+
+          </div>
+
+        `).join("")}
+
+      </div>
+
+    `;
+
+  }
+
+
+  bindPageEvents();
+
 }
 
-function bind() {
+
+/* =========================================================
+   EVENTOS DAS PÁGINAS
+========================================================= */
+
+function bindPageEvents() {
+
+
+  /* Jogos */
 
   document
     .querySelectorAll("[data-game]")
-    .forEach(
-      e =>
-        e.onclick =
-          () => game(e.dataset.game)
+    .forEach(card => {
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          openGame(
+            card.dataset.game
+          );
+
+        }
+      );
+
+
+      card.addEventListener(
+        "keydown",
+        event => {
+
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+
+            event.preventDefault();
+
+            openGame(
+              card.dataset.game
+            );
+
+          }
+
+        }
+      );
+
+    });
+
+
+  /* Explorar */
+
+  const explore =
+    document.getElementById(
+      "exploreGames"
     );
+
+  if (explore) {
+
+    explore.onclick =
+      () => navigate("casino");
+
+  }
+
+
+  /* Ver todos */
+
+  const all =
+    document.getElementById(
+      "showAllGames"
+    );
+
+  if (all) {
+
+    all.onclick =
+      () => navigate("casino");
+
+  }
+
+
+  /* Recompensa */
+
+  const daily =
+    document.getElementById(
+      "dailyReward"
+    );
+
+  if (daily) {
+
+    daily.onclick =
+      claimDailyReward;
+
+  }
+
 }
 
-function stake() {
+
+/* =========================================================
+   PAGAMENTO VIRTUAL
+========================================================= */
+
+function chargeCredits(amount) {
+
+  amount = Number(amount);
+
+
+  if (
+    !Number.isFinite(amount) ||
+    amount < 10
+  ) {
+
+    showToast(
+      "Digite um valor mínimo de 10 créditos."
+    );
+
+    return false;
+
+  }
+
+
+  if (amount > balance) {
+
+    showToast(
+      "Você não possui créditos suficientes."
+    );
+
+    return false;
+
+  }
+
+
+  balance -=
+    Math.floor(amount);
+
+  saveState();
+
+  return true;
+
+}
+
+
+/* =========================================================
+   GANHAR CRÉDITOS
+========================================================= */
+
+function addCredits(amount) {
+
+  balance +=
+    Math.floor(amount);
+
+  saveState();
+
+}
+
+
+/* =========================================================
+   CAMPO DE APOSTA
+========================================================= */
+
+function stakeInput() {
 
   return `
+
     <input
       id="stake"
       type="number"
       min="10"
       value="100"
+      inputmode="numeric"
+      aria-label="Quantidade de créditos"
     >
+
   `;
+
 }
 
-function pay(value) {
 
-  value =
-    Number(value);
+/* =========================================================
+   MODAL DO JOGO
+========================================================= */
 
-  if (
-    !Number.isFinite(value) ||
-    value < 10 ||
-    value > balance
-  ) {
+function openGame(gameId) {
 
-    toast(
-      "Créditos insuficientes ou valor inválido."
+  const game =
+    games.find(
+      item => item.id === gameId
     );
 
-    return false;
+
+  if (!game) {
+    return;
   }
 
-  balance -=
-    Math.floor(value);
-
-  save();
-
-  return true;
-}
-
-function win(value) {
-
-  balance +=
-    Math.floor(value);
-
-  save();
-}
-
-function game(id) {
-
-  const g =
-    games.find(
-      x => x.id === id
-    );
 
   const modal =
     document.createElement("div");
 
-  modal.className = "modal";
+
+  modal.className =
+    "modal";
+
 
   modal.innerHTML = `
 
@@ -499,73 +804,92 @@ function game(id) {
       <div class="modalhead">
 
         <h2>
-          ${g.i}
-          ${g.n}
+          ${game.icon}
+          ${game.name}
         </h2>
 
-        <button class="close">
+        <button
+          class="close"
+          aria-label="Fechar jogo"
+        >
           ×
         </button>
 
       </div>
 
+
       <div
         class="stage"
-        id="stage"
-      ></div>
+        id="gameStage"
+      >
+      </div>
 
     </div>
 
   `;
 
-  document.body.appendChild(modal);
+
+  document.body.appendChild(
+    modal
+  );
+
 
   modal
     .querySelector(".close")
-    .onclick =
-      () => modal.remove();
+    .onclick = () => {
+
+      modal.remove();
+
+    };
+
 
   const stage =
-    modal.querySelector("#stage");
+    modal.querySelector(
+      "#gameStage"
+    );
 
-  if (id === "slots")
-    slots(stage);
 
-  else if (id === "roulette")
-    roulette(stage);
+  if (gameId === "slots") {
 
-  else if (id === "blackjack")
-    blackjack(stage);
+    renderSlots(stage);
 
-  else if (id === "crash")
-    crash(stage);
+  }
+
+  else if (gameId === "roulette") {
+
+    renderRoulette(stage);
+
+  }
+
+  else if (gameId === "blackjack") {
+
+    renderBlackjack(stage);
+
+  }
+
+  else if (gameId === "crash") {
+
+    renderCrash(stage);
+
+  }
 
   else {
 
-    stage.innerHTML = `
+    renderComingSoon(
+      stage,
+      game
+    );
 
-      <div>
-
-        <div style="font-size:80px">
-          ${g.i}
-        </div>
-
-        <h3>
-          Em breve
-        </h3>
-
-        <p>
-          Este jogo entra na
-          próxima versão.
-        </p>
-
-      </div>
-
-    `;
   }
+
 }
 
-function slots(stage) {
+
+/* =========================================================
+   JOGO: SLOTS
+========================================================= */
+
+function renderSlots(stage) {
 
   stage.innerHTML = `
 
@@ -573,43 +897,63 @@ function slots(stage) {
 
       <div class="reels">
 
-        <div class="reel">🍒</div>
-        <div class="reel">⭐</div>
-        <div class="reel">7️⃣</div>
+        <div class="reel">
+          🍒
+        </div>
+
+        <div class="reel">
+          ⭐
+        </div>
+
+        <div class="reel">
+          7️⃣
+        </div>
 
       </div>
 
+
       <div class="controls">
 
-        ${stake()}
+        ${stakeInput()}
 
         <button
           class="primary"
-          id="go"
+          id="spin"
         >
           Girar
         </button>
 
       </div>
 
-      <p id="r"></p>
+
+      <p id="gameResult">
+      </p>
 
     </div>
+
   `;
 
+
   stage
-    .querySelector("#go")
+    .querySelector("#spin")
     .onclick = () => {
 
-      const value =
+      const amount =
         Number(
           stage.querySelector(
             "#stake"
           ).value
         );
 
-      if (!pay(value))
+
+      if (
+        !chargeCredits(amount)
+      ) {
+
         return;
+
+      }
+
 
       const symbols = [
         "🍒",
@@ -619,57 +963,90 @@ function slots(stage) {
         "7️⃣"
       ];
 
+
       const reels =
         [...stage.querySelectorAll(
           ".reel"
         )];
 
+
       const result =
-        reels.map(
-          () =>
-            symbols[
-              Math.floor(
-                Math.random() *
-                symbols.length
-              )
-            ]
-        );
+        reels.map(() => {
+
+          return symbols[
+            Math.floor(
+              Math.random() *
+              symbols.length
+            )
+          ];
+
+        });
+
 
       result.forEach(
-        (x, i) =>
-          reels[i].textContent = x
+        (symbol, index) => {
+
+          reels[index]
+            .textContent =
+            symbol;
+
+        }
       );
 
+
       let multiplier = 0;
+
 
       if (
         result[0] === result[1] &&
         result[1] === result[2]
-      )
+      ) {
+
         multiplier = 5;
+
+      }
 
       else if (
         result[0] === result[1] ||
         result[1] === result[2] ||
         result[0] === result[2]
-      )
+      ) {
+
         multiplier = 2;
 
-      const prize =
-        value * multiplier;
+      }
 
-      if (prize)
-        win(prize);
 
-      stage.querySelector("#r")
-        .textContent =
-          prize
-            ? `Você ganhou ${fmt(prize)} créditos!`
-            : "Não foi dessa vez.";
+      const winnings =
+        amount * multiplier;
+
+
+      if (winnings > 0) {
+
+        addCredits(winnings);
+
+      }
+
+
+      stage.querySelector(
+        "#gameResult"
+      ).textContent =
+        winnings > 0
+
+          ? `Você ganhou ${formatCredits(winnings)} créditos!`
+
+          : "Não foi dessa vez.";
+
     };
+
 }
 
-function roulette(stage) {
+
+/* =========================================================
+   JOGO: ROLETA
+========================================================= */
+
+function renderRoulette(stage) {
 
   stage.innerHTML = `
 
@@ -677,68 +1054,94 @@ function roulette(stage) {
 
       <div class="wheel">
 
-        <b id="num">
+        <b id="rouletteNumber">
           ?
         </b>
 
       </div>
 
+
       <div class="controls">
 
-        ${stake()}
+        ${stakeInput()}
 
         <button
           class="primary"
-          id="go"
+          id="spinRoulette"
         >
           Girar
         </button>
 
       </div>
 
-      <p id="r"></p>
+
+      <p id="gameResult">
+      </p>
 
     </div>
 
   `;
 
+
   stage
-    .querySelector("#go")
+    .querySelector("#spinRoulette")
     .onclick = () => {
 
-      const value =
+      const amount =
         Number(
           stage.querySelector(
             "#stake"
           ).value
         );
 
-      if (!pay(value))
+
+      if (
+        !chargeCredits(amount)
+      ) {
+
         return;
+
+      }
+
 
       const number =
         Math.floor(
           Math.random() * 37
         );
 
-      const prize =
+
+      const winnings =
         number === 0
-          ? value * 10
-          : value * 2;
 
-      win(prize);
+          ? amount * 10
 
-      stage.querySelector("#num")
-        .textContent =
-          number;
+          : amount * 2;
 
-      stage.querySelector("#r")
-        .textContent =
-          `Número ${number}. Retorno virtual: ${fmt(prize)} créditos.`;
+
+      addCredits(winnings);
+
+
+      stage.querySelector(
+        "#rouletteNumber"
+      ).textContent =
+        number;
+
+
+      stage.querySelector(
+        "#gameResult"
+      ).textContent =
+        `Número ${number}. Retorno virtual: ${formatCredits(winnings)} créditos.`;
+
     };
+
 }
 
-function blackjack(stage) {
+
+/* =========================================================
+   JOGO: BLACKJACK
+========================================================= */
+
+function renderBlackjack(stage) {
 
   stage.innerHTML = `
 
@@ -749,279 +1152,443 @@ function blackjack(stage) {
       </div>
 
       <p>
-        Versão simplificada.
+        Versão demonstrativa.
       </p>
+
 
       <div class="controls">
 
-        ${stake()}
+        ${stakeInput()}
 
         <button
           class="primary"
-          id="go"
+          id="deal"
         >
           Distribuir
         </button>
 
       </div>
 
-      <p id="r"></p>
+
+      <p id="gameResult">
+      </p>
 
     </div>
 
   `;
 
+
   stage
-    .querySelector("#go")
+    .querySelector("#deal")
     .onclick = () => {
 
-      const value =
+      const amount =
         Number(
           stage.querySelector(
             "#stake"
           ).value
         );
 
-      if (!pay(value))
+
+      if (
+        !chargeCredits(amount)
+      ) {
+
         return;
 
-      const playerScore =
+      }
+
+
+      const player =
         12 +
         Math.floor(
           Math.random() * 10
         );
 
-      const dealerScore =
+
+      const dealer =
         15 +
         Math.floor(
           Math.random() * 7
         );
 
+
       const result =
-        stage.querySelector("#r");
+        stage.querySelector(
+          "#gameResult"
+        );
 
-      if (playerScore > 21) {
 
-        result.textContent =
-          `Você: ${playerScore}. Estourou.`;
-      }
-
-      else if (
-        dealerScore > 21 ||
-        playerScore > dealerScore
-      ) {
-
-        win(value * 2);
+      if (player > 21) {
 
         result.textContent =
-          `Você: ${playerScore} • Banca: ${dealerScore}. Vitória! +${fmt(value * 2)}.`;
+          `Você: ${player}. Estourou.`;
+
+        return;
+
       }
 
-      else if (
-        playerScore === dealerScore
+
+      if (
+        dealer > 21 ||
+        player > dealer
       ) {
 
-        win(value);
+        const winnings =
+          amount * 2;
+
+        addCredits(
+          winnings
+        );
+
+        result.textContent =
+          `Você: ${player} • Banca: ${dealer}. Vitória! +${formatCredits(winnings)}.`;
+
+        return;
+
+      }
+
+
+      if (player === dealer) {
+
+        addCredits(
+          amount
+        );
 
         result.textContent =
           "Empate. Créditos devolvidos.";
+
+        return;
+
       }
 
-      else {
 
-        result.textContent =
-          `Você: ${playerScore} • Banca: ${dealerScore}. A banca venceu.`;
-      }
+      result.textContent =
+        `Você: ${player} • Banca: ${dealer}. A banca venceu.`;
+
     };
+
 }
 
-function crash(stage) {
+
+/* =========================================================
+   JOGO: CRASH
+========================================================= */
+
+function renderCrash(stage) {
 
   stage.innerHTML = `
 
     <div>
 
       <div
-        id="mult"
+        id="multiplier"
         style="
           font-size:72px;
           font-weight:900;
-          color:var(--gold)
+          color:var(--gold);
         "
       >
         1.00x
       </div>
 
+
       <p>
         Multiplicador demonstrativo.
       </p>
 
+
       <div class="controls">
 
-        ${stake()}
+        ${stakeInput()}
 
         <button
           class="primary"
-          id="go"
+          id="launch"
         >
           Entrar
         </button>
 
       </div>
 
-      <p id="r"></p>
+
+      <p id="gameResult">
+      </p>
 
     </div>
 
   `;
 
+
   stage
-    .querySelector("#go")
+    .querySelector("#launch")
     .onclick = () => {
 
-      const value =
+      const amount =
         Number(
           stage.querySelector(
             "#stake"
           ).value
         );
 
-      if (!pay(value))
+
+      if (
+        !chargeCredits(amount)
+      ) {
+
         return;
 
-      let multiplier = 1;
+      }
 
-      const target =
+
+      const multiplier =
+        stage.querySelector(
+          "#multiplier"
+        );
+
+
+      const result =
+        stage.querySelector(
+          "#gameResult"
+        );
+
+
+      let current = 1;
+
+      const crashPoint =
         1 +
         Math.random() * 4.5;
 
-      const timer =
+
+      const interval =
         setInterval(() => {
 
-          multiplier += .1;
+          current += 0.1;
 
-          stage.querySelector(
-            "#mult"
-          ).textContent =
-            multiplier.toFixed(2)
-            + "x";
+          multiplier.textContent =
+            current.toFixed(2) +
+            "x";
+
 
           if (
-            multiplier >= target
+            current >= crashPoint
           ) {
 
-            clearInterval(timer);
+            clearInterval(
+              interval
+            );
 
-            if (
-              Math.random() > .3
-            ) {
 
-              win(
-                value * multiplier
+            const win =
+              Math.random() > 0.3;
+
+
+            if (win) {
+
+              const winnings =
+                amount * current;
+
+              addCredits(
+                winnings
               );
 
-              stage.querySelector(
-                "#r"
-              ).textContent =
-                `Saída em ${multiplier.toFixed(2)}x. +${fmt(value * multiplier)} créditos.`;
+              result.textContent =
+                `Saída em ${current.toFixed(2)}x. +${formatCredits(winnings)} créditos.`;
+
             }
 
             else {
 
-              stage.querySelector(
-                "#r"
-              ).textContent =
-                `Crash em ${multiplier.toFixed(2)}x.`;
+              result.textContent =
+                `Crash em ${current.toFixed(2)}x.`;
+
             }
+
           }
 
         }, 70);
+
     };
+
 }
 
-function daily() {
+
+/* =========================================================
+   JOGOS FUTUROS
+========================================================= */
+
+function renderComingSoon(
+  stage,
+  game
+) {
+
+  stage.innerHTML = `
+
+    <div>
+
+      <div style="font-size:80px">
+        ${game.icon}
+      </div>
+
+      <h3>
+        ${game.name}
+      </h3>
+
+      <p>
+        Este jogo será desenvolvido
+        na próxima versão.
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   RECOMPENSA DIÁRIA
+========================================================= */
+
+function claimDailyReward() {
 
   const last =
     Number(
       localStorage.getItem(
-        "cx_daily"
+        "casinox_daily"
       ) || 0
     );
 
+
+  const oneDay =
+    24 * 60 * 60 * 1000;
+
+
   if (
     Date.now() - last <
-    86400000
+    oneDay
   ) {
 
-    toast(
+    showToast(
       "Recompensa já resgatada hoje."
     );
 
     return;
+
   }
+
 
   balance += 500;
 
+
   localStorage.setItem(
-    "cx_daily",
+    "casinox_daily",
     Date.now()
   );
 
-  save();
 
-  toast(
+  saveState();
+
+
+  showToast(
     "+500 créditos virtuais!"
   );
+
 }
 
-document
-  .querySelectorAll("nav button")
-  .forEach(
-    button =>
-      button.onclick =
-        () =>
-          view(
-            button.dataset.view
-          )
-  );
+
+/* =========================================================
+   PERFIL
+========================================================= */
+
+function openProfile() {
+
+  if (playerName) {
+
+    showToast(
+      `Olá, ${playerName}!`
+    );
+
+    return;
+
+  }
+
+
+  const name =
+    window.prompt(
+      "Digite seu nome de jogador:"
+    );
+
+
+  if (
+    name &&
+    name.trim()
+  ) {
+
+    playerName =
+      name.trim();
+
+
+    saveState();
+
+
+    showToast(
+      `Perfil criado para ${playerName}.`
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   EVENTOS DO MENU
+========================================================= */
 
 document
-  .querySelector("#login")
-  .onclick = () => {
+  .querySelectorAll(
+    "[data-view]"
+  )
+  .forEach(button => {
 
-    if (player) {
+    button.addEventListener(
+      "click",
+      () => {
 
-      toast(
-        `Olá, ${player}!`
-      );
+        navigate(
+          button.dataset.view
+        );
 
-      return;
-    }
+      }
+    );
 
-    const name =
-      prompt(
-        "Nome do jogador:"
-      );
+  });
 
-    if (
-      name &&
-      name.trim()
-    ) {
 
-      player =
-        name.trim();
+/* =========================================================
+   PERFIL
+========================================================= */
 
-      localStorage.setItem(
-        "cx_player",
-        player
-      );
+if (loginButton) {
 
-      toast(
-        "Perfil criado no protótipo."
-      );
-    }
-  };
+  loginButton.onclick =
+    openProfile;
 
-save();
+}
 
-view("home");
+
+if (mobileProfile) {
+
+  mobileProfile.onclick =
+    openProfile;
+
+}
+
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
+
+updateBalance();
+
+navigate("home");
