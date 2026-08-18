@@ -1971,3 +1971,44 @@ document.addEventListener("click", event => {
 
 
 window.CASINOX_VERSION="1.3";
+
+/* CASINOX v1.5 — jogo demo com créditos virtuais */
+(function(){
+  const S=["🐰","🐂","🐉","🐯","🦁","🦊","💎","👑","🔥","🪙"];
+  const N=["Lucky Rabbit","Golden Bull","Dragon Fortune","Tiger Riches","Lion King","Royal Bunny","Fox Fortune","Dragon Fire","Golden Toad","Treasure Panda","Moon Temple","Neon Roulette","Rocket Cash","Fortune Gems","Golden Pearls","Wild Jungle"];
+  let ov=null, balance=Number(localStorage.getItem("casinox_balance")||10000), bet=Number(localStorage.getItem("casinox_bet")||100);
+  const save=()=>{localStorage.setItem("casinox_balance",String(balance));localStorage.setItem("casinox_bet",String(bet));};
+  const grid=()=>Array.from({length:5},()=>Array.from({length:3},()=>S[Math.floor(Math.random()*S.length)]));
+  const payout=g=>{const c={};g.map(r=>r[1]).forEach(x=>c[x]=(c[x]||0)+1);const m=Math.max(...Object.values(c));return m>=5?bet*10:m>=4?bet*5:m>=3?bet*2:0;};
+  function render(g){if(!ov)return;ov.querySelectorAll(".casinox-reel").forEach((r,i)=>r.innerHTML=`<div class="casinox-reel-symbol">${g[i][0]}</div><div class="casinox-reel-symbol">${g[i][1]}</div><div class="casinox-reel-symbol">${g[i][2]}</div>`);}
+  function open(name){
+    if(ov)ov.remove();
+    ov=document.createElement("section");ov.className="casinox-game-shell";
+    ov.innerHTML=`<header class="casinox-game-top"><button class="game-back" aria-label="Voltar">‹</button><div class="casinox-game-title"><strong>${name}</strong><span>DEMO • créditos virtuais</span></div><div class="casinox-game-balance">💰 ${balance.toLocaleString("pt-BR")}</div></header><main class="casinox-reels-area"><div class="casinox-reels">${Array(5).fill('<div class="casinox-reel"></div>').join("")}<div class="casinox-payline"></div></div></main><section class="casinox-controls"><div class="casinox-win"></div><div class="casinox-control-row"><div class="casinox-bet"><button class="bm">−</button><div class="casinox-bet-value"><small>APOSTA</small><strong>${bet}</strong></div><button class="bp">+</button></div><button class="casinox-spin">GIRAR</button></div><div class="casinox-game-footer"><span>5 iguais: 10×</span><span>4 iguais: 5×</span><span>3 iguais: 2×</span></div></section>`;
+    document.body.appendChild(ov);document.body.style.overflow="hidden";render(grid());
+    ov.querySelector(".game-back").onclick=close;
+    ov.querySelector(".bm").onclick=()=>{bet=Math.max(10,bet-10);ov.querySelector(".casinox-bet-value strong").textContent=bet;save();};
+    ov.querySelector(".bp").onclick=()=>{bet=Math.min(Math.max(10,balance),bet+10);ov.querySelector(".casinox-bet-value strong").textContent=bet;save();};
+    ov.querySelector(".casinox-spin").onclick=spin;
+  }
+  function close(){if(ov){ov.remove();ov=null;document.body.style.overflow="";}}
+  function spin(){
+    const b=ov.querySelector(".casinox-spin"),m=ov.querySelector(".casinox-win");
+    if(balance<bet){m.textContent="Saldo insuficiente.";return;}
+    balance-=bet;b.disabled=true;m.textContent="Girando…";
+    let t=0,tm=setInterval(()=>{render(grid());if(++t>=12){clearInterval(tm);const g=grid(),p=payout(g);render(g);balance+=p;m.textContent=p?`✨ PRÊMIO DEMO +${p.toLocaleString("pt-BR")} créditos`:"Boa rodada. Tente novamente!";if(p)m.classList.add("flash");setTimeout(()=>m.classList.remove("flash"),1200);ov.querySelector(".casinox-game-balance").textContent=`💰 ${balance.toLocaleString("pt-BR")}`;b.disabled=false;save();}},85);
+  }
+  function bind(){
+    document.querySelectorAll(".card,[data-game],[data-game-name]").forEach(el=>{
+      if(el.dataset.casinoxV15)return;
+      const h=el.querySelector("h3,.game-title,.card-title,[data-game-name]");
+      const name=(h?.textContent||el.dataset.gameName||"").trim();
+      if(!N.some(x=>x.toLowerCase()===name.toLowerCase()))return;
+      el.dataset.casinoxV15="1";
+      el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();open(name);});
+    });
+  }
+  new MutationObserver(bind).observe(document.body,{childList:true,subtree:true});
+  document.addEventListener("DOMContentLoaded",bind);setTimeout(bind,400);setTimeout(bind,1200);
+  window.CasinoXDemoGame={open,close};
+})();

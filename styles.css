@@ -2409,3 +2409,24 @@ footer{background:#050506!important;color:#777!important}
 .controls-v14{display:grid;grid-template-columns:55px 120px 55px minmax(150px,1fr);gap:8px;align-items:center}.controls-v14 input{height:50px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:#11111a;color:#fff;text-align:center;font-size:18px}.controls-v14 .bet-btn{height:50px;border-radius:14px}.spin-btn-v14{height:54px;font-size:18px;font-weight:900}
 .game-result-v14{text-align:center;min-height:28px;color:#eee}.paytable-v14{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.paytable-v14 span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);font-size:12px;color:#bbb}.paytable-v14 b{color:#ffd24d}
 @media(max-width:600px){.slot-machine-v14{padding:8px}.slot-banner-v14 img{width:58px;height:58px}.reel-window-v14{padding:8px;border-radius:15px}.reels-v14{gap:4px}.reel-v14{height:175px;font-size:37px;border-radius:10px}.controls-v14{grid-template-columns:45px 1fr 45px}.spin-btn-v14{grid-column:1/-1}.paytable-v14{font-size:11px}.paytable-v14 span{padding:7px 9px}}
+
+/* CASINOX v1.5 — modo jogo imersivo */
+.casinox-game-shell{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;background:radial-gradient(circle at 50% 5%,rgba(100,55,160,.3),transparent 42%),#07070b;color:#fff;overflow:hidden}
+.casinox-game-top{height:58px;min-height:58px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(7,7,11,.96);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px)}
+.casinox-game-top .game-back{width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:26px}
+.casinox-game-title{flex:1;min-width:0}.casinox-game-title strong{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.casinox-game-title span{display:block;font-size:10px;opacity:.55;margin-top:2px}
+.casinox-game-balance{font-size:12px;font-weight:900;color:#ffd66d;white-space:nowrap}
+.casinox-reels-area{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:12px 8px;overflow:hidden}
+.casinox-reels{width:min(96vw,620px);aspect-ratio:5/3;display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:7px;border-radius:18px;background:linear-gradient(145deg,#17121f,#09090e);border:1px solid rgba(255,214,109,.34);box-shadow:0 0 0 2px rgba(255,214,109,.06),0 18px 70px rgba(0,0,0,.55)}
+.casinox-reel{position:relative;overflow:hidden;border-radius:12px;background:#111118;border:1px solid rgba(255,255,255,.07)}
+.casinox-reel-symbol{position:absolute;left:4%;width:92%;height:31%;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.025));font-size:clamp(22px,7vw,44px)}
+.casinox-reel-symbol:nth-child(1){top:2%}.casinox-reel-symbol:nth-child(2){top:34.5%}.casinox-reel-symbol:nth-child(3){top:67%}
+.casinox-payline{position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);background:rgba(255,214,109,.9);box-shadow:0 0 14px rgba(255,214,109,.7);pointer-events:none}
+.casinox-controls{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(7,7,11,.97);border-top:1px solid rgba(255,255,255,.08)}
+.casinox-control-row{display:flex;align-items:center;gap:8px}.casinox-bet{display:flex;align-items:center;gap:6px;padding:6px;border-radius:14px;background:rgba(255,255,255,.07)}
+.casinox-bet button{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:20px}.casinox-bet-value{min-width:58px;text-align:center}.casinox-bet-value small{display:block;font-size:9px;opacity:.5}.casinox-bet-value strong{display:block;color:#ffd66d;font-size:14px}
+.casinox-spin{flex:1;min-height:52px;border:0;border-radius:16px;background:linear-gradient(135deg,#ffd86f,#e99b28);color:#201405;font-size:17px;font-weight:950;letter-spacing:.6px}.casinox-spin:disabled{opacity:.55}
+.casinox-win{min-height:24px;text-align:center;font-weight:900;color:#ffd66d;font-size:13px;padding:3px 0}.casinox-win.flash{animation:casinoXWin .55s ease 2}@keyframes casinoXWin{50%{transform:scale(1.08);opacity:1}}
+.casinox-game-footer{display:flex;justify-content:space-between;font-size:9px;opacity:.5;margin-top:5px}
+@media(min-width:801px){.casinox-game-top{height:66px}.casinox-reels-area{padding:30px}.casinox-controls{padding:14px 24px}.casinox-spin{max-width:280px}.casinox-control-row{max-width:700px;margin:auto}}
+@media(max-height:650px) and (max-width:800px){.casinox-game-top{height:48px;min-height:48px}.casinox-reels-area{padding:5px 8px}.casinox-controls{padding-top:5px}}
