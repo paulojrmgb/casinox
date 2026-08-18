@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#35120f"/><stop offset="1" stop-color="#8b2e1e"/>
+ </linearGradient>
+ <radialGradient id="glow"><stop offset="0" stop-color="#ffca67" stop-opacity=".32"/><stop offset="1" stop-color="#ffca67" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="600" height="360" rx="34" fill="url(#g)"/>
+<circle cx="500" cy="40" r="170" fill="url(#glow)"/>
+<circle cx="80" cy="330" r="140" fill="url(#glow)" opacity=".35"/>
+<g opacity=".12" stroke="#fff"><path d="M0 90H600M0 180H600M0 270H600"/><path d="M120 0V360M240 0V360M360 0V360M480 0V360"/></g>
+<path d="M215 205 Q245 95 350 105 Q385 115 360 170 Q330 225 260 205Z" fill="#ffca67" opacity=".25"/><path d="M285 100 L315 70 L345 105" fill="none" stroke="#ffca67" stroke-width="10" opacity=".75"/>
+<text x="300" y="62" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="900" letter-spacing="4">FIRE & FORTUNE</text>
+<text x="300" y="310" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="950" letter-spacing="1">DRAGON GOLD</text>
+<text x="300" y="337" text-anchor="middle" fill="#ffca67" font-family="Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="3">CASINOX ORIGINAL</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#24180c"/><stop offset="1" stop-color="#8b4f16"/>
+ </linearGradient>
+ <radialGradient id="glow"><stop offset="0" stop-color="#ffe28a" stop-opacity=".32"/><stop offset="1" stop-color="#ffe28a" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="600" height="360" rx="34" fill="url(#g)"/>
+<circle cx="500" cy="40" r="170" fill="url(#glow)"/>
+<circle cx="80" cy="330" r="140" fill="url(#glow)" opacity=".35"/>
+<g opacity=".12" stroke="#fff"><path d="M0 90H600M0 180H600M0 270H600"/><path d="M120 0V360M240 0V360M360 0V360M480 0V360"/></g>
+<path d="M220 185 L245 100 L300 155 L355 100 L380 185 Z" fill="#ffe28a" opacity=".8"/><path d="M230 190 H370" stroke="#fff" stroke-width="7" opacity=".35"/>
+<text x="300" y="62" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="900" letter-spacing="4">GOLD EDITION</text>
+<text x="300" y="310" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="950" letter-spacing="1">ROYAL CROWN</text>
+<text x="300" y="337" text-anchor="middle" fill="#ffe28a" font-family="Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="3">CASINOX ORIGINAL</text>
+</svg>

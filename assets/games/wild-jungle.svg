@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#123d2b"/><stop offset="1" stop-color="#1b6b50"/>
+ </linearGradient>
+ <radialGradient id="glow"><stop offset="0" stop-color="#a9ff8b" stop-opacity=".32"/><stop offset="1" stop-color="#a9ff8b" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="600" height="360" rx="34" fill="url(#g)"/>
+<circle cx="500" cy="40" r="170" fill="url(#glow)"/>
+<circle cx="80" cy="330" r="140" fill="url(#glow)" opacity=".35"/>
+<g opacity=".12" stroke="#fff"><path d="M0 90H600M0 180H600M0 270H600"/><path d="M120 0V360M240 0V360M360 0V360M480 0V360"/></g>
+<path d="M210 210 Q250 90 300 210 Q340 70 390 210" fill="none" stroke="#a9ff8b" stroke-width="13" opacity=".55"/><circle cx="300" cy="130" r="58" fill="#a9ff8b" opacity=".12"/>
+<text x="300" y="62" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="900" letter-spacing="4">ADVENTURE</text>
+<text x="300" y="310" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="950" letter-spacing="1">WILD JUNGLE</text>
+<text x="300" y="337" text-anchor="middle" fill="#a9ff8b" font-family="Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="3">CASINOX ORIGINAL</text>
+</svg>
