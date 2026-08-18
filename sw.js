@@ -4,9 +4,9 @@ const VERSION = "0.8";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=0.7",
-  "./app.js?v=0.7",
-  "./CasinoX_v0.4_conta.js?v=0.7",
+  "./styles.css?v=0.8",
+  "./app.js?v=0.8",
+  "./CasinoX_v0.4_conta.js?v=0.8",
   "./manifest.json",
   "./assets/games/moon-temple.svg",
   "./assets/games/golden-pearls.svg",

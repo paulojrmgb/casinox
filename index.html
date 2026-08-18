@@ -285,9 +285,9 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.addEventListener("message", function (event) {
     if (!event.data || event.data.type !== "CASINOX_UPDATED") return;
 
-    if (sessionStorage.getItem("casinox_sw_reloaded") === "0.7") return;
+    if (sessionStorage.getItem("casinox_sw_reloaded") === "0.8") return;
 
-    sessionStorage.setItem("casinox_sw_reloaded", "0.7");
+    sessionStorage.setItem("casinox_sw_reloaded", "0.8");
 
     setTimeout(function () {
       window.location.reload();

@@ -25,6 +25,8 @@ const CASINOX_V08_GAMES = [
    PROVEDORES
 ========================================================= */
 
+const games = CASINOX_V08_GAMES;
+
 const providers = [
 
   {
@@ -523,7 +525,7 @@ function renderCategories() {
 
 function renderLobby() {
   const filtered = getFilteredGames();
-  const popular = games.filter(g => g.tag === "Popular" || g.category === "popular").slice(0, 8);
+  const popular = games.filter(g => g.tag === "TOP" || g.tag === "HOT" || g.category === "popular").slice(0, 8);
   const recent = games.filter(g => ["lucky-stars","fortune-gems","rocket-crash","fortune-crown"].includes(g.id));
   const favoriteGames = games.filter(g => favorites.includes(g.id)).slice(0, 8);
 
@@ -553,7 +555,7 @@ function renderLobby() {
 
     <section class="section-v06">
       <div class="head"><div><h2>🆕 Novidades</h2><p>Novos títulos demonstrativos</p></div></div>
-      <div class="rail-v06">${games.filter(g => g.tag === "Novo").map(gameCard).join("")}</div>
+      <div class="rail-v06">${games.filter(g => g.tag === "NOVO").map(gameCard).join("")}</div>
     </section>
 
     <section class="section-v06" id="games-section">
