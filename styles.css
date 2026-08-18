@@ -2430,3 +2430,27 @@ footer{background:#050506!important;color:#777!important}
 .casinox-game-footer{display:flex;justify-content:space-between;font-size:9px;opacity:.5;margin-top:5px}
 @media(min-width:801px){.casinox-game-top{height:66px}.casinox-reels-area{padding:30px}.casinox-controls{padding:14px 24px}.casinox-spin{max-width:280px}.casinox-control-row{max-width:700px;margin:auto}}
 @media(max-height:650px) and (max-width:800px){.casinox-game-top{height:48px;min-height:48px}.casinox-reels-area{padding:5px 8px}.casinox-controls{padding-top:5px}}
+
+/* CASINOX v1.6 — lobby dinâmica */
+.casinox-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px}
+.casinox-section-head h2{margin:0}
+.casinox-section-action{border:0;background:transparent;color:#ffd66d;font-weight:800;font-size:12px}
+.casinox-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.casinox-rail::-webkit-scrollbar{display:none}
+.casinox-lobby-card{position:relative;flex:0 0 170px;scroll-snap-align:start;border-radius:17px;overflow:hidden;background:#111118;border:1px solid rgba(255,255,255,.08);box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer}
+.casinox-lobby-card img{display:block;width:100%;height:185px;object-fit:cover}
+.casinox-lobby-card .lobby-card-info{padding:9px 10px 11px}
+.casinox-lobby-card strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.casinox-lobby-card span{display:block;margin-top:3px;font-size:10px;opacity:.55}
+.casinox-fav{position:absolute;right:8px;top:8px;width:34px;height:34px;border:0;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;font-size:18px;backdrop-filter:blur(6px)}
+.casinox-fav.active{color:#ff6584}
+.casinox-chip-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}
+.casinox-chip-row::-webkit-scrollbar{display:none}
+.casinox-chip{flex:0 0 auto;border:1px solid rgba(255,255,255,.1);background:#121219;color:#fff;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:800}
+.casinox-chip.active{background:#ffd66d;color:#201405;border-color:#ffd66d}
+.casinox-search{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.1);background:#111118;color:#fff;border-radius:13px;padding:13px 14px;outline:none;font-size:14px}
+.casinox-search:focus{border-color:rgba(255,214,109,.55)}
+.casinox-empty{padding:24px 12px;text-align:center;opacity:.55;font-size:13px}
+.casinox-game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:700px){.casinox-game-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.casinox-lobby-card{flex-basis:200px}.casinox-lobby-card img{height:215px}}
+@media(max-width:420px){.casinox-lobby-card{flex-basis:150px}.casinox-lobby-card img{height:165px}}

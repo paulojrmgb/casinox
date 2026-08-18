@@ -2012,3 +2012,50 @@ window.CASINOX_VERSION="1.3";
   document.addEventListener("DOMContentLoaded",bind);setTimeout(bind,400);setTimeout(bind,1200);
   window.CasinoXDemoGame={open,close};
 })();
+
+/* CASINOX v1.6 — lobby dinâmica */
+(function(){
+const G=[
+["Lucky Rabbit","assets/characters/lucky-rabbit.jpg","Slots"],["Golden Bull","assets/characters/golden-bull.jpg","Slots"],
+["Dragon Fortune","assets/characters/dragon-fortune.jpg","Slots"],["Tiger Riches","assets/characters/tiger-riches.jpg","Slots"],
+["Lion King","assets/characters/lion-king.jpg","Slots"],["Royal Bunny","assets/characters/royal-bunny.jpg","Slots"],
+["Fox Fortune","assets/characters/fox-fortune.jpg","Slots"],["Dragon Fire","assets/characters/dragon-fire.jpg","Slots"],
+["Golden Toad","assets/characters/golden-toad.jpg","Slots"],["Treasure Panda","assets/characters/treasure-panda.jpg","Slots"],
+["Moon Temple","assets/characters/moon-temple.jpg","Slots"],["Neon Roulette","assets/characters/neon-roulette.jpg","Casino"],
+["Rocket Cash","assets/characters/rocket-cash.jpg","Slots"],["Fortune Gems","assets/characters/fortune-gems.jpg","Slots"],
+["Golden Pearls","assets/characters/golden-pearls.jpg","Slots"],["Wild Jungle","assets/characters/wild-jungle.jpg","Slots"]];
+const KF="casinox_favorites",KR="casinox_recent";
+const get=k=>{try{return JSON.parse(localStorage.getItem(k)||"[]")}catch(e){return[]}},put=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const find=n=>G.find(g=>g[0].toLowerCase()===n.toLowerCase());
+let selected="Todos",query="";
+function openGame(name){
+if(window.CasinoXDemoGame?.open)window.CasinoXDemoGame.open(name);
+let r=get(KR).filter(x=>x!==name);r.unshift(name);put(KR,r.slice(0,8));render();
+}
+function toggle(name){let f=get(KF);f=f.includes(name)?f.filter(x=>x!==name):[...f,name];put(KF,f);render()}
+function card(g){
+const fav=get(KF).includes(g[0]),e=document.createElement("article");e.className="casinox-lobby-card";
+e.innerHTML=`<button class="casinox-fav ${fav?"active":""}">${fav?"♥":"♡"}</button><img src="${g[1]}" alt="${g[0]}" loading="lazy"><div class="lobby-card-info"><strong>${g[0]}</strong><span>${g[2]} • demo</span></div>`;
+e.querySelector(".casinox-fav").onclick=x=>{x.stopPropagation();toggle(g[0])};e.onclick=()=>openGame(g[0]);return e;
+}
+function section(title,items,grid=false){
+const s=document.createElement("section");s.innerHTML=`<div class="casinox-section-head"><h2>${title}</h2></div>`;
+const r=document.createElement("div");r.className=grid?"casinox-game-grid":"casinox-rail";
+items.forEach(g=>r.appendChild(card(g)));if(!items.length)r.innerHTML='<div class="casinox-empty">Nenhum jogo encontrado.</div>';s.appendChild(r);return s;
+}
+function render(){
+const host=document.getElementById("casinox-dynamic-lobby");if(!host)return;host.innerHTML="";
+const c=document.createElement("section");c.innerHTML='<div class="casinox-section-head"><h2>🎮 Explorar</h2></div><input class="casinox-search" placeholder="Buscar jogo..."><div class="casinox-chip-row"></div>';
+const chips=c.querySelector(".casinox-chip-row");["Todos","Slots","Casino","Favoritos"].forEach(x=>{let b=document.createElement("button");b.className="casinox-chip "+(selected===x?"active":"");b.textContent=x;b.onclick=()=>{selected=x;render()};chips.appendChild(b)});
+const inp=c.querySelector(".casinox-search");inp.value=query;inp.oninput=e=>{query=e.target.value;render()};host.appendChild(c);
+const fav=get(KF),recent=get(KR),pool=G.filter(g=>(!query||g[0].toLowerCase().includes(query.toLowerCase()))&&(selected==="Todos"||selected==="Favoritos"?selected==="Todos"||fav.includes(g[0]):g[2]===selected));
+if(!query&&selected==="Todos"){
+const rec=recent.map(find).filter(Boolean),ft=fav.map(find).filter(Boolean);
+if(rec.length)host.appendChild(section("🕘 Jogados recentemente",rec));
+if(ft.length)host.appendChild(section("❤️ Favoritos",ft));
+host.appendChild(section("🔥 Em alta",pool.slice(0,8)));host.appendChild(section("🆕 Novidades",pool.slice(8,14)));host.appendChild(section("🎰 Todos os jogos",pool,true));
+}else host.appendChild(section("🔎 Resultados",pool,true));
+}
+function mount(){if(document.getElementById("casinox-dynamic-lobby"))return;let main=document.querySelector("main")||document.body,h=document.createElement("div");h.id="casinox-dynamic-lobby";main.appendChild(h);render()}
+document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTimeout(mount,1500);
+})();
