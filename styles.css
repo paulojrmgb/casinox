@@ -2384,7 +2384,7 @@ footer{background:#050506!important;color:#777!important}
 
 /* CasinoX v1.2 — Moon Temple and Neon Roulette character artwork */
 
-/* CASINOX v1.3 — PLAYABLE DEMO GAME SCREEN */
+/* CASINOX v1.4 — PLAYABLE DEMO GAME SCREEN */
 .game-modal-v13{align-items:center!important;padding:12px!important;}
 .game-box-v13{width:min(760px,100%)!important;max-height:96vh!important;background:linear-gradient(160deg,#11152a,#080a12)!important;border:1px solid rgba(245,196,81,.35)!important;box-shadow:0 30px 100px rgba(0,0,0,.65);}
 .game-head-v13{display:flex;align-items:center;gap:10px;min-width:0}.game-head-img-v13{width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid var(--gold)}.game-head-v13 h2{font-size:18px!important}.game-head-v13 small{color:var(--muted)}
@@ -2394,3 +2394,18 @@ footer{background:#050506!important;color:#777!important}
 .slot-status-v13{display:flex;justify-content:center;gap:8px;align-items:baseline;color:var(--muted);margin-top:12px}.slot-status-v13 strong{color:#ffe39a;font-size:20px}.controls-v13{margin-top:12px!important}.bet-btn{width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:#171c2d;color:#fff;font-size:24px}.spin-btn-v13{min-width:150px!important;font-size:16px!important;font-weight:950!important}.game-result-v13{min-height:26px;color:#fff;font-size:14px}.paytable-v13{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px}.paytable-v13 b{color:var(--gold)}
 .roulette-art-v13{position:relative;height:260px;border-radius:18px;overflow:hidden;border:1px solid rgba(245,196,81,.35)}.roulette-art-v13>img{width:100%;height:100%;object-fit:cover;opacity:.45}.wheel-v13{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform .2s linear;box-shadow:0 0 40px rgba(245,196,81,.3)}
 @media(max-width:600px){.game-modal-v13{padding:0!important}.game-box-v13{max-height:100vh!important;height:100vh!important;border-radius:0!important;border:0!important;padding:12px 10px calc(12px + var(--safe-bottom))!important}.stage-v13{min-height:calc(100vh - 120px)!important;border-radius:14px}.slot-banner-v13{height:120px}.slot-banner-v13 b{font-size:19px}.reel-v13{height:100px!important}.controls-v13{gap:6px}.controls-v13 input{width:90px}.spin-btn-v13{min-width:120px!important}.roulette-art-v13{height:240px}}
+
+/* CASINOX v1.4 — slot experience */
+.slot-machine-v14{max-width:920px;margin:0 auto;padding:14px}
+.slot-banner-v14{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:10px;border:1px solid rgba(255,215,80,.22);border-radius:18px;background:rgba(255,255,255,.035)}
+.slot-banner-v14 img{width:74px;height:74px;border-radius:14px;object-fit:cover}
+.slot-banner-v14 b{display:block;font-size:18px;letter-spacing:1px}.slot-banner-v14 span{display:block;color:#aaa;font-size:11px;margin-top:4px}
+.reel-window-v14{position:relative;background:#07070d;border:2px solid rgba(255,206,63,.75);border-radius:20px;padding:14px;box-shadow:0 0 35px rgba(170,70,255,.18), inset 0 0 30px rgba(0,0,0,.8);overflow:hidden}
+.reels-v14{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:relative;z-index:2}
+.reel-v14{height:230px;border-radius:14px;background:linear-gradient(180deg,#18152d,#090912 50%,#18152d);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:space-around;font-size:54px;overflow:hidden;transition:transform .08s}
+.reel-v14 span{height:31%;display:grid;place-items:center;width:100%}.rolling-v14{filter:blur(2px);transform:translateY(4px)}
+.payline-v14{position:absolute;z-index:4;left:0;right:0;top:50%;height:3px;background:#ffd24d;box-shadow:0 0 12px #ffd24d;opacity:.85}
+.slot-status-v14{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;padding:14px 4px;color:#aaa}.slot-status-v14 strong{color:#ffd24d;font-size:20px}.slot-status-v14 b{width:100%;text-align:center;color:#ddd;font-size:12px}
+.controls-v14{display:grid;grid-template-columns:55px 120px 55px minmax(150px,1fr);gap:8px;align-items:center}.controls-v14 input{height:50px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:#11111a;color:#fff;text-align:center;font-size:18px}.controls-v14 .bet-btn{height:50px;border-radius:14px}.spin-btn-v14{height:54px;font-size:18px;font-weight:900}
+.game-result-v14{text-align:center;min-height:28px;color:#eee}.paytable-v14{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.paytable-v14 span{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.05);font-size:12px;color:#bbb}.paytable-v14 b{color:#ffd24d}
+@media(max-width:600px){.slot-machine-v14{padding:8px}.slot-banner-v14 img{width:58px;height:58px}.reel-window-v14{padding:8px;border-radius:15px}.reels-v14{gap:4px}.reel-v14{height:175px;font-size:37px;border-radius:10px}.controls-v14{grid-template-columns:45px 1fr 45px}.spin-btn-v14{grid-column:1/-1}.paytable-v14{font-size:11px}.paytable-v14 span{padding:7px 9px}}

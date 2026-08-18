@@ -1109,47 +1109,57 @@ function renderCharacterSlotsV13(stage, game) {
     "dragon-fire": ["🐲","🔥","💰","7️⃣","💎"],
     "golden-toad": ["🐸","🪙","💰","7️⃣","💎"],
     "treasure-panda": ["🐼","🎁","🪙","7️⃣","💎"],
-    "moon-temple": ["🌙","🐰","🔮","7️⃣","💎"]
+    "moon-temple": ["🌙","🐰","🔮","7️⃣","💎"],
+    "neon-roulette": ["🎡","💎","7️⃣","🪙","✨"]
   };
   const symbols = themes[game.id] || [game.icon,"💰","⭐","7️⃣","💎"];
   stage.innerHTML = `
-    <div class="slot-machine-v13">
-      <div class="slot-banner-v13">
+    <div class="slot-machine-v14">
+      <div class="slot-banner-v14">
         <img src="${game.img}" alt="${game.name}">
         <div><b>${game.name.toUpperCase()}</b><span>DEMO • CRÉDITOS VIRTUAIS</span></div>
       </div>
-      <div class="reels reels-v13">${[0,1,2].map(i=>`<div class="reel reel-v13" data-reel="${i}">${symbols[i]}</div>`).join("")}</div>
-      <div class="slot-status-v13"><span>Aposta</span><strong id="stakeDisplay">100</strong><span>créditos</span></div>
-      <div class="controls controls-v13">
+      <div class="reel-window-v14">
+        <div class="payline-v14"></div>
+        <div class="reels reels-v14">${[0,1,2,3,4].map(i=>`<div class="reel reel-v14" data-reel="${i}"><span>${symbols[(i+1)%symbols.length]}</span><span>${symbols[i%symbols.length]}</span><span>${symbols[(i+2)%symbols.length]}</span></div>`).join("")}</div>
+      </div>
+      <div class="slot-status-v14"><span>APOSTA</span><strong id="stakeDisplay">100</strong><span>créditos</span><b id="balanceInGame">Saldo ${formatCredits(balance)}</b></div>
+      <div class="controls controls-v14">
         <button class="bet-btn" data-bet="-">−</button>
         <input id="stake" type="number" min="10" step="10" value="100" inputmode="numeric" aria-label="Valor da aposta">
         <button class="bet-btn" data-bet="+">+</button>
-        <button class="primary spin-btn-v13" id="spin">GIRAR</button>
+        <button class="primary spin-btn-v14" id="spin">GIRAR</button>
       </div>
-      <p id="gameResult" class="game-result-v13">Boa sorte! Escolha sua aposta e gire.</p>
-      <div class="paytable-v13"><span>3 iguais <b>5x</b></span><span>2 iguais <b>2x</b></span><span>Sem prêmio <b>0x</b></span></div>
+      <p id="gameResult" class="game-result-v14">Boa sorte! Escolha sua aposta e gire.</p>
+      <div class="paytable-v14"><span>5 iguais <b>10x</b></span><span>4 iguais <b>5x</b></span><span>3 iguais <b>2x</b></span><span>2 iguais <b>1x</b></span></div>
     </div>`;
 
-  const input=stage.querySelector('#stake'), display=stage.querySelector('#stakeDisplay');
+  const input=stage.querySelector('#stake'), display=stage.querySelector('#stakeDisplay'), bal=stage.querySelector('#balanceInGame');
   const update=()=>{ let v=Math.max(10,Math.floor(Number(input.value)||10)); input.value=v; display.textContent=formatCredits(v); };
   input.addEventListener('input',update);
   stage.querySelectorAll('[data-bet]').forEach(b=>b.onclick=()=>{input.value=Math.max(10,Math.floor(Number(input.value)||100)+(b.dataset.bet==='+'?50:-50));update();});
+  const refreshBalance=()=>{bal.textContent='Saldo '+formatCredits(balance);updateBalance();};
   stage.querySelector('#spin').onclick=()=>{
-    const amount=Number(input.value); if(!chargeCredits(amount)) return;
-    const reels=[...stage.querySelectorAll('.reel-v13')];
-    const spinButton=stage.querySelector('#spin'); spinButton.disabled=true; spinButton.textContent='GIRANDO...';
+    const amount=Math.max(10,Math.floor(Number(input.value)||10));
+    if(!chargeCredits(amount)) return;
+    const reels=[...stage.querySelectorAll('.reel-v14')];
+    const btn=stage.querySelector('#spin'); btn.disabled=true; btn.textContent='GIRANDO...';
     let ticks=0;
     const timer=setInterval(()=>{
-      reels.forEach(r=>r.textContent=symbols[Math.floor(Math.random()*symbols.length)]);
-      if(++ticks>=10){clearInterval(timer); spinButton.disabled=false; spinButton.textContent='GIRAR';
-        const result=reels.map(r=>r.textContent); let mult=0;
-        if(result[0]===result[1]&&result[1]===result[2]) mult=5;
-        else if(result[0]===result[1]||result[1]===result[2]||result[0]===result[2]) mult=2;
-        const winnings=amount*mult; if(winnings)addCredits(winnings);
-        stage.querySelector('#gameResult').innerHTML=winnings?`🎉 Você ganhou <b>${formatCredits(winnings)}</b> créditos!`:'Boa! Tente novamente.';
-        updateBalance();
+      reels.forEach(r=>{ r.classList.add('rolling-v14'); r.querySelectorAll('span').forEach(x=>x.textContent=symbols[Math.floor(Math.random()*symbols.length)]); });
+      if(++ticks>=18){
+        clearInterval(timer);
+        const result=[];
+        reels.forEach((r,i)=>{r.classList.remove('rolling-v14'); const chosen=symbols[Math.floor(Math.random()*symbols.length)]; r.querySelectorAll('span').forEach(x=>x.textContent=chosen); result.push(chosen);});
+        const counts={}; result.forEach(x=>counts[x]=(counts[x]||0)+1);
+        const best=Math.max(...Object.values(counts));
+        const mult=best>=5?10:best>=4?5:best>=3?2:best>=2?1:0;
+        const winnings=amount*mult;
+        if(winnings)addCredits(winnings);
+        stage.querySelector('#gameResult').innerHTML=winnings?`🎉 <b>${formatCredits(winnings)}</b> créditos de retorno virtual!`:'Sem prêmio nesta rodada. Tente novamente.';
+        btn.disabled=false; btn.textContent='GIRAR'; refreshBalance();
       }
-    },90);
+    },70);
   };
 }
 
