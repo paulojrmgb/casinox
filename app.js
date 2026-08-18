@@ -2128,3 +2128,95 @@ host.appendChild(section("🔥 Em alta",pool.slice(0,8)));host.appendChild(secti
 function mount(){if(document.getElementById("casinox-dynamic-lobby"))return;let main=document.querySelector("main")||document.body,h=document.createElement("div");h.id="casinox-dynamic-lobby";main.appendChild(h);render()}
 document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTimeout(mount,1500);
 })();
+
+
+/* CASINOX v2.0 — engine visual próprio. O sistema de toque da v1.9 permanece intacto. */
+(function(){
+  const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
+  const payoutMap={3:2,4:5,5:10};
+  let shell=null,balance=Number(localStorage.getItem("casinox_balance")||10000),bet=Number(localStorage.getItem("casinox_bet")||100);
+  let turbo=false,auto=false,autoTimer=null,spinning=false;
+
+  function save(){localStorage.setItem("casinox_balance",String(balance));localStorage.setItem("casinox_bet",String(bet))}
+  function makeGrid(){return Array.from({length:5},()=>Array.from({length:3},()=>symbols[Math.floor(Math.random()*symbols.length)]))}
+  function middleWin(g){
+    const c={};g.forEach(r=>c[r[1]]=(c[r[1]]||0)+1);
+    let sym="",max=0;Object.keys(c).forEach(k=>{if(c[k]>max){max=c[k];sym=k}});
+    return {count:max,sym,pay:(payoutMap[max]||0)*bet};
+  }
+  function draw(g){
+    shell?.querySelectorAll(".cx20-reel").forEach((r,i)=>r.innerHTML=
+      `<div class="cx20-symbol s1">${g[i][0]}</div><div class="cx20-symbol s2">${g[i][1]}</div><div class="cx20-symbol s3">${g[i][2]}</div>`);
+  }
+  function open(name){
+    close();
+    shell=document.createElement("section");shell.className="cx20-shell";
+    shell.innerHTML=`
+      <header class="cx20-top">
+        <button class="cx20-back" type="button">‹</button>
+        <div class="cx20-brand"><b>${name}</b><small>CASINOX • CRÉDITOS VIRTUAIS</small></div>
+        <div class="cx20-wallet">💰 <span class="cx20-wallet-value">${balance.toLocaleString("pt-BR")}</span></div>
+      </header>
+      <main class="cx20-stage">
+        <div class="cx20-glow"></div>
+        <div class="cx20-character"><div class="orb"></div><div class="rabbit">${name.toLowerCase().includes("bull")?"🐂":name.toLowerCase().includes("dragon")?"🐉":name.toLowerCase().includes("tiger")?"🐯":"🐇"}</div></div>
+        <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels">${Array(5).fill('<div class="cx20-reel"></div>').join("")}<div class="cx20-line"></div></div></div></div>
+        <div class="cx20-prize">BOA SORTE</div>
+        <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
+      </main>
+      <section class="cx20-controls">
+        <div class="cx20-main-controls">
+          <div class="cx20-bet"><button class="cx20-minus" type="button">−</button><div class="cx20-bet-value"><small>APOSTA</small><b>${bet}</b></div><button class="cx20-plus" type="button">+</button></div>
+          <button class="cx20-spin" type="button">GIRAR</button>
+        </div>
+        <div class="cx20-tools"><button class="cx20-tool" data-tool="turbo" type="button">⚡ TURBO</button><button class="cx20-tool" data-tool="auto" type="button">🔄 AUTO</button><button class="cx20-tool" data-tool="pay" type="button">🏆 PRÊMIOS</button></div>
+      </section>
+      <div class="cx20-paytable"><div class="cx20-paypanel"><button class="cx20-tool pay-close" type="button">FECHAR</button><h3>Tabela de prêmios</h3><div class="cx20-payrow"><span>3 símbolos iguais</span><b>2× aposta</b></div><div class="cx20-payrow"><span>4 símbolos iguais</span><b>5× aposta</b></div><div class="cx20-payrow"><span>5 símbolos iguais</span><b>10× aposta</b></div><div class="cx20-payrow"><span>👑 🐰 💎 🪙</span><b>Combinações demo</b></div></div></div>`;
+    document.body.appendChild(shell);document.body.style.overflow="hidden";draw(makeGrid());
+
+    shell.querySelector(".cx20-back").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();close()});
+    shell.querySelector(".cx20-minus").addEventListener("click",e=>{e.stopPropagation();bet=Math.max(10,bet-10);sync();save()});
+    shell.querySelector(".cx20-plus").addEventListener("click",e=>{e.stopPropagation();bet=Math.min(Math.max(10,balance),bet+10);sync();save()});
+    shell.querySelector(".cx20-spin").addEventListener("click",e=>{e.stopPropagation();spin()});
+    shell.querySelector('[data-tool="turbo"]').addEventListener("click",e=>{e.stopPropagation();turbo=!turbo;e.currentTarget.classList.toggle("active",turbo)});
+    shell.querySelector('[data-tool="auto"]').addEventListener("click",e=>{e.stopPropagation();toggleAuto()});
+    shell.querySelector('[data-tool="pay"]').addEventListener("click",e=>{e.stopPropagation();shell.querySelector(".cx20-paytable").classList.add("show")});
+    shell.querySelector(".pay-close").addEventListener("click",e=>{e.stopPropagation();shell.querySelector(".cx20-paytable").classList.remove("show")});
+  }
+  function sync(){
+    if(!shell)return;
+    shell.querySelector(".cx20-wallet-value").textContent=balance.toLocaleString("pt-BR");
+    shell.querySelector(".st-balance").textContent=balance.toLocaleString("pt-BR");
+    shell.querySelector(".st-bet").textContent=bet.toLocaleString("pt-BR");
+    shell.querySelector(".cx20-bet-value b").textContent=bet;
+  }
+  function spin(){
+    if(!shell||spinning)return;
+    if(balance<bet){shell.querySelector(".cx20-prize").textContent="SALDO INSUFICIENTE";return}
+    spinning=true;balance-=bet;sync();
+    const button=shell.querySelector(".cx20-spin");button.disabled=true;
+    shell.querySelector(".cx20-prize").textContent="GIRANDO…";
+    const cycles=turbo?4:12, delay=turbo?45:85;let n=0;
+    const timer=setInterval(()=>{draw(makeGrid());if(++n>=cycles){clearInterval(timer);finish(button)}},delay);
+  }
+  function finish(button){
+    const g=makeGrid();draw(g);const w=middleWin(g);balance+=w.pay;sync();
+    shell.querySelector(".st-win").textContent=w.pay.toLocaleString("pt-BR");
+    const p=shell.querySelector(".cx20-prize");
+    p.textContent=w.pay?`✨ PRÊMIO +${w.pay.toLocaleString("pt-BR")}`:"Boa rodada — tente novamente!";
+    p.classList.toggle("win",!!w.pay);setTimeout(()=>p.classList.remove("win"),1300);
+    button.disabled=false;spinning=false;save();
+    if(auto)autoTimer=setTimeout(spin,700);
+  }
+  function toggleAuto(){
+    auto=!auto;const b=shell.querySelector('[data-tool="auto"]');b.classList.toggle("active",auto);
+    if(auto&&!spinning)spin();else if(!auto&&autoTimer){clearTimeout(autoTimer);autoTimer=null}
+  }
+  function close(){
+    if(autoTimer){clearTimeout(autoTimer);autoTimer=null}auto=false;spinning=false;
+    if(shell){shell.remove();shell=null;document.body.style.overflow=""}
+  }
+  window.CasinoXPremiumGame={open,close};
+  const old=window.CasinoXDemoGame?.open;
+  if(window.CasinoXDemoGame)window.CasinoXDemoGame.open=function(name){open(name)};
+})();

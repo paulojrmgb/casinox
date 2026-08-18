@@ -2523,3 +2523,43 @@ footer{background:#050506!important;color:#777!important}
   .cx17-main{bottom:164px!important}
   .cx17-controls{max-height:41svh!important}
 }
+
+/* CASINOX v2.0 — visual engine premium, mobile-first */
+.cx20-shell{position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;background:#08070b;color:#fff;overflow:hidden}
+.cx20-top{height:54px;min-height:54px;display:flex;align-items:center;gap:9px;padding:7px 10px;background:rgba(8,7,11,.94);border-bottom:1px solid rgba(255,214,109,.14);backdrop-filter:blur(16px)}
+.cx20-back{width:38px;height:38px;border:0;border-radius:12px;background:rgba(255,255,255,.07);color:#fff;font-size:25px;line-height:1}
+.cx20-brand{flex:1;min-width:0}.cx20-brand b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cx20-brand small{display:block;opacity:.48;font-size:9px;margin-top:2px}
+.cx20-wallet{font-weight:900;color:#ffd66d;font-size:12px;white-space:nowrap}
+.cx20-stage{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 8px 6px;overflow:hidden;background:radial-gradient(circle at 50% 18%,rgba(201,75,39,.22),transparent 40%),linear-gradient(180deg,#160d12,#09080d 70%)}
+.cx20-glow{position:absolute;inset:auto 8% 19% 8%;height:48%;border-radius:50%;background:rgba(255,188,65,.08);filter:blur(32px);pointer-events:none}
+.cx20-character{position:relative;z-index:1;width:min(47vw,240px);height:min(22vh,160px);display:flex;align-items:center;justify-content:center;margin-bottom:-10px;pointer-events:none}
+.cx20-character .orb{position:absolute;width:70%;height:70%;border-radius:50%;background:radial-gradient(circle,rgba(255,218,126,.34),transparent 68%);filter:blur(9px)}
+.cx20-character .rabbit{position:relative;font-size:clamp(68px,21vw,130px);filter:drop-shadow(0 8px 12px rgba(0,0,0,.6));transform:translateY(-3px)}
+.cx20-machine{position:relative;z-index:2;width:min(96vw,620px);padding:9px;border-radius:22px;background:linear-gradient(145deg,#3c2417,#120c0b 45%,#5a3519);border:1px solid rgba(255,214,109,.62);box-shadow:0 14px 60px rgba(0,0,0,.65),0 0 28px rgba(255,177,54,.16)}
+.cx20-machine-inner{position:relative;padding:7px;border-radius:16px;background:linear-gradient(145deg,#17151b,#07070a);border:2px solid rgba(255,214,109,.24)}
+.cx20-reels{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;aspect-ratio:5/3}
+.cx20-reel{position:relative;overflow:hidden;border-radius:10px;background:linear-gradient(180deg,#24212a,#0d0c11);border:1px solid rgba(255,255,255,.08)}
+.cx20-symbol{position:absolute;left:4%;width:92%;height:30%;display:grid;place-items:center;border-radius:8px;background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.025));font-size:clamp(22px,7vw,44px);text-shadow:0 3px 5px rgba(0,0,0,.55)}
+.cx20-symbol.s1{top:2%}.cx20-symbol.s2{top:35%}.cx20-symbol.s3{top:68%}
+.cx20-line{position:absolute;left:0;right:0;top:50%;height:3px;transform:translateY(-50%);background:#ffd66d;box-shadow:0 0 13px #ffd66d;pointer-events:none}
+.cx20-prize{position:relative;z-index:3;min-height:25px;margin:5px 0 0;text-align:center;font-size:12px;font-weight:950;color:#ffd66d;text-shadow:0 2px 9px rgba(255,166,45,.35)}
+.cx20-prize.win{animation:cx20win .6s ease 2}
+@keyframes cx20win{50%{transform:scale(1.18);text-shadow:0 0 20px #ffd66d}}
+.cx20-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:min(96vw,620px);margin:7px 0 6px}
+.cx20-stat{padding:6px 5px;border-radius:11px;text-align:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
+.cx20-stat small{display:block;font-size:8px;opacity:.45}.cx20-stat b{display:block;font-size:12px;color:#ffd66d;margin-top:2px}
+.cx20-controls{padding:8px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(7,7,11,.98);border-top:1px solid rgba(255,255,255,.08)}
+.cx20-main-controls{display:flex;align-items:center;gap:7px;max-width:720px;margin:auto}
+.cx20-bet{display:flex;align-items:center;gap:5px;padding:5px;border-radius:13px;background:rgba(255,255,255,.07)}
+.cx20-bet button,.cx20-mini{width:35px;height:35px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:20px}
+.cx20-bet-value{min-width:52px;text-align:center}.cx20-bet-value small{display:block;font-size:8px;opacity:.45}.cx20-bet-value b{display:block;color:#ffd66d;font-size:12px}
+.cx20-spin{flex:1;min-height:50px;border:0;border-radius:15px;background:linear-gradient(135deg,#ffe07b,#e49a24);color:#211405;font-weight:1000;font-size:17px;box-shadow:0 7px 25px rgba(230,153,31,.2)}
+.cx20-spin:disabled{opacity:.55}
+.cx20-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:720px;margin:7px auto 0}
+.cx20-tool{min-height:35px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(255,255,255,.055);color:#fff;font-weight:800;font-size:11px}
+.cx20-tool.active{background:rgba(255,214,109,.16);border-color:rgba(255,214,109,.45);color:#ffd66d}
+.cx20-paytable{position:fixed;inset:0;z-index:100010;display:none;align-items:flex-end;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}
+.cx20-paytable.show{display:flex}.cx20-paypanel{width:100%;max-height:72vh;overflow:auto;border-radius:22px 22px 0 0;background:#111016;border-top:1px solid rgba(255,214,109,.25);padding:16px 14px calc(18px + env(safe-area-inset-bottom))}
+.cx20-paypanel h3{margin:0 0 12px}.cx20-payrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+@media(max-height:700px){.cx20-character{height:16vh}.cx20-character .rabbit{font-size:72px}.cx20-stage{padding-top:2px}.cx20-stats{margin:3px 0}.cx20-controls{padding-top:5px}}
+@media(min-width:801px){.cx20-top{height:62px}.cx20-character{height:19vh}.cx20-character .rabbit{font-size:105px}.cx20-stage{padding:18px}.cx20-controls{padding:12px 20px}}
