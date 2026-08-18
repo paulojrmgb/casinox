@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#17234b"/><stop offset="1" stop-color="#4a2b7a"/>
+ </linearGradient>
+ <radialGradient id="glow"><stop offset="0" stop-color="#8be7ff" stop-opacity=".32"/><stop offset="1" stop-color="#8be7ff" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="600" height="360" rx="34" fill="url(#g)"/>
+<circle cx="500" cy="40" r="170" fill="url(#glow)"/>
+<circle cx="80" cy="330" r="140" fill="url(#glow)" opacity=".35"/>
+<g opacity=".12" stroke="#fff"><path d="M0 90H600M0 180H600M0 270H600"/><path d="M120 0V360M240 0V360M360 0V360M480 0V360"/></g>
+<circle cx="300" cy="145" r="72" fill="#8be7ff" opacity=".16"/><circle cx="300" cy="145" r="48" fill="none" stroke="#8be7ff" stroke-width="8" opacity=".75"/><circle cx="318" cy="130" r="42" fill="#4a2b7a"/>
+<text x="300" y="62" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="900" letter-spacing="4">JACKPOT</text>
+<text x="300" y="310" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="34" font-weight="950" letter-spacing="1">MOON TEMPLE</text>
+<text x="300" y="337" text-anchor="middle" fill="#8be7ff" font-family="Arial,sans-serif" font-size="12" font-weight="800" letter-spacing="3">CASINOX ORIGINAL</text>
+</svg>
