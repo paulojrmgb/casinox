@@ -1069,138 +1069,106 @@ function addCredits(amount) {
 ========================================================= */
 
 function openGame(gameId) {
+  const game = games.find(item => item.id === gameId);
+  if (!game) return;
 
-  const game =
-    games.find(
-      item =>
-        item.id === gameId
-    );
-
-
-  if (!game) {
-    return;
-  }
-
-
-  const modal =
-    document.createElement(
-      "div"
-    );
-
-
-  modal.className =
-    "modal";
-
-
+  const modal = document.createElement("div");
+  modal.className = "modal game-modal-v13";
   modal.innerHTML = `
-
-    <div class="box">
-
+    <div class="box game-box-v13">
       <div class="modalhead">
-
-        <div>
-
-          <h2>
-            ${game.icon}
-            ${game.name}
-          </h2>
-
-          <small
-            style="color:var(--muted);"
-          >
-            ${game.provider}
-          </small>
-
+        <div class="game-head-v13">
+          <img src="${game.img}" alt="${game.name}" class="game-head-img-v13">
+          <div>
+            <h2>${game.icon} ${game.name}</h2>
+            <small>${game.provider} • DEMO • créditos virtuais</small>
+          </div>
         </div>
-
-
-        <button
-          class="close"
-          aria-label="Fechar"
-        >
-          ×
-        </button>
-
+        <button class="close" aria-label="Fechar">×</button>
       </div>
+      <div class="stage stage-v13" id="gameStage"></div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.querySelector(".close").onclick = () => modal.remove();
+  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
 
-
-      <div
-        class="stage"
-        id="gameStage"
-      >
-      </div>
-
-    </div>
-
-  `;
-
-
-  document.body.appendChild(
-    modal
-  );
-
-
-  modal
-    .querySelector(
-      ".close"
-    )
-    .onclick = () => {
-
-      modal.remove();
-
-    };
-
-
-  const stage =
-    modal.querySelector(
-      "#gameStage"
-    );
-
-
-  if (
-    gameId === "lucky-stars"
-  ) {
-
-    renderSlots(stage);
-
-  }
-
-  else if (
-    gameId === "royal-roulette"
-  ) {
-
-    renderRoulette(stage);
-
-  }
-
-  else if (
-    gameId === "blackjack-pro" ||
-    gameId === "live-blackjack"
-  ) {
-
-    renderBlackjack(stage);
-
-  }
-
-  else if (
-    gameId === "rocket-crash"
-  ) {
-
-    renderCrash(stage);
-
-  }
-
-  else {
-
-    renderComingSoon(
-      stage,
-      game
-    );
-
-  }
-
+  const stage = modal.querySelector("#gameStage");
+  if (game.id === "neon-roulette") renderRouletteV13(stage, game);
+  else renderCharacterSlotsV13(stage, game);
 }
 
+function renderCharacterSlotsV13(stage, game) {
+  const themes = {
+    "lucky-rabbit": ["🐰","💰","🥕","7️⃣","💎"],
+    "golden-bull": ["🐂","🪙","💰","7️⃣","💎"],
+    "dragon-fortune": ["🐉","🔥","🪙","7️⃣","💎"],
+    "tiger-riches": ["🐯","💰","🪙","7️⃣","💎"],
+    "lion-king": ["🦁","👑","💰","7️⃣","💎"],
+    "royal-bunny": ["🐰","👑","💎","7️⃣","🪙"],
+    "fox-fortune": ["🦊","🔮","💰","7️⃣","💎"],
+    "dragon-fire": ["🐲","🔥","💰","7️⃣","💎"],
+    "golden-toad": ["🐸","🪙","💰","7️⃣","💎"],
+    "treasure-panda": ["🐼","🎁","🪙","7️⃣","💎"],
+    "moon-temple": ["🌙","🐰","🔮","7️⃣","💎"]
+  };
+  const symbols = themes[game.id] || [game.icon,"💰","⭐","7️⃣","💎"];
+  stage.innerHTML = `
+    <div class="slot-machine-v13">
+      <div class="slot-banner-v13">
+        <img src="${game.img}" alt="${game.name}">
+        <div><b>${game.name.toUpperCase()}</b><span>DEMO • CRÉDITOS VIRTUAIS</span></div>
+      </div>
+      <div class="reels reels-v13">${[0,1,2].map(i=>`<div class="reel reel-v13" data-reel="${i}">${symbols[i]}</div>`).join("")}</div>
+      <div class="slot-status-v13"><span>Aposta</span><strong id="stakeDisplay">100</strong><span>créditos</span></div>
+      <div class="controls controls-v13">
+        <button class="bet-btn" data-bet="-">−</button>
+        <input id="stake" type="number" min="10" step="10" value="100" inputmode="numeric" aria-label="Valor da aposta">
+        <button class="bet-btn" data-bet="+">+</button>
+        <button class="primary spin-btn-v13" id="spin">GIRAR</button>
+      </div>
+      <p id="gameResult" class="game-result-v13">Boa sorte! Escolha sua aposta e gire.</p>
+      <div class="paytable-v13"><span>3 iguais <b>5x</b></span><span>2 iguais <b>2x</b></span><span>Sem prêmio <b>0x</b></span></div>
+    </div>`;
+
+  const input=stage.querySelector('#stake'), display=stage.querySelector('#stakeDisplay');
+  const update=()=>{ let v=Math.max(10,Math.floor(Number(input.value)||10)); input.value=v; display.textContent=formatCredits(v); };
+  input.addEventListener('input',update);
+  stage.querySelectorAll('[data-bet]').forEach(b=>b.onclick=()=>{input.value=Math.max(10,Math.floor(Number(input.value)||100)+(b.dataset.bet==='+'?50:-50));update();});
+  stage.querySelector('#spin').onclick=()=>{
+    const amount=Number(input.value); if(!chargeCredits(amount)) return;
+    const reels=[...stage.querySelectorAll('.reel-v13')];
+    const spinButton=stage.querySelector('#spin'); spinButton.disabled=true; spinButton.textContent='GIRANDO...';
+    let ticks=0;
+    const timer=setInterval(()=>{
+      reels.forEach(r=>r.textContent=symbols[Math.floor(Math.random()*symbols.length)]);
+      if(++ticks>=10){clearInterval(timer); spinButton.disabled=false; spinButton.textContent='GIRAR';
+        const result=reels.map(r=>r.textContent); let mult=0;
+        if(result[0]===result[1]&&result[1]===result[2]) mult=5;
+        else if(result[0]===result[1]||result[1]===result[2]||result[0]===result[2]) mult=2;
+        const winnings=amount*mult; if(winnings)addCredits(winnings);
+        stage.querySelector('#gameResult').innerHTML=winnings?`🎉 Você ganhou <b>${formatCredits(winnings)}</b> créditos!`:'Boa! Tente novamente.';
+        updateBalance();
+      }
+    },90);
+  };
+}
+
+function renderRouletteV13(stage, game) {
+  stage.innerHTML=`
+    <div class="roulette-v13">
+      <div class="roulette-art-v13"><img src="${game.img}" alt="${game.name}"><div class="wheel wheel-v13"><b id="rouletteNumber">?</b></div></div>
+      <p>Roleta demonstrativa • créditos virtuais</p>
+      <div class="controls controls-v13">${stakeInput()}<button class="primary spin-btn-v13" id="spinRoulette">GIRAR ROLETA</button></div>
+      <p id="gameResult" class="game-result-v13">Escolha sua aposta.</p>
+    </div>`;
+  stage.querySelector('#spinRoulette').onclick=()=>{
+    const amount=Number(stage.querySelector('#stake').value); if(!chargeCredits(amount))return;
+    const btn=stage.querySelector('#spinRoulette');btn.disabled=true;btn.textContent='GIRANDO...';
+    const wheel=stage.querySelector('.wheel-v13'); let n=0;
+    const timer=setInterval(()=>{n+=45;wheel.style.transform=`rotate(${n}deg)`;},45);
+    setTimeout(()=>{clearInterval(timer);const number=Math.floor(Math.random()*37);const winnings=number===0?amount*10:amount*2;addCredits(winnings);stage.querySelector('#rouletteNumber').textContent=number;stage.querySelector('#gameResult').innerHTML=`Número <b>${number}</b> • retorno virtual <b>${formatCredits(winnings)}</b> créditos.`;btn.disabled=false;btn.textContent='GIRAR ROLETA';updateBalance();},1300);
+  };
+}
 
 /* =========================================================
    INPUT DE APOSTA VIRTUAL
@@ -1992,4 +1960,4 @@ document.addEventListener("click", event => {
 
 
 
-window.CASINOX_VERSION="1.0";
+window.CASINOX_VERSION="1.3";
