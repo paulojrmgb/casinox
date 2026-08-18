@@ -1,11 +1,11 @@
-const CACHE_NAME = "casinox-v1.8";
-const VERSION="1.7";
+const CACHE_NAME = "casinox-v1.9";
+const VERSION = "1.9";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=1.8",
-  "./app.js?v=1.8",
+  "./styles.css?v=1.9",
+  "./app.js?v=1.9",
   "./CasinoX_v0.4_conta.js?v=1.1",
   "./manifest.json",
   "./assets/games/moon-temple.svg",

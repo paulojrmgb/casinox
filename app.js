@@ -2063,12 +2063,22 @@ window.CASINOX_VERSION="1.8";
         <div class="cx17-payline-text">${c.pay}</div>
       </footer>`;
     document.body.appendChild(overlay);document.body.style.overflow='hidden';renderGrid(resultGrid(c));updateHUD();
-    overlay.querySelector('[data-back]').onclick=close; overlay.querySelector('[data-minus]').onclick=()=>adjustBet(-10); overlay.querySelector('[data-plus]').onclick=()=>adjustBet(10); overlay.querySelector('[data-spin]').onclick=spin; overlay.querySelector('[data-turbo]').onclick=toggleTurbo; overlay.querySelector('[data-auto]').onclick=toggleAuto;
-    overlay.querySelector('[data-pay]').onclick=()=>setMessage(c.pay,'win');
+    overlay.querySelector('[data-back]').onclick=(e)=>{e.stopPropagation();close();}; overlay.querySelector('[data-minus]').onclick=(e)=>{e.stopPropagation();adjustBet(-10);}; overlay.querySelector('[data-plus]').onclick=(e)=>{e.stopPropagation();adjustBet(10);}; overlay.querySelector('[data-spin]').onclick=(e)=>{e.stopPropagation();spin();}; overlay.querySelector('[data-turbo]').onclick=(e)=>{e.stopPropagation();toggleTurbo();}; overlay.querySelector('[data-auto]').onclick=(e)=>{e.stopPropagation();toggleAuto();};
+    overlay.querySelector('[data-pay]').onclick=(e)=>{e.stopPropagation();setMessage(c.pay,'win');};
   }
   document.addEventListener('click',e=>{
-    const el=e.target.closest('[data-game]'); if(!el)return; const n=el.dataset.game; if(!n)return; e.preventDefault();e.stopPropagation();open(n);
-  },true);
+     // IMPORTANT: never treat clicks inside the game shell as a request to open a game.
+     // The shell itself has data-game, so the old capture handler reopened the game
+     // when the user tapped Back, Spin, Turbo, Auto, or even empty areas.
+     if(e.target.closest('.cx17-shell')) return;
+     const el=e.target.closest('[data-game]');
+     if(!el) return;
+     const n=el.dataset.game;
+     if(!n) return;
+     e.preventDefault();
+     e.stopPropagation();
+     open(n);
+   },false);
   window.CasinoXDemoGame={open,close};
 })();
 
