@@ -10,115 +10,22 @@
    ========================================================= */
 
 const games = [
-
-  {
-    id: "lucky-stars",
-    name: "Lucky Stars",
-    provider: "PG",
-    category: "slots",
-    icon: "🎰",
-    tag: "Popular"
-  },
-
-  {
-    id: "fortune-gems",
-    name: "Fortune Gems",
-    provider: "Fortunes",
-    category: "slots",
-    icon: "💎",
-    tag: "Popular"
-  },
-
-  {
-    id: "royal-roulette",
-    name: "Royal Roulette",
-    provider: "Evolution",
-    category: "casino",
-    icon: "🎡",
-    tag: "Clássico"
-  },
-
-  {
-    id: "blackjack-pro",
-    name: "Blackjack Pro",
-    provider: "Evolution",
-    category: "casino",
-    icon: "🃏",
-    tag: "Clássico"
-  },
-
-  {
-    id: "rocket-crash",
-    name: "Rocket Crash",
-    provider: "PG",
-    category: "popular",
-    icon: "🚀",
-    tag: "Novo"
-  },
-
-  {
-    id: "fortune-crown",
-    name: "Fortune Crown",
-    provider: "Fortunes",
-    category: "slots",
-    icon: "👑",
-    tag: "Novo"
-  },
-
-  {
-    id: "golden-dragon",
-    name: "Golden Dragon",
-    provider: "PG",
-    category: "slots",
-    icon: "🐉",
-    tag: "Premium"
-  },
-
-  {
-    id: "diamond-wheel",
-    name: "Diamond Wheel",
-    provider: "Pragmatic Play",
-    category: "popular",
-    icon: "💠",
-    tag: "Popular"
-  },
-
-  {
-    id: "mega-fruit",
-    name: "Mega Fruit",
-    provider: "Pragmatic Play",
-    category: "slots",
-    icon: "🍒",
-    tag: "Slots"
-  },
-
-  {
-    id: "live-blackjack",
-    name: "Live Blackjack",
-    provider: "Evolution",
-    category: "casino",
-    icon: "♠️",
-    tag: "Live"
-  },
-
-  {
-    id: "fortune-wheel",
-    name: "Fortune Wheel",
-    provider: "Fortunes",
-    category: "popular",
-    icon: "🎯",
-    tag: "Bônus"
-  },
-
-  {
-    id: "super-seven",
-    name: "Super Seven",
-    provider: "PG",
-    category: "slots",
-    icon: "7️⃣",
-    tag: "Novo"
-  }
-
+  {id:"lucky-stars",name:"Lucky Stars",provider:"PG • Demo",category:"slots",icon:"🎰",tag:"Popular",tone:"gold"},
+  {id:"fortune-gems",name:"Fortune Gems",provider:"Fortunes • Demo",category:"slots",icon:"💎",tag:"Popular",tone:"violet"},
+  {id:"royal-roulette",name:"Royal Roulette",provider:"Evolution • Demo",category:"casino",icon:"🎡",tag:"Clássico",tone:"red"},
+  {id:"blackjack-pro",name:"Blackjack Pro",provider:"Evolution • Demo",category:"casino",icon:"🃏",tag:"Clássico",tone:"green"},
+  {id:"rocket-crash",name:"Rocket Crash",provider:"PG • Demo",category:"popular",icon:"🚀",tag:"Novo",tone:"blue"},
+  {id:"fortune-crown",name:"Fortune Crown",provider:"Fortunes • Demo",category:"slots",icon:"👑",tag:"Novo",tone:"purple"},
+  {id:"golden-dragon",name:"Golden Dragon",provider:"PG • Demo",category:"slots",icon:"🐉",tag:"Premium",tone:"orange"},
+  {id:"diamond-wheel",name:"Diamond Wheel",provider:"Pragmatic Play • Demo",category:"popular",icon:"💠",tag:"Popular",tone:"cyan"},
+  {id:"mega-fruit",name:"Mega Fruit",provider:"Pragmatic Play • Demo",category:"slots",icon:"🍒",tag:"Slots",tone:"pink"},
+  {id:"live-blackjack",name:"Live Blackjack",provider:"Evolution • Demo",category:"casino",icon:"♠️",tag:"Live",tone:"green"},
+  {id:"fortune-wheel",name:"Fortune Wheel",provider:"Fortunes • Demo",category:"popular",icon:"🎯",tag:"Bônus",tone:"gold"},
+  {id:"super-seven",name:"Super Seven",provider:"PG • Demo",category:"slots",icon:"7️⃣",tag:"Novo",tone:"red"},
+  {id:"moon-temple",name:"Moon Temple",provider:"PG • Demo",category:"slots",icon:"🌙",tag:"Novo",tone:"blue"},
+  {id:"golden-pearls",name:"Golden Pearls",provider:"Fortunes • Demo",category:"slots",icon:"🦪",tag:"Destaque",tone:"gold"},
+  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution • Demo",category:"casino",icon:"🎲",tag:"Novo",tone:"cyan"},
+  {id:"wild-jungle",name:"Wild Jungle",provider:"Pragmatic Play • Demo",category:"slots",icon:"🌴",tag:"Popular",tone:"green"}
 ];
 
 
@@ -452,40 +359,22 @@ function getFilteredGames() {
 ========================================================= */
 
 function gameCard(game) {
-
   const favorite = isFavorite(game.id);
-
   return `
-    <article
-      class="card"
-      data-game="${game.id}"
-      tabindex="0"
-      aria-label="Abrir ${game.name}"
-    >
-      <div class="art">
-        <span aria-hidden="true">${game.icon}</span>
-
-        <button
-          class="favorite-btn"
-          data-favorite="${game.id}"
-          aria-label="Favoritar ${game.name}"
-          type="button"
-        >
-          ${favorite ? "⭐" : "☆"}
-        </button>
+    <article class="card game-card-v06" data-game="${game.id}" tabindex="0" aria-label="Abrir ${game.name}">
+      <div class="art art-${game.tone || 'gold'}">
+        <span class="game-glow" aria-hidden="true"></span>
+        <span class="game-icon" aria-hidden="true">${game.icon}</span>
+        <span class="game-tag">${game.tag}</span>
+        <button class="favorite-btn" data-favorite="${game.id}" aria-label="Favoritar ${game.name}" type="button">${favorite ? "★" : "☆"}</button>
       </div>
-
-      <h3>${game.name}</h3>
-      <p>${game.provider}</p>
-      <span class="tag">${game.tag}</span>
-    </article>
-  `;
+      <div class="game-info">
+        <h3>${game.name}</h3>
+        <p>${game.provider}</p>
+      </div>
+    </article>`;
 }
 
-
-/* =========================================================
-   CARDS
-========================================================= */
 
 function renderGameCards(list) {
 
@@ -641,131 +530,60 @@ function renderCategories() {
 ========================================================= */
 
 function renderLobby() {
-
   const filtered = getFilteredGames();
-
-  const popular = games.filter(game =>
-    game.tag === "Popular" || game.category === "popular"
-  ).slice(0, 6);
-
-  const favoriteGames = games.filter(game =>
-    favorites.includes(game.id)
-  ).slice(0, 6);
+  const popular = games.filter(g => g.tag === "Popular" || g.category === "popular").slice(0, 8);
+  const recent = games.filter(g => ["lucky-stars","fortune-gems","rocket-crash","fortune-crown"].includes(g.id));
+  const favoriteGames = games.filter(g => favorites.includes(g.id)).slice(0, 8);
 
   app.innerHTML = `
-
-    <section class="hero">
-      <div>
-        <div class="eyebrow">CASINOX • MOBILE FIRST</div>
-
-        <h1>
-          Jogue.<br>
-          Divirta-se.
-        </h1>
-
-        <p>
-          Seu hub social de jogos com créditos virtuais.
-          Explore categorias, provedores e seus favoritos.
-        </p>
-
-        <button class="primary" id="heroGames" type="button">
-          🎰 Explorar jogos
-        </button>
+    <section class="hero hero-v06">
+      <div class="hero-copy-v06">
+        <div class="eyebrow">CASINOX • V0.6</div>
+        <h1>Seu próximo<br><span>destaque.</span></h1>
+        <p>Explore uma seleção de jogos demonstrativos em uma experiência feita primeiro para celular.</p>
+        <button class="primary" id="heroGames" type="button">🎰 Explorar jogos</button>
       </div>
-
-      <div class="hero-art" aria-hidden="true">
-        <div class="chip">🎰</div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="head">
-        <div>
-          <h2>🔥 Em alta</h2>
-          <p>Os destaques do lobby</p>
-        </div>
-      </div>
-
-      <div class="grid">
-        ${renderGameCards(popular)}
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="head">
-        <div>
-          <h2>🎮 Todos os jogos</h2>
-          <p>Escolha por provedor ou categoria</p>
-        </div>
-      </div>
-
-      <input
-        id="gameSearch"
-        type="search"
-        placeholder="🔎 Buscar jogo ou provedor..."
-        value="${searchTerm}"
-        autocomplete="off"
-        aria-label="Buscar jogos"
-      >
-
-      <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 0 9px;margin-bottom:8px;scrollbar-width:none;">
-        ${renderProviders()}
-      </div>
-
-      <div style="display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;margin-bottom:12px;scrollbar-width:none;">
-        ${renderCategories()}
-      </div>
-
-      <div class="grid" id="gamesGrid">
-        ${renderGameCards(filtered)}
-      </div>
-    </section>
-
-    ${favoriteGames.length ? `
-      <section class="section">
-        <div class="head">
-          <div>
-            <h2>⭐ Seus favoritos</h2>
-            <p>Seus jogos salvos neste dispositivo</p>
-          </div>
-        </div>
-
-        <div class="grid">
-          ${renderGameCards(favoriteGames)}
-        </div>
-      </section>
-    ` : ""}
-
-    <section class="section">
-      <div class="features">
-        <div class="feature">
-          <div style="font-size:24px;">⭐</div>
-          <h3>Favoritos</h3>
-          <p>Salve seus jogos preferidos neste dispositivo.</p>
-        </div>
-
-        <div class="feature">
-          <div style="font-size:24px;">🎮</div>
-          <h3>Provedores</h3>
-          <p>Organização preparada para futuras integrações autorizadas.</p>
-        </div>
-
-        <div class="feature">
-          <div style="font-size:24px;">📱</div>
-          <h3>Mobile First</h3>
-          <p>Interface pensada primeiro para a experiência no celular.</p>
+      <div class="hero-showcase" aria-hidden="true">
+        <div class="showcase-orbit orbit-1"></div>
+        <div class="showcase-orbit orbit-2"></div>
+        <div class="showcase-game">
+          <span>🐉</span>
+          <b>GOLDEN<br>DRAGON</b>
+          <small>DEMO</small>
         </div>
       </div>
     </section>
-  `;
+
+    <section class="section-v06">
+      <div class="head"><div><h2>🔥 Em alta</h2><p>Os destaques do momento</p></div><button class="see-all" data-scroll-target="games-section">Ver todos</button></div>
+      <div class="rail-v06">${popular.map(gameCard).join("")}</div>
+    </section>
+
+    <section class="section-v06">
+      <div class="head"><div><h2>🆕 Novidades</h2><p>Novos títulos demonstrativos</p></div></div>
+      <div class="rail-v06">${games.filter(g => g.tag === "Novo").map(gameCard).join("")}</div>
+    </section>
+
+    <section class="section-v06" id="games-section">
+      <div class="head"><div><h2>🎮 Todos os jogos</h2><p>Escolha por provedor ou categoria</p></div></div>
+      <input id="gameSearch" type="search" placeholder="🔎 Buscar jogo ou provedor..." value="${searchTerm}" autocomplete="off" aria-label="Buscar jogos">
+      <div class="filter-rail">${renderProviders()}</div>
+      <div class="filter-rail categories-rail">${renderCategories()}</div>
+      <div class="grid grid-v06" id="gamesGrid">${renderGameCards(filtered)}</div>
+    </section>
+
+    ${favoriteGames.length ? `<section class="section-v06"><div class="head"><div><h2>⭐ Seus favoritos</h2><p>Salvos neste dispositivo</p></div></div><div class="rail-v06">${favoriteGames.map(gameCard).join("")}</div></section>` : ""}
+
+    <section class="section-v06 info-strip-v06">
+      <div><b>📱 Mobile first</b><span>Interface otimizada para toque e telas pequenas.</span></div>
+      <div><b>🎮 Créditos virtuais</b><span>Os jogos desta versão são demonstrativos.</span></div>
+      <div><b>🔐 Estrutura preparada</b><span>Integrações futuras devem ser autorizadas e licenciadas.</span></div>
+    </section>`;
 
   bindLobbyEvents();
+  bindGameEvents();
 }
 
-
-/* =========================================================
-   EVENTOS DO LOBBY
-========================================================= */
 
 function bindLobbyEvents() {
 
@@ -2165,3 +1983,11 @@ updateBalance();
 navigate(
   "home"
 );
+
+
+document.addEventListener("click", event => {
+  const button = event.target.closest("[data-scroll-target]");
+  if (!button) return;
+  const target = document.getElementById(button.dataset.scrollTarget);
+  if (target) target.scrollIntoView({behavior:"smooth", block:"start"});
+});
