@@ -1,5 +1,5 @@
 /* =========================================================
-   CASINOX — v0.3
+   CASINOX — v0.5
    MOBILE FIRST
    LOBBY + PROVEDORES + CATEGORIAS + FAVORITOS
    ========================================================= */
@@ -453,68 +453,33 @@ function getFilteredGames() {
 
 function gameCard(game) {
 
-  const favorite =
-    isFavorite(game.id);
-
+  const favorite = isFavorite(game.id);
 
   return `
-
     <article
       class="card"
       data-game="${game.id}"
       tabindex="0"
+      aria-label="Abrir ${game.name}"
     >
-
-      <div
-        class="art"
-        style="position:relative;"
-      >
-
-        ${game.icon}
-
+      <div class="art">
+        <span aria-hidden="true">${game.icon}</span>
 
         <button
           class="favorite-btn"
           data-favorite="${game.id}"
           aria-label="Favoritar ${game.name}"
-          style="
-            position:absolute;
-            top:7px;
-            right:7px;
-            width:32px;
-            height:32px;
-            border:0;
-            border-radius:50%;
-            background:rgba(0,0,0,.45);
-            color:#fff;
-            font-size:16px;
-            z-index:2;
-          "
+          type="button"
         >
           ${favorite ? "⭐" : "☆"}
         </button>
-
       </div>
 
-
-      <h3>
-        ${game.name}
-      </h3>
-
-
-      <p>
-        ${game.provider}
-      </p>
-
-
-      <span class="tag">
-        ${game.tag}
-      </span>
-
+      <h3>${game.name}</h3>
+      <p>${game.provider}</p>
+      <span class="tag">${game.tag}</span>
     </article>
-
   `;
-
 }
 
 
@@ -677,19 +642,21 @@ function renderCategories() {
 
 function renderLobby() {
 
-  const filtered =
-    getFilteredGames();
+  const filtered = getFilteredGames();
 
+  const popular = games.filter(game =>
+    game.tag === "Popular" || game.category === "popular"
+  ).slice(0, 6);
+
+  const favoriteGames = games.filter(game =>
+    favorites.includes(game.id)
+  ).slice(0, 6);
 
   app.innerHTML = `
 
     <section class="hero">
-
       <div>
-
-        <div class="eyebrow">
-          CASINO SOCIAL • v0.3
-        </div>
+        <div class="eyebrow">CASINOX • MOBILE FIRST</div>
 
         <h1>
           Jogue.<br>
@@ -697,176 +664,102 @@ function renderLobby() {
         </h1>
 
         <p>
-          Explore nosso lobby de jogos
-          com créditos virtuais.
+          Seu hub social de jogos com créditos virtuais.
+          Explore categorias, provedores e seus favoritos.
         </p>
 
-        <button
-          class="primary"
-          id="heroGames"
-        >
-          Ver jogos →
+        <button class="primary" id="heroGames" type="button">
+          🎰 Explorar jogos
         </button>
-
       </div>
 
-
-      <div class="hero-art">
-
-        <div class="chip">
-          🎰
-        </div>
-
+      <div class="hero-art" aria-hidden="true">
+        <div class="chip">🎰</div>
       </div>
-
     </section>
 
-
     <section class="section">
-
       <div class="head">
-
         <div>
-
-          <h2>
-            🎮 Lobby
-          </h2>
-
-          <p>
-            Escolha seu jogo.
-          </p>
-
+          <h2>🔥 Em alta</h2>
+          <p>Os destaques do lobby</p>
         </div>
-
       </div>
 
+      <div class="grid">
+        ${renderGameCards(popular)}
+      </div>
+    </section>
 
-      <!-- BUSCA -->
+    <section class="section">
+      <div class="head">
+        <div>
+          <h2>🎮 Todos os jogos</h2>
+          <p>Escolha por provedor ou categoria</p>
+        </div>
+      </div>
 
       <input
         id="gameSearch"
         type="search"
         placeholder="🔎 Buscar jogo ou provedor..."
         value="${searchTerm}"
-        style="
-          width:100%;
-          min-height:46px;
-          padding:12px 14px;
-          margin-bottom:14px;
-          border:1px solid var(--line);
-          border-radius:12px;
-          background:#0d1321;
-          color:#fff;
-          font-size:14px;
-          outline:none;
-        "
+        autocomplete="off"
+        aria-label="Buscar jogos"
       >
 
-
-      <!-- PROVEDORES -->
-
-      <div
-        style="
-          display:flex;
-          gap:8px;
-          overflow-x:auto;
-          padding-bottom:7px;
-          margin-bottom:13px;
-          scrollbar-width:none;
-        "
-      >
-
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:2px 0 9px;margin-bottom:8px;scrollbar-width:none;">
         ${renderProviders()}
-
       </div>
 
-
-      <!-- CATEGORIAS -->
-
-      <div
-        style="
-          display:flex;
-          gap:7px;
-          overflow-x:auto;
-          padding-bottom:5px;
-          margin-bottom:18px;
-          scrollbar-width:none;
-        "
-      >
-
+      <div style="display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;margin-bottom:12px;scrollbar-width:none;">
         ${renderCategories()}
-
       </div>
 
-
-      <!-- JOGOS -->
-
-      <div
-        class="grid"
-        id="gamesGrid"
-      >
-
+      <div class="grid" id="gamesGrid">
         ${renderGameCards(filtered)}
-
       </div>
-
     </section>
 
+    ${favoriteGames.length ? `
+      <section class="section">
+        <div class="head">
+          <div>
+            <h2>⭐ Seus favoritos</h2>
+            <p>Seus jogos salvos neste dispositivo</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          ${renderGameCards(favoriteGames)}
+        </div>
+      </section>
+    ` : ""}
 
     <section class="section">
-
       <div class="features">
-
         <div class="feature">
-
-          <h3>
-            ⭐ Favoritos
-          </h3>
-
-          <p>
-            Salve seus jogos preferidos
-            neste dispositivo.
-          </p>
-
+          <div style="font-size:24px;">⭐</div>
+          <h3>Favoritos</h3>
+          <p>Salve seus jogos preferidos neste dispositivo.</p>
         </div>
 
-
         <div class="feature">
-
-          <h3>
-            🎮 Provedores
-          </h3>
-
-          <p>
-            Lobby preparado para futuras
-            integrações licenciadas.
-          </p>
-
+          <div style="font-size:24px;">🎮</div>
+          <h3>Provedores</h3>
+          <p>Organização preparada para futuras integrações autorizadas.</p>
         </div>
 
-
         <div class="feature">
-
-          <h3>
-            📱 Mobile First
-          </h3>
-
-          <p>
-            Interface desenvolvida
-            pensando primeiro no celular.
-          </p>
-
+          <div style="font-size:24px;">📱</div>
+          <h3>Mobile First</h3>
+          <p>Interface pensada primeiro para a experiência no celular.</p>
         </div>
-
       </div>
-
     </section>
-
   `;
 
-
   bindLobbyEvents();
-
 }
 
 
