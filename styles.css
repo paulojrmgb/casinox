@@ -2275,3 +2275,101 @@ main {
 @media (max-width:600px) {
   .card .art.character-art-v09 { height: 142px; }
 }
+
+/* =========================================================
+   CASINOX v1.0 — VISUAL REDESIGN
+   ========================================================= */
+:root{
+  --bg:#050506;
+  --panel:#0c0c10;
+  --panel2:#111117;
+  --line:rgba(255,210,70,.25);
+  --gold:#ffc51b;
+  --gold2:#ff9d00;
+  --white:#f8f8fb;
+  --muted:#9d9da8;
+  --purple:#8e38ff;
+}
+body{background:
+ radial-gradient(circle at 80% 10%,rgba(103,20,130,.12),transparent 28rem),
+ #050506;color:var(--white);}
+.topbar{
+  height:78px!important;background:rgba(4,4,6,.97)!important;
+  border-bottom:1px solid rgba(255,255,255,.08)!important;
+  padding:0 clamp(16px,3vw,50px)!important;
+  position:sticky;top:0;z-index:50;
+}
+.brand{font-size:28px!important;font-weight:950!important;letter-spacing:-1.5px}
+.brand b{display:none!important}.brand span{color:#fff}.brand i{color:#ffc51b;font-style:normal}
+.desktop-nav{gap:32px!important;margin-left:45px}
+.desktop-nav button{font-size:15px!important;text-transform:uppercase;letter-spacing:.4px}
+.actions{gap:12px!important}
+.balance{border:1px solid rgba(255,197,27,.35);border-radius:30px;padding:8px 20px!important;background:#09090b}
+.balance strong{color:#ffd044!important;font-size:18px!important}
+.balance small{font-size:9px!important}
+.profile-btn{border:1px solid rgba(255,255,255,.18)!important;background:#09090b!important}
+#app{max-width:1460px;margin:auto;padding:18px 28px 100px!important}
+
+.hero-v10{
+  height:380px;border:1px solid rgba(255,195,35,.38);border-radius:18px;overflow:hidden;
+  position:relative;isolation:isolate;background:#14060d;
+  box-shadow:0 15px 60px rgba(0,0,0,.45), inset 0 0 50px rgba(255,150,0,.08);
+}
+.hero-bg{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(7,5,7,.92) 0%,rgba(7,5,7,.6) 38%,rgba(7,5,7,.05) 70%),url("assets/characters/hero-dragon-fortune.jpg");background-size:cover;background-position:center;z-index:-1;transform:scale(1.03)}
+.hero-copy{position:absolute;left:6%;top:35px;z-index:3}
+.hero-ribbon{display:inline-block;background:linear-gradient(90deg,#d82a43,#ff4863);padding:8px 22px;font-weight:900;font-size:15px;clip-path:polygon(0 0,100% 0,93% 100%,7% 100%)}
+.hero-eyebrow{color:#ffc51b;font-weight:900;font-size:10px;letter-spacing:3px;margin:12px 0}
+.hero-copy h1{font-size:58px;line-height:.88;margin:0;text-shadow:0 4px 0 #7d3300,0 0 20px rgba(255,180,0,.3);font-weight:1000;letter-spacing:-2px}
+.hero-copy h1 span{color:#ffc51b}
+.hero-copy p{font-size:25px;font-weight:900;margin:14px 0 0}
+.hero-copy>small{display:block;color:#eee;max-width:410px;font-size:15px;margin:3px 0 20px}
+.hero-play{background:linear-gradient(#ffd64b,#f59f00);border:0;border-radius:10px;padding:15px 30px;font-size:19px;font-weight:950;color:#1b1000;box-shadow:0 8px 22px rgba(255,180,0,.3);cursor:pointer}
+.hero-side-card{position:absolute;right:11%;top:62px;width:165px;height:215px;background:#141117;border-radius:20px;transform:rotate(8deg);overflow:hidden;box-shadow:0 16px 30px #000;z-index:4;border:1px solid rgba(255,255,255,.1)}
+.hero-side-card img{width:100%;height:100%;object-fit:cover;opacity:.2}
+.hero-side-card div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.hero-side-card b{font-size:52px}.hero-side-card strong{font-size:17px}.hero-side-card small{color:#ffc51b;margin-top:6px}
+.hero-arrow{position:absolute;top:45%;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.55);color:#fff;font-size:40px;line-height:30px;z-index:5}
+.hero-arrow.left{left:14px}.hero-arrow.right{right:14px}
+.hero-dots{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:9px}.hero-dots i{width:12px;height:12px;border-radius:50%;background:#8e8e8e}.hero-dots i.active{background:#ffc51b}
+
+.catalog-section{margin-top:28px}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:10px}
+.section-head h2{margin:0;font-size:20px;letter-spacing:.2px}.section-head p{margin:4px 0 0;color:#888894;font-size:12px}
+.link-btn{border:0;background:none;color:#ffd34c;font-weight:900;font-size:12px;cursor:pointer}
+.game-rail{display:grid;grid-auto-flow:column;grid-auto-columns:180px;gap:10px;overflow-x:auto;padding:4px 1px 12px;scrollbar-width:none}
+.game-rail::-webkit-scrollbar{display:none}
+.game-card{background:#0d0d13;border:1px solid rgba(255,255,255,.12);border-radius:13px;overflow:hidden;cursor:pointer;min-width:0;transition:.2s;box-shadow:0 5px 20px rgba(0,0,0,.22)}
+.game-card:hover{transform:translateY(-3px);border-color:#ffc51b}
+.game-art{height:220px;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.art-shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78))}
+.hot-badge{position:absolute;left:0;top:0;background:#ef263c;color:#fff;padding:5px 10px;border-radius:0 0 9px 0;font-size:10px;font-weight:1000;z-index:2}
+.heart-btn{position:absolute;right:8px;top:7px;border:0;background:rgba(0,0,0,.35);color:#fff;border-radius:50%;width:30px;height:30px;font-size:20px;z-index:2;cursor:pointer}
+.card-title{position:absolute;bottom:9px;left:9px;right:9px;color:#fff;font-weight:1000;font-size:16px;text-shadow:0 2px 3px #000;z-index:2}
+.game-meta{padding:8px 10px 11px}.game-meta strong{display:block;font-size:13px}.game-meta small{color:#858592;font-size:10px}
+.game-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.game-grid .game-card .game-art{height:230px}
+.tools-row{display:flex;gap:12px;align-items:center;margin-bottom:10px}.filter-rail{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}.filter-rail::-webkit-scrollbar{display:none}
+.tools-row .filter-rail{flex:1}.tools-row input{width:250px}
+#gameSearch{background:#0b0b0e;border:1px solid rgba(255,255,255,.12);border-radius:24px;color:#fff;padding:11px 15px;outline:none}
+.demo-note{margin:30px 0;padding:16px;border:1px solid rgba(255,197,27,.18);border-radius:14px;background:#0a0a0d;display:flex;gap:12px;align-items:center}.demo-note b{color:#ffc51b}.demo-note span{color:#858592;font-size:12px}
+
+.mobile-nav{background:rgba(8,8,11,.98)!important;border-top:1px solid rgba(255,197,27,.22)!important}
+footer{background:#050506!important;color:#777!important}
+
+@media(max-width:900px){
+ #app{padding:10px 12px 90px!important}
+ .topbar{height:64px!important;padding:0 13px!important}.desktop-nav{display:none!important}
+ .brand{font-size:24px!important}.balance{padding:7px 13px!important}.balance small{display:none}
+ .hero-v10{height:320px;border-radius:15px}.hero-copy{left:22px;top:22px}.hero-copy h1{font-size:40px}.hero-copy p{font-size:18px}.hero-copy>small{font-size:12px;max-width:250px}
+ .hero-ribbon{font-size:11px;padding:6px 15px}.hero-play{font-size:14px;padding:12px 20px}.hero-side-card{right:7%;top:88px;width:112px;height:155px}.hero-side-card b{font-size:34px}.hero-side-card strong{font-size:11px}
+ .hero-arrow{display:none}
+ .game-rail{grid-auto-columns:155px;gap:9px}.game-art{height:195px}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.game-grid .game-card .game-art{height:230px}
+ .tools-row{display:block}.tools-row .filter-rail{margin-bottom:9px}#gameSearch{width:100%;box-sizing:border-box}
+ .section-head h2{font-size:18px}
+}
+@media(max-width:480px){
+ .hero-v10{height:285px}.hero-bg{background-position:62% center}.hero-copy{left:18px;top:18px}.hero-copy h1{font-size:34px}.hero-copy p{font-size:16px;margin-top:9px}.hero-copy>small{font-size:11px;max-width:220px;margin-bottom:12px}
+ .hero-side-card{right:5%;top:75px;width:92px;height:128px}.hero-side-card b{font-size:28px}.hero-side-card strong{font-size:9px}.hero-side-card small{font-size:8px}
+ .hero-play{font-size:13px;padding:10px 16px}
+ .game-rail{grid-auto-columns:145px}.game-art{height:188px}.game-grid .game-card .game-art{height:220px}
+ .demo-note{font-size:11px;display:block}.demo-note span{display:block;margin-top:5px}
+}

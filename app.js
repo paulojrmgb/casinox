@@ -10,14 +10,18 @@
    ========================================================= */
 
 const CASINOX_V08_GAMES = [
-  {id:"moon-temple",name:"Moon Temple",provider:"PG",category:"Slots",img:"assets/games/moon-temple.svg",tag:"NOVO"},
-  {id:"golden-pearls",name:"Golden Pearls",provider:"Fortunes",category:"Slots",img:"assets/games/golden-pearls.svg",tag:"HOT"},
-  {id:"wild-jungle",name:"Wild Jungle",provider:"PG",category:"Slots",img:"assets/games/wild-jungle.svg",tag:"TOP"},
-  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution",category:"Cassino",img:"assets/games/neon-roulette.svg",tag:"LIVE"},
-  {id:"rocket-cash",name:"Rocket Cash",provider:"Pragmatic Play",category:"Crash",img:"assets/games/rocket-cash.svg",tag:"HOT"},
-  {id:"fortune-gems",name:"Fortune Gems",provider:"Fortunes",category:"Slots",img:"assets/games/fortune-gems.svg",tag:"NOVO"},
-  {id:"royal-crown",name:"Royal Crown",provider:"PG",category:"Slots",img:"assets/games/royal-crown.svg",tag:"VIP"},
-  {id:"dragon-gold",name:"Dragon Gold",provider:"Pragmatic Play",category:"Slots",img:"assets/games/dragon-gold.svg",tag:"TOP"}
+  {id:"lucky-rabbit",name:"Lucky Rabbit",provider:"PG",category:"Slots",img:"assets/characters/lucky-rabbit.jpg",tag:"HOT",icon:"🐰"},
+  {id:"golden-bull",name:"Golden Bull",provider:"Fortunes",category:"Slots",img:"assets/characters/golden-bull.jpg",tag:"HOT",icon:"🐂"},
+  {id:"dragon-fortune",name:"Dragon Fortune",provider:"PG",category:"Slots",img:"assets/characters/dragon-fortune.jpg",tag:"HOT",icon:"🐉"},
+  {id:"tiger-riches",name:"Tiger Riches",provider:"Fortunes",category:"Slots",img:"assets/characters/tiger-riches.jpg",tag:"HOT",icon:"🐯"},
+  {id:"lion-king",name:"Lion King",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/lion-king.jpg",tag:"HOT",icon:"🦁"},
+  {id:"royal-bunny",name:"Royal Bunny",provider:"PG",category:"Slots",img:"assets/characters/royal-bunny.jpg",tag:"HOT",icon:"🐰"},
+  {id:"fox-fortune",name:"Fox Fortune",provider:"Fortunes",category:"Slots",img:"assets/characters/fox-fortune.jpg",tag:"HOT",icon:"🦊"},
+  {id:"dragon-fire",name:"Dragon Fire",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/dragon-fire.jpg",tag:"HOT",icon:"🐲"},
+  {id:"golden-toad",name:"Golden Toad",provider:"PG",category:"Slots",img:"assets/characters/golden-toad.jpg",tag:"NEW",icon:"🐸"},
+  {id:"treasure-panda",name:"Treasure Panda",provider:"Fortunes",category:"Slots",img:"assets/characters/treasure-panda.jpg",tag:"NEW",icon:"🐼"},
+  {id:"moon-temple",name:"Moon Temple",provider:"PG",category:"Slots",img:"assets/games/moon-temple.svg",tag:"NEW",icon:"🌙"},
+  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution",category:"Cassino",img:"assets/games/neon-roulette.svg",tag:"LIVE",icon:"◎"}
 ];
 
 
@@ -355,16 +359,16 @@ function getFilteredGames() {
 function gameCard(game) {
   const favorite = isFavorite(game.id);
   return `
-    <article class="card game-card-v06" data-game="${game.id}" tabindex="0" aria-label="Abrir ${game.name}">
-      <div class="art art-${game.tone || 'gold'}">
-        <span class="game-glow" aria-hidden="true"></span>
-        <span class="game-icon" aria-hidden="true">${game.icon}</span>
-        <span class="game-tag">${game.tag}</span>
-        <button class="favorite-btn" data-favorite="${game.id}" aria-label="Favoritar ${game.name}" type="button">${favorite ? "★" : "☆"}</button>
+    <article class="game-card" data-game="${game.id}" tabindex="0" aria-label="Abrir ${game.name}">
+      <div class="game-art" style="background-image:url("${game.img}")">
+        <span class="hot-badge">${game.tag}</span>
+        <button class="heart-btn" data-favorite="${game.id}" aria-label="Favoritar ${game.name}" type="button">${favorite ? "♥" : "♡"}</button>
+        <div class="art-shade"></div>
+        <div class="card-title">${game.name}</div>
       </div>
-      <div class="game-info">
-        <h3>${game.name}</h3>
-        <p>${game.provider}</p>
+      <div class="game-meta">
+        <strong>${game.name}</strong>
+        <small>${game.provider}</small>
       </div>
     </article>`;
 }
@@ -525,54 +529,53 @@ function renderCategories() {
 
 function renderLobby() {
   const filtered = getFilteredGames();
-  const popular = games.filter(g => g.tag === "TOP" || g.tag === "HOT" || g.category === "popular").slice(0, 8);
-  const recent = games.filter(g => ["lucky-stars","fortune-gems","rocket-crash","fortune-crown"].includes(g.id));
+  const popular = games.slice(0, 8);
+  const newest = games.slice(8, 12);
   const favoriteGames = games.filter(g => favorites.includes(g.id)).slice(0, 8);
 
   app.innerHTML = `
-    <section class="hero hero-v06">
-      <div class="hero-copy-v06">
-        <div class="eyebrow">CASINOX • V0.6</div>
-        <h1>Seu próximo<br><span>destaque.</span></h1>
-        <p>Explore uma seleção de jogos demonstrativos em uma experiência feita primeiro para celular.</p>
-        <button class="primary" id="heroGames" type="button">🎰 Explorar jogos</button>
+    <section class="hero-v10">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <span class="hero-ribbon">JOGO EM DESTAQUE</span>
+        <div class="hero-eyebrow">CASINOX • DEMO</div>
+        <h1>DRAGON<br><span>FORTUNE</span></h1>
+        <p>FORTUNA EM CHAMAS!</p>
+        <small>A sorte queima mais forte para os corajosos.</small>
+        <button class="hero-play" id="heroGames" type="button">▶ &nbsp; JOGAR AGORA</button>
       </div>
-      <div class="hero-showcase" aria-hidden="true">
-        <div class="showcase-orbit orbit-1"></div>
-        <div class="showcase-orbit orbit-2"></div>
-        <div class="showcase-game">
-          <span>🐉</span>
-          <b>GOLDEN<br>DRAGON</b>
-          <small>DEMO</small>
-        </div>
+      <div class="hero-side-card">
+        <img src="assets/characters/dragon-fortune.jpg" alt="Dragon Fortune">
+        <div><b>🐉</b><strong>DRAGON<br>FORTUNE</strong><small>DEMO</small></div>
       </div>
+      <button class="hero-arrow left" type="button" aria-label="Anterior">‹</button>
+      <button class="hero-arrow right" type="button" aria-label="Próximo">›</button>
+      <div class="hero-dots"><i></i><i class="active"></i><i></i><i></i><i></i><i></i></div>
     </section>
 
-    <section class="section-v06">
-      <div class="head"><div><h2>🔥 Em alta</h2><p>Os destaques do momento</p></div><button class="see-all" data-scroll-target="games-section">Ver todos</button></div>
-      <div class="rail-v06">${popular.map(gameCard).join("")}</div>
+    <section class="catalog-section">
+      <div class="section-head"><div><h2>🔥 EM ALTA</h2><p>Os destaques do momento</p></div><button class="link-btn" data-scroll-target="games-section">VER TODOS ›</button></div>
+      <div class="game-rail">${popular.map(gameCard).join("")}</div>
     </section>
 
-    <section class="section-v06">
-      <div class="head"><div><h2>🆕 Novidades</h2><p>Novos títulos demonstrativos</p></div></div>
-      <div class="rail-v06">${games.filter(g => g.tag === "NOVO").map(gameCard).join("")}</div>
+    <section class="catalog-section">
+      <div class="section-head"><div><h2>🆕 NOVIDADES</h2><p>Novos títulos demonstrativos</p></div><button class="link-btn">VER TODOS ›</button></div>
+      <div class="game-rail">${newest.map(gameCard).join("")}</div>
     </section>
 
-    <section class="section-v06" id="games-section">
-      <div class="head"><div><h2>🎮 Todos os jogos</h2><p>Escolha por provedor ou categoria</p></div></div>
-      <input id="gameSearch" type="search" placeholder="🔎 Buscar jogo ou provedor..." value="${searchTerm}" autocomplete="off" aria-label="Buscar jogos">
-      <div class="filter-rail">${renderProviders()}</div>
+    <section class="catalog-section all-games" id="games-section">
+      <div class="section-head"><div><h2>🎮 TODOS OS JOGOS</h2><p>Escolha por provedor ou categoria</p></div></div>
+      <div class="tools-row">
+        <div class="filter-rail">${renderProviders()}</div>
+        <input id="gameSearch" type="search" placeholder="🔎 Buscar jogo..." value="${searchTerm}" autocomplete="off" aria-label="Buscar jogos">
+      </div>
       <div class="filter-rail categories-rail">${renderCategories()}</div>
-      <div class="grid grid-v06" id="gamesGrid">${renderGameCards(filtered)}</div>
+      <div class="game-grid" id="gamesGrid">${renderGameCards(filtered)}</div>
     </section>
 
-    ${favoriteGames.length ? `<section class="section-v06"><div class="head"><div><h2>⭐ Seus favoritos</h2><p>Salvos neste dispositivo</p></div></div><div class="rail-v06">${favoriteGames.map(gameCard).join("")}</div></section>` : ""}
+    ${favoriteGames.length ? `<section class="catalog-section"><div class="section-head"><div><h2>♥ FAVORITOS</h2><p>Salvos neste dispositivo</p></div></div><div class="game-rail">${favoriteGames.map(gameCard).join("")}</div></section>` : ""}
 
-    <section class="section-v06 info-strip-v06">
-      <div><b>📱 Mobile first</b><span>Interface otimizada para toque e telas pequenas.</span></div>
-      <div><b>🎮 Créditos virtuais</b><span>Os jogos desta versão são demonstrativos.</span></div>
-      <div><b>🔐 Estrutura preparada</b><span>Integrações futuras devem ser autorizadas e licenciadas.</span></div>
-    </section>`;
+    <section class="demo-note"><b>CASINOX DEMO</b><span>Créditos virtuais • experiência social • sem depósitos ou saques nesta versão.</span></section>`;
 
   bindLobbyEvents();
   bindGameEvents();
@@ -1987,91 +1990,5 @@ document.addEventListener("click", event => {
 });
 
 
-/* ================= CASINOX v0.8 VISUAL ART ADAPTER ================= */
-(function () {
-  const artMap = Object.fromEntries(CASINOX_V08_GAMES.map(g => [g.name.toLowerCase(), g.img]));
 
-  function applyOriginalArt() {
-    document.querySelectorAll(".card").forEach(card => {
-      const title = card.querySelector("h3");
-      if (!title) return;
-      const key = title.textContent.trim().toLowerCase();
-      const src = artMap[key];
-      if (!src) return;
-
-      let art = card.querySelector(".art");
-      if (!art) {
-        art = document.createElement("div");
-        art.className = "art";
-        card.insertBefore(art, title);
-      }
-      art.innerHTML = "";
-      art.style.backgroundImage = `url("${src}")`;
-      art.style.backgroundSize = "cover";
-      art.style.backgroundPosition = "center";
-      art.classList.add("original-art");
-    });
-  }
-
-  const observer = new MutationObserver(() => applyOriginalArt());
-  observer.observe(document.body, {childList:true, subtree:true});
-  document.addEventListener("DOMContentLoaded", applyOriginalArt);
-  setTimeout(applyOriginalArt, 500);
-  setTimeout(applyOriginalArt, 1500);
-})();
-
-
-const CASINOX_V09_CHARACTERS = [
-  {id:"lucky-rabbit",name:"Lucky Rabbit",provider:"PG",category:"Slots",img:"assets/characters/lucky-rabbit.jpg",tag:"HOT"},
-  {id:"golden-bull",name:"Golden Bull",provider:"Fortunes",category:"Slots",img:"assets/characters/golden-bull.jpg",tag:"HOT"},
-  {id:"dragon-fortune",name:"Dragon Fortune",provider:"PG",category:"Slots",img:"assets/characters/dragon-fortune.jpg",tag:"HOT"},
-  {id:"tiger-riches",name:"Tiger Riches",provider:"Fortunes",category:"Slots",img:"assets/characters/tiger-riches.jpg",tag:"HOT"},
-  {id:"lion-king",name:"Lion King",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/lion-king.jpg",tag:"HOT"},
-  {id:"royal-bunny",name:"Royal Bunny",provider:"PG",category:"Slots",img:"assets/characters/royal-bunny.jpg",tag:"NEW"},
-  {id:"fox-fortune",name:"Fox Fortune",provider:"Fortunes",category:"Slots",img:"assets/characters/fox-fortune.jpg",tag:"NEW"},
-  {id:"dragon-fire",name:"Dragon Fire",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/dragon-fire.jpg",tag:"NEW"},
-  {id:"golden-toad",name:"Golden Toad",provider:"PG",category:"Slots",img:"assets/characters/golden-toad.jpg",tag:"NEW"},
-  {id:"treasure-panda",name:"Treasure Panda",provider:"Fortunes",category:"Slots",img:"assets/characters/treasure-panda.jpg",tag:"NEW"}
-];
-
-
-(function () {
-  const map = Object.fromEntries(CASINOX_V09_CHARACTERS.map(g => [g.name.toLowerCase(), g.img]));
-  const hero = "assets/characters/hero-dragon-fortune.jpg";
-
-  function applyV09Art() {
-    document.querySelectorAll(".card").forEach(card => {
-      const title = card.querySelector("h3");
-      if (!title) return;
-      const src = map[title.textContent.trim().toLowerCase()];
-      if (!src) return;
-
-      let art = card.querySelector(".art");
-      if (!art) {
-        art = document.createElement("div");
-        art.className = "art";
-        card.insertBefore(art, title);
-      }
-      art.style.backgroundImage = `url("${src}")`;
-      art.style.backgroundSize = "cover";
-      art.style.backgroundPosition = "center";
-      art.classList.add("character-art-v09");
-    });
-
-    document.querySelectorAll("[data-hero], .hero, .hero-banner").forEach(el => {
-      if (el.matches("img")) el.src = hero;
-      else {
-        el.style.backgroundImage = `url("${hero}")`;
-        el.style.backgroundSize = "cover";
-        el.style.backgroundPosition = "center";
-      }
-      el.classList.add("hero-character-v09");
-    });
-  }
-
-  const observer = new MutationObserver(applyV09Art);
-  observer.observe(document.body, {childList:true, subtree:true});
-  document.addEventListener("DOMContentLoaded", applyV09Art);
-  setTimeout(applyV09Art, 300);
-  setTimeout(applyV09Art, 1200);
-})();
+window.CASINOX_VERSION="1.0";
