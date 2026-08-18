@@ -1,5 +1,5 @@
-const CACHE_NAME = "casinox-v0.8";
-const VERSION = "0.8";
+const CACHE_NAME = "casinox-v0.9";
+const VERSION = "0.9";
 
 const APP_SHELL = [
   "./",
@@ -15,7 +15,18 @@ const APP_SHELL = [
   "./assets/games/rocket-cash.svg",
   "./assets/games/fortune-gems.svg",
   "./assets/games/royal-crown.svg",
-  "./assets/games/dragon-gold.svg"
+  "./assets/games/dragon-gold.svg",
+  "./assets/characters/hero-dragon-fortune.jpg",
+  "./assets/characters/lucky-rabbit.jpg",
+  "./assets/characters/golden-bull.jpg",
+  "./assets/characters/dragon-fortune.jpg",
+  "./assets/characters/tiger-riches.jpg",
+  "./assets/characters/lion-king.jpg",
+  "./assets/characters/royal-bunny.jpg",
+  "./assets/characters/fox-fortune.jpg",
+  "./assets/characters/dragon-fire.jpg",
+  "./assets/characters/golden-toad.jpg",
+  "./assets/characters/treasure-panda.jpg"
 ];
 
 self.addEventListener("install", event => {

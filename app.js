@@ -2019,3 +2019,59 @@ document.addEventListener("click", event => {
   setTimeout(applyOriginalArt, 500);
   setTimeout(applyOriginalArt, 1500);
 })();
+
+
+const CASINOX_V09_CHARACTERS = [
+  {id:"lucky-rabbit",name:"Lucky Rabbit",provider:"PG",category:"Slots",img:"assets/characters/lucky-rabbit.jpg",tag:"HOT"},
+  {id:"golden-bull",name:"Golden Bull",provider:"Fortunes",category:"Slots",img:"assets/characters/golden-bull.jpg",tag:"HOT"},
+  {id:"dragon-fortune",name:"Dragon Fortune",provider:"PG",category:"Slots",img:"assets/characters/dragon-fortune.jpg",tag:"HOT"},
+  {id:"tiger-riches",name:"Tiger Riches",provider:"Fortunes",category:"Slots",img:"assets/characters/tiger-riches.jpg",tag:"HOT"},
+  {id:"lion-king",name:"Lion King",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/lion-king.jpg",tag:"HOT"},
+  {id:"royal-bunny",name:"Royal Bunny",provider:"PG",category:"Slots",img:"assets/characters/royal-bunny.jpg",tag:"NEW"},
+  {id:"fox-fortune",name:"Fox Fortune",provider:"Fortunes",category:"Slots",img:"assets/characters/fox-fortune.jpg",tag:"NEW"},
+  {id:"dragon-fire",name:"Dragon Fire",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/dragon-fire.jpg",tag:"NEW"},
+  {id:"golden-toad",name:"Golden Toad",provider:"PG",category:"Slots",img:"assets/characters/golden-toad.jpg",tag:"NEW"},
+  {id:"treasure-panda",name:"Treasure Panda",provider:"Fortunes",category:"Slots",img:"assets/characters/treasure-panda.jpg",tag:"NEW"}
+];
+
+
+(function () {
+  const map = Object.fromEntries(CASINOX_V09_CHARACTERS.map(g => [g.name.toLowerCase(), g.img]));
+  const hero = "assets/characters/hero-dragon-fortune.jpg";
+
+  function applyV09Art() {
+    document.querySelectorAll(".card").forEach(card => {
+      const title = card.querySelector("h3");
+      if (!title) return;
+      const src = map[title.textContent.trim().toLowerCase()];
+      if (!src) return;
+
+      let art = card.querySelector(".art");
+      if (!art) {
+        art = document.createElement("div");
+        art.className = "art";
+        card.insertBefore(art, title);
+      }
+      art.style.backgroundImage = `url("${src}")`;
+      art.style.backgroundSize = "cover";
+      art.style.backgroundPosition = "center";
+      art.classList.add("character-art-v09");
+    });
+
+    document.querySelectorAll("[data-hero], .hero, .hero-banner").forEach(el => {
+      if (el.matches("img")) el.src = hero;
+      else {
+        el.style.backgroundImage = `url("${hero}")`;
+        el.style.backgroundSize = "cover";
+        el.style.backgroundPosition = "center";
+      }
+      el.classList.add("hero-character-v09");
+    });
+  }
+
+  const observer = new MutationObserver(applyV09Art);
+  observer.observe(document.body, {childList:true, subtree:true});
+  document.addEventListener("DOMContentLoaded", applyV09Art);
+  setTimeout(applyV09Art, 300);
+  setTimeout(applyV09Art, 1200);
+})();
