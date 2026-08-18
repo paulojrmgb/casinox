@@ -1970,7 +1970,7 @@ document.addEventListener("click", event => {
 
 
 
-window.CASINOX_VERSION="1.7";
+window.CASINOX_VERSION="1.8";
 
 /* CASINOX v1.7 — GAME ENGINE IMERSIVO / OFFLINE DEMO */
 (function(){

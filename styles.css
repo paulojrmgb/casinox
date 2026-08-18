@@ -2470,3 +2470,41 @@ footer{background:#050506!important;color:#777!important}
 @media(min-width:700px){.cx17-main{padding-top:12px}.cx17-stage{height:min(58vh,590px);max-width:620px}.cx17-hero img{width:64px;height:78px}.cx17-controls{padding-left:24px;padding-right:24px}.cx17-top{height:64px;min-height:64px;padding-left:18px;padding-right:18px}}
 @media(max-height:720px){.cx17-hero{padding:1px 8px}.cx17-hero img{width:44px;height:52px}.cx17-hero strong{font-size:14px}.cx17-jackpot{padding:4px 10px}.cx17-stage{height:48vh;min-height:230px}.cx17-message{min-height:18px}.cx17-controls{padding-top:4px}.cx17-control-row{margin:4px auto}.cx17-tools button{padding:6px}}
 @media(max-width:360px){.cx17-stage{height:45vh;min-height:220px}.cx17-cell span{font-size:22px}.cx17-round{width:44px}.cx17-control-row{grid-template-columns:44px 1fr 44px}}
+
+/* CASINOX v1.8 — MOBILE FIRST / CONTROLES SEMPRE VISÍVEIS */
+.cx17-shell{height:100dvh;min-height:100svh;width:100vw;touch-action:manipulation}
+.cx17-top{position:relative;z-index:30;flex:0 0 auto}
+.cx17-main{z-index:10;padding-bottom:0;overflow:hidden}
+.cx17-controls{position:absolute;left:0;right:0;bottom:0;z-index:40;padding-bottom:max(10px,env(safe-area-inset-bottom));}
+.cx17-controls button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
+@media(max-width:699px){
+  .cx17-shell{height:100dvh;min-height:100svh}
+  .cx17-top{height:50px;min-height:50px;padding:5px 8px;padding-top:max(5px,env(safe-area-inset-top));}
+  .cx17-icon{width:40px;height:40px;font-size:28px}
+  .cx17-top-balance{padding:7px 8px;font-size:10px}
+  .cx17-main{position:absolute;top:50px;left:0;right:0;bottom:166px;padding:3px 6px 0;overflow:hidden}
+  .cx17-hero{width:100%;height:38px;padding:0 4px;gap:6px;overflow:hidden}
+  .cx17-hero img{width:32px;height:32px;border-radius:8px}
+  .cx17-hero strong{font-size:12px}.cx17-hero small{font-size:8px}.cx17-hero span{font-size:7px}
+  .cx17-jackpot{width:100%;height:28px;box-sizing:border-box;margin:2px 0 4px;padding:4px 9px}
+  .cx17-jackpot span{font-size:7px}.cx17-jackpot strong{font-size:12px}
+  .cx17-stage{width:100%;height:calc(100% - 76px);min-height:0;max-height:none;box-sizing:border-box;padding:6px;border-radius:18px}
+  .cx17-reels{gap:3px;padding:5px;border-radius:13px}
+  .cx17-reel{gap:3px;padding:3px;border-radius:9px}
+  .cx17-cell{border-radius:7px}
+  .cx17-cell span{font-size:clamp(23px,10vw,42px)}
+  .cx17-message{height:18px;min-height:18px;font-size:9px;overflow:hidden}
+  .cx17-controls{padding:6px 8px max(10px,env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(20,5,14,.97),rgba(4,3,7,1) 82%);}
+  .cx17-stats{width:100%;height:34px}.cx17-stats div{padding:4px 2px}.cx17-stats small{font-size:6px}.cx17-stats b{font-size:11px}
+  .cx17-control-row{width:100%;grid-template-columns:52px 1fr 52px;gap:7px;margin:6px auto}
+  .cx17-round{height:54px;min-height:54px;font-size:27px;border-radius:15px}
+  .cx17-spin{height:54px;min-height:54px;border-radius:17px}.cx17-spin span{font-size:18px}.cx17-spin small{font-size:6px}
+  .cx17-tools{width:100%;gap:6px}.cx17-tools button{min-height:40px;padding:8px 3px;font-size:9px;border-radius:11px}
+  .cx17-payline-text{margin-top:3px;font-size:7px}
+}
+@media(max-width:380px){
+  .cx17-main{bottom:158px}.cx17-controls{padding-left:6px;padding-right:6px}
+  .cx17-control-row{grid-template-columns:48px 1fr 48px}.cx17-round,.cx17-spin{height:50px;min-height:50px}
+  .cx17-tools button{min-height:36px;font-size:8px}
+}
+@media(min-width:700px){.cx17-controls{position:absolute;bottom:0;left:0;right:0}.cx17-main{padding-bottom:170px}}
