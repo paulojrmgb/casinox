@@ -9,23 +9,15 @@
    JOGOS DEMONSTRATIVOS
    ========================================================= */
 
-const games = [
-  {id:"lucky-stars",name:"Lucky Stars",provider:"PG • Demo",category:"slots",icon:"🎰",tag:"Popular",tone:"gold"},
-  {id:"fortune-gems",name:"Fortune Gems",provider:"Fortunes • Demo",category:"slots",icon:"💎",tag:"Popular",tone:"violet"},
-  {id:"royal-roulette",name:"Royal Roulette",provider:"Evolution • Demo",category:"casino",icon:"🎡",tag:"Clássico",tone:"red"},
-  {id:"blackjack-pro",name:"Blackjack Pro",provider:"Evolution • Demo",category:"casino",icon:"🃏",tag:"Clássico",tone:"green"},
-  {id:"rocket-crash",name:"Rocket Crash",provider:"PG • Demo",category:"popular",icon:"🚀",tag:"Novo",tone:"blue"},
-  {id:"fortune-crown",name:"Fortune Crown",provider:"Fortunes • Demo",category:"slots",icon:"👑",tag:"Novo",tone:"purple"},
-  {id:"golden-dragon",name:"Golden Dragon",provider:"PG • Demo",category:"slots",icon:"🐉",tag:"Premium",tone:"orange"},
-  {id:"diamond-wheel",name:"Diamond Wheel",provider:"Pragmatic Play • Demo",category:"popular",icon:"💠",tag:"Popular",tone:"cyan"},
-  {id:"mega-fruit",name:"Mega Fruit",provider:"Pragmatic Play • Demo",category:"slots",icon:"🍒",tag:"Slots",tone:"pink"},
-  {id:"live-blackjack",name:"Live Blackjack",provider:"Evolution • Demo",category:"casino",icon:"♠️",tag:"Live",tone:"green"},
-  {id:"fortune-wheel",name:"Fortune Wheel",provider:"Fortunes • Demo",category:"popular",icon:"🎯",tag:"Bônus",tone:"gold"},
-  {id:"super-seven",name:"Super Seven",provider:"PG • Demo",category:"slots",icon:"7️⃣",tag:"Novo",tone:"red"},
-  {id:"moon-temple",name:"Moon Temple",provider:"PG • Demo",category:"slots",icon:"🌙",tag:"Novo",tone:"blue"},
-  {id:"golden-pearls",name:"Golden Pearls",provider:"Fortunes • Demo",category:"slots",icon:"🦪",tag:"Destaque",tone:"gold"},
-  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution • Demo",category:"casino",icon:"🎲",tag:"Novo",tone:"cyan"},
-  {id:"wild-jungle",name:"Wild Jungle",provider:"Pragmatic Play • Demo",category:"slots",icon:"🌴",tag:"Popular",tone:"green"}
+const CASINOX_V08_GAMES = [
+  {id:"moon-temple",name:"Moon Temple",provider:"PG",category:"Slots",img:"assets/games/moon-temple.svg",tag:"NOVO"},
+  {id:"golden-pearls",name:"Golden Pearls",provider:"Fortunes",category:"Slots",img:"assets/games/golden-pearls.svg",tag:"HOT"},
+  {id:"wild-jungle",name:"Wild Jungle",provider:"PG",category:"Slots",img:"assets/games/wild-jungle.svg",tag:"TOP"},
+  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution",category:"Cassino",img:"assets/games/neon-roulette.svg",tag:"LIVE"},
+  {id:"rocket-cash",name:"Rocket Cash",provider:"Pragmatic Play",category:"Crash",img:"assets/games/rocket-cash.svg",tag:"HOT"},
+  {id:"fortune-gems",name:"Fortune Gems",provider:"Fortunes",category:"Slots",img:"assets/games/fortune-gems.svg",tag:"NOVO"},
+  {id:"royal-crown",name:"Royal Crown",provider:"PG",category:"Slots",img:"assets/games/royal-crown.svg",tag:"VIP"},
+  {id:"dragon-gold",name:"Dragon Gold",provider:"Pragmatic Play",category:"Slots",img:"assets/games/dragon-gold.svg",tag:"TOP"}
 ];
 
 
@@ -1991,3 +1983,37 @@ document.addEventListener("click", event => {
   const target = document.getElementById(button.dataset.scrollTarget);
   if (target) target.scrollIntoView({behavior:"smooth", block:"start"});
 });
+
+
+/* ================= CASINOX v0.8 VISUAL ART ADAPTER ================= */
+(function () {
+  const artMap = Object.fromEntries(CASINOX_V08_GAMES.map(g => [g.name.toLowerCase(), g.img]));
+
+  function applyOriginalArt() {
+    document.querySelectorAll(".card").forEach(card => {
+      const title = card.querySelector("h3");
+      if (!title) return;
+      const key = title.textContent.trim().toLowerCase();
+      const src = artMap[key];
+      if (!src) return;
+
+      let art = card.querySelector(".art");
+      if (!art) {
+        art = document.createElement("div");
+        art.className = "art";
+        card.insertBefore(art, title);
+      }
+      art.innerHTML = "";
+      art.style.backgroundImage = `url("${src}")`;
+      art.style.backgroundSize = "cover";
+      art.style.backgroundPosition = "center";
+      art.classList.add("original-art");
+    });
+  }
+
+  const observer = new MutationObserver(() => applyOriginalArt());
+  observer.observe(document.body, {childList:true, subtree:true});
+  document.addEventListener("DOMContentLoaded", applyOriginalArt);
+  setTimeout(applyOriginalArt, 500);
+  setTimeout(applyOriginalArt, 1500);
+})();

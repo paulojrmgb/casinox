@@ -51,7 +51,7 @@
 
   <title>CasinoX — Hub Social de Jogos • v0.6</title>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=0.8">
 </head>
 
 <body>
@@ -236,8 +236,8 @@
        JAVASCRIPT
   ========================================== -->
 
-  <script src="app.js"></script>
-  <script src="CasinoX_v0.4_conta.js"></script>
+  <script src="app.js?v=0.8"></script>
+  <script src="CasinoX_v0.4_conta.js?v=0.8"></script>
 
 <script>
 
@@ -277,6 +277,29 @@ if ("serviceWorker" in navigator) {
 
 </script>
   
+
+<script>
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+
+  navigator.serviceWorker.addEventListener("message", function (event) {
+    if (!event.data || event.data.type !== "CASINOX_UPDATED") return;
+
+    if (sessionStorage.getItem("casinox_sw_reloaded") === "0.7") return;
+
+    sessionStorage.setItem("casinox_sw_reloaded", "0.7");
+
+    setTimeout(function () {
+      window.location.reload();
+    }, 250);
+  });
+
+  navigator.serviceWorker.ready.then(function (registration) {
+    registration.update().catch(function () {});
+  });
+})();
+</script>
+
 </body>
 
 </html>
