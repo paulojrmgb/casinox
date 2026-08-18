@@ -1,4 +1,4 @@
-const CACHE_NAME = "casinox-v1.1";
+const CACHE_NAME = "casinox-v1.2";
 const VERSION = "1.1";
 
 const APP_SHELL = [
@@ -26,7 +26,9 @@ const APP_SHELL = [
   "./assets/characters/fox-fortune.jpg",
   "./assets/characters/dragon-fire.jpg",
   "./assets/characters/golden-toad.jpg",
-  "./assets/characters/treasure-panda.jpg"
+  "./assets/characters/treasure-panda.jpg",
+  "./assets/characters/moon-temple.jpg",
+  "./assets/characters/neon-roulette.jpg"
 ];
 
 self.addEventListener("install", event => {

@@ -20,8 +20,8 @@ const CASINOX_V08_GAMES = [
   {id:"dragon-fire",name:"Dragon Fire",provider:"Pragmatic Play",category:"Slots",img:"assets/characters/dragon-fire.jpg",tag:"HOT",icon:"🐲"},
   {id:"golden-toad",name:"Golden Toad",provider:"PG",category:"Slots",img:"assets/characters/golden-toad.jpg",tag:"NEW",icon:"🐸"},
   {id:"treasure-panda",name:"Treasure Panda",provider:"Fortunes",category:"Slots",img:"assets/characters/treasure-panda.jpg",tag:"NEW",icon:"🐼"},
-  {id:"moon-temple",name:"Moon Temple",provider:"PG",category:"Slots",img:"assets/games/moon-temple.svg",tag:"NEW",icon:"🌙"},
-  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution",category:"Cassino",img:"assets/games/neon-roulette.svg",tag:"LIVE",icon:"◎"}
+  {id:"moon-temple",name:"Moon Temple",provider:"PG",category:"Slots",img:"assets/characters/moon-temple.jpg",tag:"NEW",icon:"🌙"},
+  {id:"neon-roulette",name:"Neon Roulette",provider:"Evolution",category:"Cassino",img:"assets/characters/neon-roulette.jpg",tag:"LIVE",icon:"◎"}
 ];
 
 

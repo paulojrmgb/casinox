@@ -2381,3 +2381,5 @@ footer{background:#050506!important;color:#777!important}
 .game-art .hot-badge,.game-art .heart-btn,.game-art .card-title{z-index:2;}
 .game-art.image-failed::before{content:"CASINOX DEMO";position:absolute;inset:0;display:grid;place-items:center;color:#f6c84a;font-weight:900;letter-spacing:2px;}
 @media(max-width:900px){.game-art{height:190px!important}.game-grid .game-card .game-art{height:205px!important}.game-image{min-width:100%;min-height:100%;}}
+
+/* CasinoX v1.2 — Moon Temple and Neon Roulette character artwork */
