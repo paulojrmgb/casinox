@@ -1970,46 +1970,105 @@ document.addEventListener("click", event => {
 
 
 
-window.CASINOX_VERSION="1.3";
+window.CASINOX_VERSION="1.7";
 
-/* CASINOX v1.5 — jogo demo com créditos virtuais */
+/* CASINOX v1.7 — GAME ENGINE IMERSIVO / OFFLINE DEMO */
 (function(){
-  const S=["🐰","🐂","🐉","🐯","🦁","🦊","💎","👑","🔥","🪙"];
-  const N=["Lucky Rabbit","Golden Bull","Dragon Fortune","Tiger Riches","Lion King","Royal Bunny","Fox Fortune","Dragon Fire","Golden Toad","Treasure Panda","Moon Temple","Neon Roulette","Rocket Cash","Fortune Gems","Golden Pearls","Wild Jungle"];
-  let ov=null, balance=Number(localStorage.getItem("casinox_balance")||10000), bet=Number(localStorage.getItem("casinox_bet")||100);
-  const save=()=>{localStorage.setItem("casinox_balance",String(balance));localStorage.setItem("casinox_bet",String(bet));};
-  const grid=()=>Array.from({length:5},()=>Array.from({length:3},()=>S[Math.floor(Math.random()*S.length)]));
-  const payout=g=>{const c={};g.map(r=>r[1]).forEach(x=>c[x]=(c[x]||0)+1);const m=Math.max(...Object.values(c));return m>=5?bet*10:m>=4?bet*5:m>=3?bet*2:0;};
-  function render(g){if(!ov)return;ov.querySelectorAll(".casinox-reel").forEach((r,i)=>r.innerHTML=`<div class="casinox-reel-symbol">${g[i][0]}</div><div class="casinox-reel-symbol">${g[i][1]}</div><div class="casinox-reel-symbol">${g[i][2]}</div>`);}
-  function open(name){
-    if(ov)ov.remove();
-    ov=document.createElement("section");ov.className="casinox-game-shell";
-    ov.innerHTML=`<header class="casinox-game-top"><button class="game-back" aria-label="Voltar">‹</button><div class="casinox-game-title"><strong>${name}</strong><span>DEMO • créditos virtuais</span></div><div class="casinox-game-balance">💰 ${balance.toLocaleString("pt-BR")}</div></header><main class="casinox-reels-area"><div class="casinox-reels">${Array(5).fill('<div class="casinox-reel"></div>').join("")}<div class="casinox-payline"></div></div></main><section class="casinox-controls"><div class="casinox-win"></div><div class="casinox-control-row"><div class="casinox-bet"><button class="bm">−</button><div class="casinox-bet-value"><small>APOSTA</small><strong>${bet}</strong></div><button class="bp">+</button></div><button class="casinox-spin">GIRAR</button></div><div class="casinox-game-footer"><span>5 iguais: 10×</span><span>4 iguais: 5×</span><span>3 iguais: 2×</span></div></section>`;
-    document.body.appendChild(ov);document.body.style.overflow="hidden";render(grid());
-    ov.querySelector(".game-back").onclick=close;
-    ov.querySelector(".bm").onclick=()=>{bet=Math.max(10,bet-10);ov.querySelector(".casinox-bet-value strong").textContent=bet;save();};
-    ov.querySelector(".bp").onclick=()=>{bet=Math.min(Math.max(10,balance),bet+10);ov.querySelector(".casinox-bet-value strong").textContent=bet;save();};
-    ov.querySelector(".casinox-spin").onclick=spin;
+  const games={
+    "Lucky Rabbit":{img:"assets/characters/lucky-rabbit.jpg",tag:"FORTUNE RABBIT",accent:"gold",symbols:["🐰","🧧","🪙","🥇","💎","👑","🍀","7️⃣"],pay:"🐰 3× = 2x • 4× = 5x • 5× = 12x"},
+    "Golden Bull":{img:"assets/characters/golden-bull.jpg",tag:"GOLDEN BULL",accent:"red",symbols:["🐂","🧧","🪙","🥇","💎","👑","🔥","7️⃣"],pay:"🐂 3× = 2x • 4× = 6x • 5× = 15x"},
+    "Dragon Fortune":{img:"assets/characters/dragon-fortune.jpg",tag:"DRAGON FORTUNE",accent:"red",symbols:["🐉","🏮","🪙","🥇","💎","👑","🔥","7️⃣"],pay:"🐉 3× = 2x • 4× = 7x • 5× = 20x"},
+    "Tiger Riches":{img:"assets/characters/tiger-riches.jpg",tag:"TIGER RICHES",accent:"orange",symbols:["🐯","🧧","🪙","🥇","💎","👑","🔥","7️⃣"],pay:"🐯 3× = 2x • 4× = 6x • 5× = 18x"},
+    "Lion King":{img:"assets/characters/lion-king.jpg",tag:"LION KING",accent:"gold",symbols:["🦁","👑","🪙","🥇","💎","🔥","🍀","7️⃣"],pay:"🦁 3× = 2x • 4× = 6x • 5× = 16x"},
+    "Royal Bunny":{img:"assets/characters/royal-bunny.jpg",tag:"ROYAL BUNNY",accent:"pink",symbols:["🐇","👑","🪙","🥇","💎","💖","🍀","7️⃣"],pay:"🐇 3× = 2x • 4× = 5x • 5× = 14x"},
+    "Fox Fortune":{img:"assets/characters/fox-fortune.jpg",tag:"FOX FORTUNE",accent:"orange",symbols:["🦊","🧧","🪙","🥇","💎","🔥","🍀","7️⃣"],pay:"🦊 3× = 2x • 4× = 6x • 5× = 16x"},
+    "Dragon Fire":{img:"assets/characters/dragon-fire.jpg",tag:"DRAGON FIRE",accent:"red",symbols:["🐲","🔥","🪙","🥇","💎","👑","🏮","7️⃣"],pay:"🐲 3× = 2x • 4× = 7x • 5× = 20x"}
+  };
+  const fallback={img:"assets/characters/dragon-fortune.jpg",tag:"CASINOX ORIGINAL",accent:"gold",symbols:["⭐","🪙","💎","👑","🔥","🍀","7️⃣"],pay:"3× = 2x • 4× = 5x • 5× = 10x"};
+  let overlay=null, balance=Number(localStorage.getItem('casinox_balance')||10000), bet=Number(localStorage.getItem('casinox_bet')||100), autoTimer=null, spinning=false;
+  const money=n=>Number(n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const save=()=>{localStorage.setItem('casinox_balance',String(balance));localStorage.setItem('casinox_bet',String(bet));};
+  const cfg=name=>games[name]||fallback;
+  const randomSymbol=s=>s[Math.floor(Math.random()*s.length)];
+  function resultGrid(c){return Array.from({length:5},()=>Array.from({length:3},()=>randomSymbol(c.symbols)));}
+  function winFor(g,c){
+    const mid=g.map(col=>col[1]); const counts={}; mid.forEach(x=>counts[x]=(counts[x]||0)+1);
+    const best=Math.max(...Object.values(counts));
+    let mult=best>=5?10:best>=4?5:best>=3?2:0;
+    if(best>=5 && mid.every(x=>x===c.symbols[0])) mult+=2;
+    return {best,mult,pick:mid.find(x=>counts[x]===best)||mid[0]};
   }
-  function close(){if(ov){ov.remove();ov=null;document.body.style.overflow="";}}
+  function cellMarkup(sym){return `<div class="cx17-cell"><span>${sym}</span></div>`}
+  function renderGrid(g){
+    if(!overlay)return;
+    overlay.querySelectorAll('.cx17-reel').forEach((r,i)=>{r.innerHTML=g[i].map(cellMarkup).join('')});
+  }
+  function updateHUD(){
+    if(!overlay)return;
+    overlay.querySelector('[data-balance]').textContent=money(balance);
+    overlay.querySelector('[data-bet]').textContent=money(bet);
+    overlay.querySelector('[data-credit]').textContent=money(balance);
+  }
+  function close(){
+    if(autoTimer){clearInterval(autoTimer);autoTimer=null}
+    if(overlay){overlay.remove();overlay=null;document.body.style.overflow=''}
+  }
+  function adjustBet(delta){bet=Math.max(1,Math.min(Math.max(1,balance),bet+delta));save();updateHUD()}
+  function setMessage(text,kind=''){if(!overlay)return;const m=overlay.querySelector('[data-message]');m.textContent=text;m.className='cx17-message '+kind}
+  function beep(freq=420,dur=.06){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;const a=new A(),o=a.createOscillator(),g=a.createGain();o.frequency.value=freq;o.type='sine';g.gain.value=.025;o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+dur);o.stop(a.currentTime+dur)}catch(e){}}
   function spin(){
-    const b=ov.querySelector(".casinox-spin"),m=ov.querySelector(".casinox-win");
-    if(balance<bet){m.textContent="Saldo insuficiente.";return;}
-    balance-=bet;b.disabled=true;m.textContent="Girando…";
-    let t=0,tm=setInterval(()=>{render(grid());if(++t>=12){clearInterval(tm);const g=grid(),p=payout(g);render(g);balance+=p;m.textContent=p?`✨ PRÊMIO DEMO +${p.toLocaleString("pt-BR")} créditos`:"Boa rodada. Tente novamente!";if(p)m.classList.add("flash");setTimeout(()=>m.classList.remove("flash"),1200);ov.querySelector(".casinox-game-balance").textContent=`💰 ${balance.toLocaleString("pt-BR")}`;b.disabled=false;save();}},85);
+    if(!overlay||spinning)return;
+    if(balance<bet){setMessage('Saldo virtual insuficiente. Reduza a aposta.','bad');beep(150,.12);return}
+    spinning=true; balance-=bet; save(); updateHUD(); setMessage('Girando…','rolling');
+    const reels=[...overlay.querySelectorAll('.cx17-reel')]; reels.forEach(r=>r.classList.add('is-spinning'));
+    const turbo=overlay.querySelector('[data-turbo]').classList.contains('active'); const step=turbo?85:145;
+    let tick=0; const max=turbo?9:15;
+    const timer=setInterval(()=>{
+      reels.forEach((r,i)=>{if(tick>=Math.min(max,6+i*2))return; r.innerHTML=Array.from({length:3},()=>cellMarkup(randomSymbol(cfg(overlay.dataset.game).symbols))).join('')});
+      tick++; if(tick>=max){clearInterval(timer); const c=cfg(overlay.dataset.game),g=resultGrid(c); renderGrid(g); reels.forEach((r,i)=>setTimeout(()=>r.classList.remove('is-spinning'),i*90));
+        const w=winFor(g,c), prize=bet*w.mult; if(prize)balance+=prize; save(); updateHUD();
+        if(prize){setMessage(`✨ ${w.pick} • PRÊMIO + ${money(prize)} créditos`,'win');overlay.querySelector('.cx17-stage').classList.add('big-win');setTimeout(()=>overlay?.querySelector('.cx17-stage')?.classList.remove('big-win'),900);beep(760,.1);setTimeout(()=>beep(980,.12),90)}
+        else setMessage('Boa rodada. Gire novamente!');
+        spinning=false;
+      }
+    },step);
   }
-  function bind(){
-    document.querySelectorAll(".card,[data-game],[data-game-name]").forEach(el=>{
-      if(el.dataset.casinoxV15)return;
-      const h=el.querySelector("h3,.game-title,.card-title,[data-game-name]");
-      const name=(h?.textContent||el.dataset.gameName||"").trim();
-      if(!N.some(x=>x.toLowerCase()===name.toLowerCase()))return;
-      el.dataset.casinoxV15="1";
-      el.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();open(name);});
-    });
+  function toggleAuto(){
+    if(!overlay)return;const b=overlay.querySelector('[data-auto]');b.classList.toggle('active');
+    if(b.classList.contains('active')){setMessage('AUTO ativado • rodadas virtuais','rolling');autoTimer=setInterval(()=>{if(!spinning)spin()},1300)}
+    else {clearInterval(autoTimer);autoTimer=null;setMessage('AUTO desativado')}
   }
-  new MutationObserver(bind).observe(document.body,{childList:true,subtree:true});
-  document.addEventListener("DOMContentLoaded",bind);setTimeout(bind,400);setTimeout(bind,1200);
+  function toggleTurbo(){if(!overlay)return;overlay.querySelector('[data-turbo]').classList.toggle('active')}
+  function open(name){
+    close(); const c=cfg(name); overlay=document.createElement('section'); overlay.className='cx17-shell'; overlay.dataset.game=name;
+    overlay.innerHTML=`
+      <div class="cx17-backdrop" style="background-image:linear-gradient(180deg,rgba(9,4,17,.12),rgba(8,3,10,.74) 48%,#08050a 100%),url('${c.img}')"></div>
+      <header class="cx17-top">
+        <button class="cx17-icon" data-back aria-label="Voltar">‹</button>
+        <div class="cx17-brand"><small>CASINOX ORIGINAL</small><strong>${c.tag}</strong></div>
+        <div class="cx17-top-balance">💰 <b data-balance>${money(balance)}</b></div>
+      </header>
+      <main class="cx17-main">
+        <div class="cx17-hero"><img src="${c.img}" alt="${c.tag}"><div><span>DEMO • OFFLINE</span><strong>${name}</strong><small>Créditos virtuais</small></div></div>
+        <div class="cx17-jackpot"><span>PRÊMIO DA RODADA</span><strong data-credit>${money(balance)}</strong></div>
+        <section class="cx17-stage" aria-label="Máquina de caça-níquel">
+          <div class="cx17-frame-glow"></div><div class="cx17-reels">${Array.from({length:5},()=>'<div class="cx17-reel"></div>').join('')}<div class="cx17-payline"></div></div>
+        </section>
+        <div class="cx17-message" data-message>Pronto para girar.</div>
+      </main>
+      <footer class="cx17-controls">
+        <div class="cx17-stats"><div><small>SALDO</small><b data-credit>${money(balance)}</b></div><div><small>APOSTA</small><b data-bet>${money(bet)}</b></div><div><small>PRÊMIO</small><b data-prize>0,00</b></div></div>
+        <div class="cx17-control-row"><button class="cx17-round" data-minus>−</button><button class="cx17-spin" data-spin><span>GIRAR</span><small>RODADA VIRTUAL</small></button><button class="cx17-round" data-plus>+</button></div>
+        <div class="cx17-tools"><button data-turbo>⚡ TURBO</button><button data-auto>⟳ AUTO</button><button data-pay>🏆 PRÊMIOS</button></div>
+        <div class="cx17-payline-text">${c.pay}</div>
+      </footer>`;
+    document.body.appendChild(overlay);document.body.style.overflow='hidden';renderGrid(resultGrid(c));updateHUD();
+    overlay.querySelector('[data-back]').onclick=close; overlay.querySelector('[data-minus]').onclick=()=>adjustBet(-10); overlay.querySelector('[data-plus]').onclick=()=>adjustBet(10); overlay.querySelector('[data-spin]').onclick=spin; overlay.querySelector('[data-turbo]').onclick=toggleTurbo; overlay.querySelector('[data-auto]').onclick=toggleAuto;
+    overlay.querySelector('[data-pay]').onclick=()=>setMessage(c.pay,'win');
+  }
+  document.addEventListener('click',e=>{
+    const el=e.target.closest('[data-game]'); if(!el)return; const n=el.dataset.game; if(!n)return; e.preventDefault();e.stopPropagation();open(n);
+  },true);
   window.CasinoXDemoGame={open,close};
 })();
 
