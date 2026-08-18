@@ -2373,3 +2373,11 @@ footer{background:#050506!important;color:#777!important}
  .game-rail{grid-auto-columns:145px}.game-art{height:188px}.game-grid .game-card .game-art{height:220px}
  .demo-note{font-size:11px;display:block}.demo-note span{display:block;margin-top:5px}
 }
+
+/* v1.1 — robust game artwork rendering */
+.game-art{background:#15151a!important;}
+.game-art .game-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center;z-index:0;}
+.game-art .art-shade{z-index:1;}
+.game-art .hot-badge,.game-art .heart-btn,.game-art .card-title{z-index:2;}
+.game-art.image-failed::before{content:"CASINOX DEMO";position:absolute;inset:0;display:grid;place-items:center;color:#f6c84a;font-weight:900;letter-spacing:2px;}
+@media(max-width:900px){.game-art{height:190px!important}.game-grid .game-card .game-art{height:205px!important}.game-image{min-width:100%;min-height:100%;}}

@@ -360,7 +360,8 @@ function gameCard(game) {
   const favorite = isFavorite(game.id);
   return `
     <article class="game-card" data-game="${game.id}" tabindex="0" aria-label="Abrir ${game.name}">
-      <div class="game-art" style="background-image:url("${game.img}")">
+      <div class="game-art">
+        <img class="game-image" src="${game.img}" alt="${game.name}" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.classList.add('image-failed')">
         <span class="hot-badge">${game.tag}</span>
         <button class="heart-btn" data-favorite="${game.id}" aria-label="Favoritar ${game.name}" type="button">${favorite ? "♥" : "♡"}</button>
         <div class="art-shade"></div>
