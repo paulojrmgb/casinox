@@ -2627,8 +2627,13 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     shell.dataset.animal=theme.animal;
     const stage=shell.querySelector(".cx20-stage");
     if(stage){
-      stage.classList.add("cx30-theme");
-      stage.style.setProperty("--cx31-bg", `url("assets/characters/bg-${theme.img}")`);
+      stage.classList.add("cx30-theme","cx32-responsive-game");
+      const refBg = theme.animal === "rabbit"
+        ? 'url("assets/reference/lucky-rabbit-reference.png")'
+        : `url("assets/characters/bg-${theme.img}")`;
+      stage.style.setProperty("--cx31-bg", refBg);
+      stage.style.setProperty("--cx32-bg", refBg);
+      stage.dataset.themeAnimal = theme.animal;
     }
 
     shell.querySelectorAll(".cx20-reel").forEach(reel=>{
@@ -2893,14 +2898,14 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 
-/* v3.1 portal badge — single authoritative version */
+/* v3.2 portal badge — single authoritative version */
 (function(){
   function add(){
     const top=document.querySelector(".topbar");
     if(!top || top.querySelector(".cx31-version"))return;
     const b=document.createElement("span");
     b.className="cx31-version";
-    b.textContent="v3.1";
+    b.textContent="v3.2";
     top.appendChild(b);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
