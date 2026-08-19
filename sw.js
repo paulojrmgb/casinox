@@ -1,13 +1,14 @@
-const CACHE_NAME = "casinox-v3.3";
-const VERSION = "3.3";
+const CACHE_NAME = "casinox-v3.4";
+const VERSION = "3.4";
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./CasinoX_v3.1_conta.js",
+  "./CasinoX_v3.3_conta.js",
   "./manifest.json",
+  "./assets/reference/lucky-rabbit-reference.png",
   "./assets/games/moon-temple.svg",
   "./assets/games/golden-pearls.svg",
   "./assets/games/wild-jungle.svg",

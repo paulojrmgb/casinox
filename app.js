@@ -2151,15 +2151,37 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   function open(name){
     close();
     shell=document.createElement("section");shell.className="cx20-shell";
+    const gameKey=(()=>{
+      const n=String(name||"").toLowerCase();
+      if(n.includes("golden bull")) return "golden-bull";
+      if(n.includes("dragon fire")) return "dragon-fire";
+      if(n.includes("dragon")) return "dragon-fortune";
+      if(n.includes("tiger")) return "tiger-riches";
+      if(n.includes("lion")) return "lion-king";
+      if(n.includes("panda")) return "treasure-panda";
+      return "lucky-rabbit";
+    })();
+    const bgMap={
+      "lucky-rabbit":"assets/reference/lucky-rabbit-reference.png",
+      "golden-bull":"assets/characters/bg-golden-bull.jpg",
+      "dragon-fortune":"assets/characters/bg-dragon-fortune.jpg",
+      "dragon-fire":"assets/characters/bg-dragon-fire.jpg",
+      "tiger-riches":"assets/characters/bg-tiger-riches.jpg",
+      "lion-king":"assets/characters/bg-lion-king.jpg",
+      "treasure-panda":"assets/characters/bg-treasure-panda.jpg"
+    };
+    shell.dataset.game=gameKey;
+    shell.style.setProperty("--cx34-bg", `url("${bgMap[gameKey]||bgMap["lucky-rabbit"]}")`);
     shell.innerHTML=`
       <header class="cx20-top">
         <button class="cx20-back" type="button">‹</button>
         <div class="cx20-brand"><b>${name}</b><small>CASINOX • CRÉDITOS VIRTUAIS</small></div>
-        <div class="cx20-wallet">💰 <span class="cx20-wallet-value">${balance.toLocaleString("pt-BR")}</span></div>
+        <span class="cx34-version">v3.4</span>
+        <div class="cx20-wallet">🪙 <span class="cx20-wallet-value">${balance.toLocaleString("pt-BR")}</span></div>
       </header>
       <main class="cx20-stage">
         <div class="cx20-glow"></div>
-        <div class="cx20-character"><div class="orb"></div><div class="rabbit cx26-hero">${(() => { const n=name.toLowerCase(); const f=n.includes("bull")?"golden-bull.jpg":n.includes("dragon fire")?"dragon-fire.jpg":n.includes("dragon")?"dragon-fortune.jpg":n.includes("tiger")?"tiger-riches.jpg":n.includes("panda")?"treasure-panda.jpg":n.includes("lion")?"lion-king.jpg":"lucky-rabbit.jpg"; return `<img src="assets/characters/${f}" alt="${name}" loading="eager">`; })()}</div></div>
+        <div class="cx34-art-anchor" aria-hidden="true"></div>
         <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels">${Array(5).fill('<div class="cx20-reel"></div>').join("")}<div class="cx20-line"></div></div></div></div>
         <div class="cx20-prize">BOA SORTE</div>
         <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
@@ -2216,6 +2238,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     if(autoTimer){clearTimeout(autoTimer);autoTimer=null}auto=false;spinning=false;
     if(shell){shell.remove();shell=null;document.body.style.overflow=""}
   }
+  window.CasinoXSpin=spin;
   window.CasinoXPremiumGame={open,close};
   const old=window.CasinoXDemoGame?.open;
   if(window.CasinoXDemoGame)window.CasinoXDemoGame.open=function(name){open(name)};
@@ -2247,58 +2270,12 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       const fresh=btn.cloneNode(true);
       btn.replaceWith(fresh);
       fresh.disabled=false;
-
-      let locked=false;
       fresh.addEventListener("click",function(e){
-        e.preventDefault(); e.stopPropagation();
-        if(locked)return;
-        locked=true;
-        const balanceEl=shell.querySelector(".cx20-wallet-value");
-        const statBalance=shell.querySelector(".st-balance");
-        const statWin=shell.querySelector(".st-win");
-        const prize=shell.querySelector(".cx20-prize");
-        const betEl=shell.querySelector(".st-bet");
-        const betValue=shell.querySelector(".cx20-bet-value b");
-        let balance=Number(localStorage.getItem("casinox_balance")||10000);
-        let bet=Number(localStorage.getItem("casinox_bet")||100);
-        if(balance<bet){
-          prize.textContent="SALDO INSUFICIENTE";
-          locked=false; return;
-        }
-        balance-=bet;
-        localStorage.setItem("casinox_balance",String(balance));
-        prize.textContent="GIRANDO…";
-        statWin.textContent="0";
-        balanceEl.textContent=balance.toLocaleString("pt-BR");
-        statBalance.textContent=balance.toLocaleString("pt-BR");
-
-        const reels=[...shell.querySelectorAll(".cx20-reel")];
-        const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
-        let tick=0, maxTick=shell.querySelector('[data-tool="turbo"]')?.classList.contains("active")?5:8;
-        const timer=setInterval(()=>{
-          reels.forEach(r=>{
-            const vals=[0,1,2].map(()=>symbols[Math.floor(Math.random()*symbols.length)]);
-            r.innerHTML=`<div class="cx20-symbol s1">${vals[0]}</div><div class="cx20-symbol s2">${vals[1]}</div><div class="cx20-symbol s3">${vals[2]}</div>`;
-          });
-          tick++;
-          if(tick>=maxTick){
-            clearInterval(timer);
-            const vals=reels.map(r=>r.querySelector(".s2")?.textContent||"");
-            const counts={}; vals.forEach(v=>counts[v]=(counts[v]||0)+1);
-            const max=Math.max(...Object.values(counts));
-            const mult=max>=5?10:max>=4?5:max>=3?2:0;
-            const win=bet*mult;
-            balance+=win;
-            localStorage.setItem("casinox_balance",String(balance));
-            balanceEl.textContent=balance.toLocaleString("pt-BR");
-            statBalance.textContent=balance.toLocaleString("pt-BR");
-            statWin.textContent=win.toLocaleString("pt-BR");
-            prize.textContent=win?`✨ PRÊMIO +${win.toLocaleString("pt-BR")}`:"Boa rodada — tente novamente!";
-            if(win){prize.classList.add("win");setTimeout(()=>prize.classList.remove("win"),1000)}
-            locked=false;
-          }
-        },70);
-      });
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        if(typeof window.CasinoXSpin==="function") window.CasinoXSpin();
+      }, true);
     }
 
     // Make the paytable explicit and readable.

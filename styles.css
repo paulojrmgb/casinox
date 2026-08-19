@@ -3279,7 +3279,7 @@ footer{background:#050506!important;color:#777!important}
 }
 
 /* =========================================================
-   CASINOX v3.3
+   CASINOX v3.4
    - clean artwork area: no old animal-logo card overlay
    - artwork is scenery only; reels are our own UI
    - persistent GIRAR button
@@ -3391,4 +3391,301 @@ footer{background:#050506!important;color:#777!important}
     border-radius:17px!important;
     font-size:22px!important;
   }
+}
+
+/* =========================================================
+   CASINOX v3.4 — REFERENCE-FIRST RESPONSIVE GAME SCREEN
+   Reference: assets/reference/lucky-rabbit-reference.png
+   ========================================================= */
+
+/* The complete game shell is the canvas. */
+.cx20-shell{
+  background-color:#0b0505!important;
+  background-image:var(--cx34-bg)!important;
+  background-repeat:no-repeat!important;
+  background-position:center top!important;
+  background-size:cover!important;
+}
+
+/* Header from reference: black, compact, version centered. */
+.cx20-top{
+  height:110px!important;
+  min-height:110px!important;
+  padding:18px 28px!important;
+  gap:18px!important;
+  background:rgba(0,0,0,.94)!important;
+  border-bottom:0!important;
+}
+.cx20-back{
+  width:70px!important;
+  height:70px!important;
+  border-radius:18px!important;
+  background:#202020!important;
+  font-size:54px!important;
+  line-height:.8!important;
+}
+.cx20-brand b{
+  font-size:27px!important;
+  line-height:1.05!important;
+  color:#fff!important;
+}
+.cx20-brand small{
+  font-size:17px!important;
+  margin-top:5px!important;
+  color:#d1d1d1!important;
+  opacity:.82!important;
+}
+.cx34-version{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  font-weight:1000;
+  font-size:24px;
+  padding:7px 13px;
+  border-radius:12px;
+  background:rgba(20,20,20,.75);
+}
+.cx20-wallet{
+  margin-left:auto;
+  font-size:26px!important;
+  color:#ffd21f!important;
+}
+.cx20-wallet-value{
+  font-size:30px!important;
+}
+
+/* The stage is transparent so the reference artwork remains visible.
+   No old animal card/logo is rendered on top of it. */
+.cx20-stage{
+  flex:1!important;
+  min-height:0!important;
+  justify-content:flex-start!important;
+  padding:0 3.7% 0!important;
+  background:transparent!important;
+}
+.cx20-stage::before,
+.cx20-stage::after,
+.cx20-glow{
+  display:none!important;
+}
+.cx34-art-anchor{
+  height:0!important;
+  flex:0 0 0!important;
+}
+
+/* Machine sits over the reference artwork, never inside the background image. */
+.cx20-machine{
+  width:92%!important;
+  max-width:900px!important;
+  margin-top:32.5vh!important;
+  padding:12px!important;
+  border-radius:28px!important;
+  background:linear-gradient(145deg,#6b421d,#26120d 50%,#7b4d1c)!important;
+  border:3px solid #d7a33b!important;
+  box-shadow:0 14px 60px rgba(0,0,0,.72),0 0 28px rgba(255,184,55,.18)!important;
+}
+.cx20-machine-inner{
+  padding:9px!important;
+  border-radius:20px!important;
+  background:rgba(24,4,7,.92)!important;
+  border:2px solid rgba(255,193,56,.85)!important;
+}
+.cx20-reels{
+  gap:5px!important;
+  aspect-ratio:5/3!important;
+}
+.cx20-reel{
+  border-radius:12px!important;
+  background:linear-gradient(180deg,#30070e,#150309)!important;
+  border:1px solid rgba(255,210,60,.35)!important;
+}
+.cx20-symbol{
+  background:rgba(44,4,10,.92)!important;
+  border:1px solid rgba(255,86,55,.20);
+  font-size:clamp(25px,5.2vw,52px)!important;
+}
+.cx20-line{
+  height:4px!important;
+  background:#ffe05a!important;
+}
+
+/* Reference's "BOA SORTE" area. */
+.cx20-prize{
+  margin-top:8px!important;
+  min-height:42px!important;
+  font-size:24px!important;
+  letter-spacing:.5px;
+  color:#ffd21f!important;
+}
+
+/* Reference's three stat cards. */
+.cx20-stats{
+  width:92%!important;
+  max-width:900px!important;
+  gap:10px!important;
+  margin:6px 0 8px!important;
+}
+.cx20-stat{
+  padding:15px 8px!important;
+  min-height:86px;
+  border-radius:16px!important;
+  background:rgba(13,5,7,.93)!important;
+  border:2px solid rgba(218,159,30,.92)!important;
+}
+.cx20-stat small{
+  font-size:17px!important;
+  opacity:.75!important;
+  letter-spacing:.2px;
+}
+.cx20-stat b{
+  font-size:27px!important;
+  color:#ffc91c!important;
+}
+
+/* Controls are fixed in the visual hierarchy, but remain normal flow
+   so they cannot disappear when spinning. */
+.cx20-controls{
+  padding:20px 3.7% calc(22px + env(safe-area-inset-bottom))!important;
+  background:rgba(7,3,5,.97)!important;
+  border-top:0!important;
+}
+.cx20-main-controls{
+  width:92%!important;
+  max-width:900px!important;
+  gap:16px!important;
+}
+.cx20-bet{
+  min-width:31%!important;
+  height:118px!important;
+  padding:10px!important;
+  border:2px solid #f2c300!important;
+  border-radius:18px!important;
+  background:rgba(10,8,8,.90)!important;
+  justify-content:space-between!important;
+}
+.cx20-bet button{
+  width:58px!important;
+  height:58px!important;
+  border-radius:13px!important;
+  background:#252525!important;
+  font-size:36px!important;
+}
+.cx20-bet-value{
+  min-width:90px!important;
+}
+.cx20-bet-value small{
+  font-size:16px!important;
+  opacity:.75!important;
+}
+.cx20-bet-value b{
+  font-size:28px!important;
+  color:#ffc91c!important;
+}
+
+/* Exact reference-like GIRAR: always occupies its slot. */
+.cx20-spin{
+  min-height:118px!important;
+  height:118px!important;
+  border-radius:20px!important;
+  background:linear-gradient(180deg,#ffe47d 0%,#f2b928 100%)!important;
+  color:#17110a!important;
+  font-size:38px!important;
+  font-weight:1000!important;
+  box-shadow:0 9px 28px rgba(231,178,24,.28),inset 0 2px rgba(255,255,255,.55)!important;
+  opacity:1!important;
+}
+.cx20-spin:disabled{
+  opacity:1!important;
+  filter:none!important;
+  color:#17110a!important;
+}
+
+/* Reference subtitle under GIRAR. */
+.cx20-spin::after{
+  content:"SEGURE PARA TURBO";
+  display:block;
+  margin-top:4px;
+  font-size:16px;
+  font-weight:800;
+}
+
+/* Tools become compact gold-outline controls. */
+.cx20-tools{
+  width:92%!important;
+  max-width:900px!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:12px!important;
+  margin:14px auto 0!important;
+}
+.cx20-tool{
+  min-height:66px!important;
+  border:2px solid rgba(214,151,17,.9)!important;
+  border-radius:15px!important;
+  background:rgba(10,7,7,.84)!important;
+  font-size:16px!important;
+}
+.cx20-tool.active{
+  background:rgba(255,205,45,.16)!important;
+  color:#ffd21f!important;
+}
+
+/* Hide only legacy v2.5 badge if still injected elsewhere. */
+.cx25-version{display:none!important}
+
+/* Responsive desktop: retain the reference proportions without stretching art. */
+@media(min-width:801px){
+  .cx20-top{height:82px!important;min-height:82px!important;padding:12px 24px!important}
+  .cx20-back{width:52px!important;height:52px!important;font-size:40px!important}
+  .cx20-brand b{font-size:21px!important}
+  .cx20-brand small{font-size:13px!important}
+  .cx20-wallet{font-size:19px!important}.cx20-wallet-value{font-size:22px!important}
+  .cx34-version{font-size:18px}
+  .cx20-machine{margin-top:18vh!important;width:min(70vw,720px)!important}
+  .cx20-stats,.cx20-main-controls,.cx20-tools{width:min(70vw,720px)!important}
+  .cx20-prize{font-size:20px!important}
+  .cx20-controls{padding-left:15%!important;padding-right:15%!important}
+}
+
+/* Mobile: scale everything from the reference, not from desktop. */
+@media(max-width:600px){
+  .cx20-top{height:82px!important;min-height:82px!important;padding:10px 14px!important;gap:10px!important}
+  .cx20-back{width:54px!important;height:54px!important;font-size:42px!important}
+  .cx20-brand b{font-size:19px!important}
+  .cx20-brand small{font-size:12px!important}
+  .cx34-version{font-size:15px;padding:5px 8px}
+  .cx20-wallet{font-size:15px!important}.cx20-wallet-value{font-size:19px!important}
+  .cx20-machine{
+    width:94%!important;
+    margin-top:23vh!important;
+    padding:7px!important;
+    border-radius:19px!important;
+  }
+  .cx20-machine-inner{padding:6px!important;border-radius:14px!important}
+  .cx20-symbol{font-size:clamp(20px,8.5vw,34px)!important}
+  .cx20-prize{font-size:17px!important;min-height:34px!important}
+  .cx20-stats{width:94%!important;gap:5px!important}
+  .cx20-stat{min-height:62px;padding:8px 3px!important;border-radius:12px!important}
+  .cx20-stat small{font-size:10px!important}
+  .cx20-stat b{font-size:19px!important}
+  .cx20-controls{padding:10px 3% calc(12px + env(safe-area-inset-bottom))!important}
+  .cx20-main-controls{width:94%!important;gap:6px!important}
+  .cx20-bet{height:78px!important;min-width:30%!important;border-radius:13px!important}
+  .cx20-bet button{width:38px!important;height:38px!important;font-size:26px!important}
+  .cx20-bet-value{min-width:55px!important}
+  .cx20-bet-value small{font-size:9px!important}
+  .cx20-bet-value b{font-size:20px!important}
+  .cx20-spin{height:78px!important;min-height:78px!important;border-radius:14px!important;font-size:27px!important}
+  .cx20-spin::after{font-size:10px}
+  .cx20-tools{width:94%!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important;margin-top:8px!important}
+  .cx20-tool{min-height:50px!important;border-radius:11px!important;font-size:10px!important}
+}
+
+/* Very short screens: prioritize reels + spin without hiding the button. */
+@media(max-height:720px) and (max-width:600px){
+  .cx20-machine{margin-top:17vh!important}
+  .cx20-prize{min-height:28px!important}
+  .cx20-stat{min-height:52px!important}
+  .cx20-controls{padding-top:6px!important}
+  .cx20-bet,.cx20-spin{height:68px!important;min-height:68px!important}
 }
