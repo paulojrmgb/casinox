@@ -3750,3 +3750,79 @@ footer{background:#050506!important;color:#777!important}
   .cx20-reels-343 .cx20-reel{gap:3px!important}
   .cx20-reels-343 .cx20-symbol{font-size:clamp(19px,7vw,38px)!important;border-radius:8px!important}
 }
+
+/* =========================================================
+   v3.6 — ROLETE 3x4x3 / DIMENSÃO REDUZIDA
+   ========================================================= */
+
+/* A máquina inteira fica menor, sem cortar o quarto símbolo. */
+.cx20-stage .cx20-machine{
+  width:min(76vw, 430px)!important;
+  max-width:430px!important;
+}
+
+/* Área dos rolos menor, mas com 4 posições verticais no centro. */
+.cx20-stage .cx20-reels{
+  width:100%!important;
+  max-width:100%!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
+
+/* As três colunas usam a mesma largura; as laterais recebem 3
+   símbolos e a central recebe 4. */
+.cx20-stage .cx36-reel{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  overflow:visible!important;
+}
+
+/* célula compacta */
+.cx20-stage .cx36-reel .cx20-symbol,
+.cx20-stage .cx36-reel .symbol,
+.cx20-stage .cx36-reel .reel-symbol{
+  width:100%!important;
+  min-height:clamp(48px,10vw,68px)!important;
+  max-height:68px!important;
+}
+
+/* Central: quatro símbolos, sem esconder o último. */
+.cx20-stage .cx36-center-four{
+  height:calc(4 * clamp(48px,10vw,68px) + 3 * 6px)!important;
+  min-height:calc(4 * clamp(48px,10vw,68px) + 3 * 6px)!important;
+  overflow:visible!important;
+}
+
+/* laterais: três símbolos centralizados */
+.cx20-stage .cx36-reel:not(.cx36-center-four){
+  height:calc(3 * clamp(48px,10vw,68px) + 2 * 6px)!important;
+  min-height:calc(3 * clamp(48px,10vw,68px) + 2 * 6px)!important;
+}
+
+/* mantém o quarto símbolo dentro da máquina */
+.cx20-stage .cx36-center-four > *{
+  flex:0 0 clamp(48px,10vw,68px)!important;
+}
+
+/* Mobile */
+@media(max-width:600px){
+  .cx20-stage .cx20-machine{
+    width:min(72vw,360px)!important;
+    max-width:360px!important;
+  }
+
+  .cx20-stage .cx36-center-four{
+    height:calc(4 * clamp(42px,9vw,58px) + 3 * 5px)!important;
+    min-height:calc(4 * clamp(42px,9vw,58px) + 3 * 5px)!important;
+  }
+
+  .cx20-stage .cx36-reel:not(.cx36-center-four){
+    height:calc(3 * clamp(42px,9vw,58px) + 2 * 5px)!important;
+    min-height:calc(3 * clamp(42px,9vw,58px) + 2 * 5px)!important;
+  }
+
+  .cx20-stage .cx36-center-four > *{
+    flex-basis:clamp(42px,9vw,58px)!important;
+  }
+}

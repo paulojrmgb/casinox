@@ -2928,3 +2928,67 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   mo.observe(document.body,{childList:true,subtree:true});
   cleanGameArt();
 })();
+
+/* =========================================================
+   CASINOX v3.6 — ROLETE 3x4x3
+   10 posições visíveis:
+     coluna 1 = 3
+     coluna 2 = 4
+     coluna 3 = 3
+   ========================================================= */
+(function(){
+  const CFG = Object.freeze({
+    visibleRows: [3,4,3],
+    totalSymbols: 10,
+    centerRow: 1.5
+  });
+
+  function normalizeReels(){
+    const root = document.querySelector(".cx20-stage");
+    if(!root) return;
+
+    const reels = root.querySelectorAll(
+      ".cx20-reel, [data-reel], .reel, .slot-reel"
+    );
+    if(reels.length < 3) return;
+
+    reels.forEach((reel, col)=>{
+      reel.dataset.visibleRows = String(CFG.visibleRows[col] || 4);
+      reel.classList.add("cx36-reel");
+    });
+
+    root.dataset.reelLayout = "3x4x3";
+    root.dataset.reelSymbols = String(CFG.totalSymbols);
+  }
+
+  function enforceFourOnCenter(){
+    const root = document.querySelector(".cx20-stage");
+    if(!root) return;
+
+    const reels = root.querySelectorAll(".cx20-reel, [data-reel], .reel, .slot-reel");
+    if(reels.length < 3) return;
+
+    // O algoritmo da coluna central precisa SEMPRE produzir 4 células.
+    const center = reels[1];
+    center.dataset.visibleRows = "4";
+
+    const cells = center.querySelectorAll(
+      ".cx20-symbol, .symbol, .reel-symbol, [data-symbol]"
+    );
+
+    // Não removemos células aqui: apenas garantimos que o container
+    // tenha espaço físico para quatro símbolos.
+    center.classList.add("cx36-center-four");
+    center.style.setProperty("--cx36-count","4");
+    center.style.setProperty("--cx36-cell-count", String(Math.max(4,cells.length)));
+  }
+
+  const observer = new MutationObserver(()=>{
+    normalizeReels();
+    enforceFourOnCenter();
+  });
+
+  observer.observe(document.body,{childList:true,subtree:true});
+  normalizeReels();
+  enforceFourOnCenter();
+})();
