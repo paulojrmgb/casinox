@@ -2703,3 +2703,65 @@ footer{background:#050506!important;color:#777!important}
   .cx26-jackpot{padding:5px 8px;gap:6px;margin:1px auto 3px}
   .cx26-jackpot b{font-size:13px}
 }
+
+/* =========================================================
+   v2.7 GAME FEEL — animation only
+   ========================================================= */
+.cx27-status{
+  min-height:22px;
+  margin:4px auto 7px;
+  text-align:center;
+  font-size:11px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  opacity:.72;
+  color:#ffd76a;
+  transition:transform .18s ease,opacity .18s ease;
+}
+.cx27-spin-start .cx20-reel{
+  animation:cx27Reel .16s linear infinite;
+  will-change:transform;
+}
+.cx27-spin-start .cx20-reel:nth-child(2){animation-duration:.13s}
+.cx27-spin-start .cx20-reel:nth-child(3){animation-duration:.10s}
+.cx27-spin-start .cx20-symbol{
+  filter:blur(.5px);
+}
+.cx27-win{
+  animation:cx27Win .55s ease-in-out 2;
+}
+.cx27-win .cx20-symbol.s2{
+  transform:scale(1.13);
+  filter:drop-shadow(0 0 12px rgba(255,215,80,.95));
+}
+.cx27-turbo-on{
+  transform:scale(1.035);
+  filter:brightness(1.18);
+}
+@keyframes cx27Reel{
+  0%{transform:translateY(0) rotateX(0deg)}
+  25%{transform:translateY(2px) rotateX(5deg)}
+  50%{transform:translateY(-2px) rotateX(0deg)}
+  75%{transform:translateY(2px) rotateX(-5deg)}
+  100%{transform:translateY(0) rotateX(0deg)}
+}
+@keyframes cx27Win{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.018)}
+}
+.cx27-version{
+  display:inline-flex;
+  align-items:center;
+  margin-left:8px;
+  padding:3px 8px;
+  border:1px solid rgba(255,214,109,.35);
+  border-radius:999px;
+  color:#ffd66d;
+  background:rgba(255,214,109,.08);
+  font-size:10px;
+  font-weight:900;
+}
+@media(max-width:600px){
+  .cx27-status{font-size:10px;margin:3px auto 5px}
+  .cx27-version{font-size:9px;padding:3px 6px}
+}

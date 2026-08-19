@@ -2924,3 +2924,87 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   const shell=document.querySelector('.cx20-shell');
   if(shell)enhance(shell);
 })();
+
+/* =========================================================
+   CASINOX v2.7 — GAME FEEL
+   Visual/animation layer only. Existing controls/navigation
+   remain authoritative and are not replaced.
+   ========================================================= */
+(function(){
+  const V="2.7";
+
+  function shell(){return document.querySelector(".cx20-shell");}
+
+  function installGameFeel(){
+    const s=shell();
+    if(!s || s.dataset.cx27==="1") return;
+    s.dataset.cx27="1";
+
+    // Add a visual status element without touching existing buttons.
+    let status=s.querySelector(".cx27-status");
+    if(!status){
+      status=document.createElement("div");
+      status.className="cx27-status";
+      status.setAttribute("aria-live","polite");
+      status.textContent="PRONTO";
+      const reels=s.querySelector(".cx20-reels") || s.querySelector(".cx20-machine") || s.firstElementChild;
+      if(reels && reels.parentNode) reels.parentNode.insertBefore(status,reels);
+    }
+
+    // Observe the existing spin button state and animate the reels.
+    const spin=s.querySelector(".cx20-spin");
+    if(spin && !spin.dataset.cx27){
+      spin.dataset.cx27="1";
+      spin.addEventListener("click",function(){
+        s.classList.remove("cx27-spin-start","cx27-win");
+        void s.offsetWidth;
+        s.classList.add("cx27-spin-start");
+        status.textContent="GIRANDO…";
+
+        setTimeout(function(){
+          if(!s.isConnected)return;
+          const disabled=spin.disabled;
+          if(!disabled){
+            s.classList.add("cx27-win");
+            status.textContent="PRÊMIO";
+            setTimeout(function(){
+              if(s.isConnected){
+                s.classList.remove("cx27-win");
+                status.textContent="PRONTO";
+              }
+            },900);
+          }
+        },1700);
+      },false);
+    }
+
+    // TURBO visual indicator only; actual Turbo logic remains untouched.
+    const turbo=s.querySelector('[data-tool="turbo"]');
+    if(turbo && !turbo.dataset.cx27){
+      turbo.dataset.cx27="1";
+      const observer=new MutationObserver(function(){
+        turbo.classList.toggle("cx27-turbo-on",turbo.classList.contains("active"));
+      });
+      observer.observe(turbo,{attributes:true,attributeFilter:["class"]});
+    }
+  }
+
+  const mo=new MutationObserver(installGameFeel);
+  mo.observe(document.body,{childList:true,subtree:true});
+  installGameFeel();
+})();
+
+/* v2.7 portal badge */
+(function(){
+  function add(){
+    if(document.querySelector(".cx27-version"))return;
+    const top=document.querySelector(".topbar");
+    if(!top)return;
+    const b=document.createElement("span");
+    b.className="cx27-version";
+    b.textContent="v2.7";
+    top.appendChild(b);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
+  else add();
+})();
