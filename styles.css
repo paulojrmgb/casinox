@@ -2686,3 +2686,20 @@ footer{background:#050506!important;color:#777!important}
     font-size:10px;
   }
 }
+
+/* =========================================================
+   CasinoX v2.6 — premium visual layer
+   ========================================================= */
+.cx26-hero{width:100%!important;height:100%!important;display:flex;align-items:flex-end;justify-content:center;position:relative!important;overflow:visible!important}
+.cx26-hero img{height:min(25vh,190px);width:auto;max-width:58vw;object-fit:contain;display:block;filter:saturate(1.15) drop-shadow(0 12px 18px rgba(0,0,0,.72));transform:translateY(7px);border-radius:10px}
+.cx20-character .cx26-hero:after{content:"";position:absolute;left:15%;right:15%;bottom:2%;height:18%;background:radial-gradient(ellipse,rgba(255,204,85,.32),transparent 70%);filter:blur(9px);pointer-events:none}
+.cx26-machine{box-shadow:0 14px 60px rgba(0,0,0,.65),0 0 32px rgba(255,177,54,.20),inset 0 0 0 1px rgba(255,222,125,.08)!important}
+.cx26-jackpot{width:min(96vw,620px);margin:2px auto 4px;padding:6px 12px;border-radius:12px;border:1px solid rgba(255,214,109,.22);background:linear-gradient(90deg,rgba(255,179,41,.05),rgba(255,214,109,.13),rgba(255,179,41,.05));display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;text-align:center;box-shadow:0 0 20px rgba(255,180,40,.06)}
+.cx26-jackpot span{font-size:8px;letter-spacing:1.2px;color:rgba(255,255,255,.55);font-weight:900}.cx26-jackpot b{font-size:15px;color:#ffd66d;text-shadow:0 0 12px rgba(255,205,90,.4)}.cx26-jackpot small{font-size:8px;color:rgba(255,255,255,.42)}
+.cx20-machine.cx26-machine .cx20-line{animation:cx26line 1.7s ease-in-out infinite}
+@keyframes cx26line{50%{box-shadow:0 0 22px #ffd66d;opacity:.92}100%{box-shadow:0 0 10px #ffd66d;opacity:1}}
+@media(max-width:600px){
+  .cx26-hero img{height:min(20vh,145px);max-width:56vw;transform:translateY(4px)}
+  .cx26-jackpot{padding:5px 8px;gap:6px;margin:1px auto 3px}
+  .cx26-jackpot b{font-size:13px}
+}

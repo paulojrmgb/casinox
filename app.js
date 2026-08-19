@@ -2159,7 +2159,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       </header>
       <main class="cx20-stage">
         <div class="cx20-glow"></div>
-        <div class="cx20-character"><div class="orb"></div><div class="rabbit">${name.toLowerCase().includes("bull")?"🐂":name.toLowerCase().includes("dragon")?"🐉":name.toLowerCase().includes("tiger")?"🐯":"🐇"}</div></div>
+        <div class="cx20-character"><div class="orb"></div><div class="rabbit cx26-hero">${(() => { const n=name.toLowerCase(); const f=n.includes("bull")?"golden-bull.jpg":n.includes("dragon")?"dragon-fortune.jpg":n.includes("tiger")?"tiger-riches.jpg":n.includes("panda")?"treasure-panda.jpg":n.includes("lion")?"lion-king.jpg":"lucky-rabbit.jpg"; return `<img src="assets/characters/${f}" alt="${name}" loading="eager">`; })()}</div></div>
         <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels">${Array(5).fill('<div class="cx20-reel"></div>').join("")}<div class="cx20-line"></div></div></div></div>
         <div class="cx20-prize">BOA SORTE</div>
         <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
@@ -2522,7 +2522,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 /* =========================================================
-   CASINOX v2.5 — AUTHORITATIVE MOBILE CONTROLS
+   CASINOX v2.6 — AUTHORITATIVE MOBILE CONTROLS
    One delegated capture handler owns the game controls.
    This avoids cloning/replacing buttons and therefore preserves
    the handlers and DOM created by the game engine.
@@ -2850,7 +2850,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 })();
 
 
-/* CASINOX v2.5 — portal version badge */
+/* CASINOX v2.6 — portal version badge */
 (function(){
   function addVersion(){
     if(document.querySelector(".cx25-version"))return;
@@ -2858,11 +2858,69 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     if(!top)return;
     const badge=document.createElement("span");
     badge.className="cx25-version";
-    badge.textContent="v2.5";
+    badge.textContent="v2.6";
     badge.setAttribute("aria-label","Versão 2.5");
     top.appendChild(badge);
   }
   if(document.readyState==="loading"){
     document.addEventListener("DOMContentLoaded",addVersion);
   }else addVersion();
+})();
+
+
+/* =========================================================
+   CASINOX v2.6 — PREMIUM VISUAL LAYER
+   Visual-only enhancement. Navigation and game controls remain
+   on the proven v2.5 handlers.
+   ========================================================= */
+(function(){
+  const GAME_ART={
+    rabbit:'assets/symbols/rabbit-symbol.jpg',
+    bull:'assets/symbols/bull-symbol.jpg',
+    dragon:'assets/symbols/dragon-symbol.jpg',
+    tiger:'assets/symbols/tiger-symbol.jpg',
+    panda:'assets/symbols/panda-symbol.jpg',
+    lion:'assets/symbols/lion-symbol.jpg'
+  };
+
+  function heroKey(name){
+    const n=(name||'').toLowerCase();
+    if(n.includes('bull'))return 'bull';
+    if(n.includes('dragon'))return 'dragon';
+    if(n.includes('tiger'))return 'tiger';
+    if(n.includes('panda'))return 'panda';
+    if(n.includes('lion'))return 'lion';
+    return 'rabbit';
+  }
+
+  function enhance(shell){
+    if(!shell || shell.dataset.v26==='1')return;
+    shell.dataset.v26='1';
+    const name=shell.querySelector('.cx20-brand b')?.textContent||'';
+    const key=heroKey(name);
+    const hero=shell.querySelector('.cx20-character .rabbit');
+    if(hero){
+      hero.classList.add('cx26-hero');
+      hero.innerHTML=`<img src="${GAME_ART[key]}" alt="${name}" loading="eager">`;
+    }
+
+    const prize=shell.querySelector('.cx20-prize');
+    if(prize){
+      const jackpot=document.createElement('div');
+      jackpot.className='cx26-jackpot';
+      jackpot.innerHTML='<span>JACKPOT DEMO</span><b>50.000</b><small>créditos virtuais</small>';
+      prize.insertAdjacentElement('afterend',jackpot);
+    }
+
+    const machine=shell.querySelector('.cx20-machine');
+    if(machine)machine.classList.add('cx26-machine');
+  }
+
+  const obs=new MutationObserver(()=>{
+    const shell=document.querySelector('.cx20-shell');
+    if(shell)enhance(shell);
+  });
+  obs.observe(document.body,{childList:true,subtree:true});
+  const shell=document.querySelector('.cx20-shell');
+  if(shell)enhance(shell);
 })();
