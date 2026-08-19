@@ -2220,3 +2220,115 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   const old=window.CasinoXDemoGame?.open;
   if(window.CasinoXDemoGame)window.CasinoXDemoGame.open=function(name){open(name)};
 })();
+
+
+/* CASINOX v2.1 PATCH — mobile stability */
+(function(){
+  const oldPremium=window.CasinoXPremiumGame;
+  if(!oldPremium) return;
+
+  // Keep the existing premium UI but replace the slow/random spin controller
+  // with a lightweight, non-blocking controller.
+  const originalOpen=oldPremium.open;
+
+  oldPremium.open=function(name){
+    originalOpen(name);
+    const shell=document.querySelector(".cx20-shell");
+    if(!shell)return;
+
+    // Prevent the old global card/game handlers from seeing any game-screen touch.
+    shell.addEventListener("click",function(e){e.stopPropagation()},true);
+    shell.addEventListener("pointerdown",function(e){e.stopPropagation()},true);
+    shell.addEventListener("touchstart",function(e){e.stopPropagation()},true);
+
+    // Replace spin button with a stable handler.
+    const btn=shell.querySelector(".cx20-spin");
+    if(btn){
+      const fresh=btn.cloneNode(true);
+      btn.replaceWith(fresh);
+      fresh.disabled=false;
+
+      let locked=false;
+      fresh.addEventListener("click",function(e){
+        e.preventDefault(); e.stopPropagation();
+        if(locked)return;
+        locked=true;
+        const balanceEl=shell.querySelector(".cx20-wallet-value");
+        const statBalance=shell.querySelector(".st-balance");
+        const statWin=shell.querySelector(".st-win");
+        const prize=shell.querySelector(".cx20-prize");
+        const betEl=shell.querySelector(".st-bet");
+        const betValue=shell.querySelector(".cx20-bet-value b");
+        let balance=Number(localStorage.getItem("casinox_balance")||10000);
+        let bet=Number(localStorage.getItem("casinox_bet")||100);
+        if(balance<bet){
+          prize.textContent="SALDO INSUFICIENTE";
+          locked=false; return;
+        }
+        balance-=bet;
+        localStorage.setItem("casinox_balance",String(balance));
+        prize.textContent="GIRANDO…";
+        statWin.textContent="0";
+        balanceEl.textContent=balance.toLocaleString("pt-BR");
+        statBalance.textContent=balance.toLocaleString("pt-BR");
+
+        const reels=[...shell.querySelectorAll(".cx20-reel")];
+        const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
+        let tick=0, maxTick=shell.querySelector('[data-tool="turbo"]')?.classList.contains("active")?5:8;
+        const timer=setInterval(()=>{
+          reels.forEach(r=>{
+            const vals=[0,1,2].map(()=>symbols[Math.floor(Math.random()*symbols.length)]);
+            r.innerHTML=`<div class="cx20-symbol s1">${vals[0]}</div><div class="cx20-symbol s2">${vals[1]}</div><div class="cx20-symbol s3">${vals[2]}</div>`;
+          });
+          tick++;
+          if(tick>=maxTick){
+            clearInterval(timer);
+            const vals=reels.map(r=>r.querySelector(".s2")?.textContent||"");
+            const counts={}; vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+            const max=Math.max(...Object.values(counts));
+            const mult=max>=5?10:max>=4?5:max>=3?2:0;
+            const win=bet*mult;
+            balance+=win;
+            localStorage.setItem("casinox_balance",String(balance));
+            balanceEl.textContent=balance.toLocaleString("pt-BR");
+            statBalance.textContent=balance.toLocaleString("pt-BR");
+            statWin.textContent=win.toLocaleString("pt-BR");
+            prize.textContent=win?`✨ PRÊMIO +${win.toLocaleString("pt-BR")}`:"Boa rodada — tente novamente!";
+            if(win){prize.classList.add("win");setTimeout(()=>prize.classList.remove("win"),1000)}
+            locked=false;
+          }
+        },70);
+      });
+    }
+
+    // Make the paytable explicit and readable.
+    const pay=shell.querySelector(".cx20-paytable");
+    const payPanel=shell.querySelector(".cx20-paypanel");
+    if(payPanel){
+      payPanel.style.fontSize="15px";
+      payPanel.style.color="#fff";
+      payPanel.querySelectorAll(".cx20-payrow").forEach(r=>{
+        r.style.fontSize="15px"; r.style.padding="13px 4px";
+      });
+      const close=payPanel.querySelector(".pay-close");
+      if(close){close.textContent="FECHAR";close.style.fontSize="13px";close.style.marginBottom="8px"}
+    }
+    if(pay){
+      pay.addEventListener("click",e=>{
+        if(e.target===pay)pay.classList.remove("show");
+      });
+    }
+
+    // Back must only close the current game and return to the current lobby DOM.
+    const back=shell.querySelector(".cx20-back");
+    if(back){
+      const freshBack=back.cloneNode(true);
+      back.replaceWith(freshBack);
+      freshBack.addEventListener("click",function(e){
+        e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
+        if(window.CasinoXPremiumGame?.close)window.CasinoXPremiumGame.close();
+        else {shell.remove();document.body.style.overflow=""}
+      });
+    }
+  };
+})();

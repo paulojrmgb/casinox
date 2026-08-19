@@ -2563,3 +2563,10 @@ footer{background:#050506!important;color:#777!important}
 .cx20-paypanel h3{margin:0 0 12px}.cx20-payrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
 @media(max-height:700px){.cx20-character{height:16vh}.cx20-character .rabbit{font-size:72px}.cx20-stage{padding-top:2px}.cx20-stats{margin:3px 0}.cx20-controls{padding-top:5px}}
 @media(min-width:801px){.cx20-top{height:62px}.cx20-character{height:19vh}.cx20-character .rabbit{font-size:105px}.cx20-stage{padding:18px}.cx20-controls{padding:12px 20px}}
+
+/* v2.1 stability/readability patch */
+.cx20-paypanel{font-size:15px}
+.cx20-paypanel h3{font-size:21px}
+.cx20-payrow{font-size:15px!important;padding:13px 4px!important}
+.cx20-paypanel .pay-close{font-size:13px;min-height:40px}
+.cx20-shell button{touch-action:manipulation}
