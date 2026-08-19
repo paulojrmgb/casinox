@@ -2519,3 +2519,220 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     };
   }
 })();
+
+
+/* =========================================================
+   CASINOX v2.4 — MOBILE CONTROLS REBIND
+   Rebinds every control after the game shell is created.
+   This deliberately replaces the old button handlers so that
+   mobile and desktop use the same stable event path.
+   ========================================================= */
+(function(){
+  function money(n){ return Number(n||0).toLocaleString("pt-BR"); }
+
+  function replaceButton(old, handler){
+    if(!old) return null;
+    const fresh=old.cloneNode(true);
+    old.replaceWith(fresh);
+    fresh.disabled=false;
+    fresh.style.pointerEvents="auto";
+    fresh.style.touchAction="manipulation";
+    fresh.addEventListener("click",function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      e.stopPropagation();
+      handler(e);
+    },true);
+    return fresh;
+  }
+
+  function installControls(){
+    const shell=document.querySelector(".cx20-shell");
+    if(!shell || shell.dataset.v24==="1") return;
+    shell.dataset.v24="1";
+
+    let balance=Number(localStorage.getItem("casinox_balance")||10000);
+    let bet=Number(localStorage.getItem("casinox_bet")||100);
+    let turbo=false, auto=false, spinning=false, autoTimer=null, spinTimer=null;
+
+    function sync(){
+      const w=shell.querySelector(".cx20-wallet-value");
+      const sb=shell.querySelector(".st-balance");
+      const st=shell.querySelector(".st-bet");
+      const bv=shell.querySelector(".cx20-bet-value b");
+      if(w)w.textContent=money(balance);
+      if(sb)sb.textContent=money(balance);
+      if(st)st.textContent=money(bet);
+      if(bv)bv.textContent=money(bet);
+      localStorage.setItem("casinox_balance",String(balance));
+      localStorage.setItem("casinox_bet",String(bet));
+    }
+
+    function draw(){
+      const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
+      shell.querySelectorAll(".cx20-reel").forEach(r=>{
+        const a=symbols[Math.floor(Math.random()*symbols.length)];
+        const b=symbols[Math.floor(Math.random()*symbols.length)];
+        const c=symbols[Math.floor(Math.random()*symbols.length)];
+        r.innerHTML=`<div class="cx20-symbol s1">${a}</div><div class="cx20-symbol s2">${b}</div><div class="cx20-symbol s3">${c}</div>`;
+      });
+    }
+
+    function stopAuto(){
+      auto=false;
+      if(autoTimer){clearTimeout(autoTimer);autoTimer=null}
+      const b=shell.querySelector('[data-tool="auto"]');
+      if(b)b.classList.remove("active");
+    }
+
+    function finishSpin(){
+      if(spinTimer){clearInterval(spinTimer);spinTimer=null}
+      if(!shell.isConnected)return;
+      const symbols=[...shell.querySelectorAll(".cx20-reel .s2")].map(x=>x.textContent);
+      const counts={};
+      symbols.forEach(s=>counts[s]=(counts[s]||0)+1);
+      const max=Math.max(...Object.values(counts));
+      const mult=max>=5?10:max>=4?5:max>=3?2:0;
+      const win=bet*mult;
+      balance+=win;
+      spinning=false;
+      const btn=shell.querySelector(".cx20-spin");
+      if(btn){btn.disabled=false;btn.textContent="GIRAR";btn.style.pointerEvents="auto"}
+      const prize=shell.querySelector(".cx20-prize");
+      const gain=shell.querySelector(".st-win");
+      if(gain)gain.textContent=money(win);
+      if(prize){
+        prize.textContent=win?`✨ PRÊMIO +${money(win)}`:"Boa rodada — tente novamente!";
+        prize.classList.toggle("win",!!win);
+        if(win)setTimeout(()=>prize.classList.remove("win"),1200);
+      }
+      sync();
+      if(auto)autoTimer=setTimeout(startSpin,700);
+    }
+
+    function startSpin(){
+      if(!shell.isConnected || spinning)return;
+      if(balance<bet){
+        const p=shell.querySelector(".cx20-prize");
+        if(p)p.textContent="SALDO INSUFICIENTE";
+        stopAuto();
+        return;
+      }
+      spinning=true;
+      balance-=bet;
+      sync();
+      const btn=shell.querySelector(".cx20-spin");
+      if(btn){btn.disabled=true;btn.textContent="GIRANDO…";btn.style.pointerEvents="none"}
+      const p=shell.querySelector(".cx20-prize");
+      if(p)p.textContent=turbo?"⚡ TURBO":"GIRANDO…";
+      const cycles=turbo?6:14;
+      const delay=turbo?42:78;
+      let n=0;
+      spinTimer=setInterval(()=>{
+        draw();
+        if(++n>=cycles)finishSpin();
+      },delay);
+    }
+
+    function showPrizes(){
+      const panel=shell.querySelector(".cx20-paytable");
+      if(panel)panel.classList.add("show");
+    }
+    function closePrizes(){
+      const panel=shell.querySelector(".cx20-paytable");
+      if(panel)panel.classList.remove("show");
+    }
+
+    function closeGame(){
+      stopAuto();
+      if(spinTimer){clearInterval(spinTimer);spinTimer=null}
+      spinning=false;
+      shell.remove();
+      document.body.style.overflow="";
+    }
+
+    /* Replace ALL existing controls, removing every legacy handler. */
+    replaceButton(shell.querySelector(".cx20-back"),closeGame);
+    replaceButton(shell.querySelector(".cx20-minus"),function(){
+      bet=Math.max(10,bet-10);sync();
+    });
+    replaceButton(shell.querySelector(".cx20-plus"),function(){
+      bet=Math.min(Math.max(10,balance),bet+10);sync();
+    });
+    replaceButton(shell.querySelector(".cx20-spin"),startSpin);
+    replaceButton(shell.querySelector('[data-tool="turbo"]'),function(e){
+      turbo=!turbo;
+      e.currentTarget.classList.toggle("active",turbo);
+    });
+    replaceButton(shell.querySelector('[data-tool="auto"]'),function(e){
+      auto=!auto;
+      e.currentTarget.classList.toggle("active",auto);
+      if(auto && !spinning)startSpin();
+      if(!auto && autoTimer){clearTimeout(autoTimer);autoTimer=null}
+    });
+    replaceButton(shell.querySelector('[data-tool="pay"]'),showPrizes);
+    replaceButton(shell.querySelector(".pay-close"),closePrizes);
+
+    /* Replace the old v2.2 credit button with a known-good one. */
+    const oldCredit=shell.querySelector(".cx22-dev");
+    if(oldCredit){
+      const credit=replaceButton(oldCredit,function(){
+        const modal=shell.querySelector(".cx22-credit-modal");
+        if(modal){
+          const v=modal.querySelector(".cx22-credit-value");
+          if(v)v.textContent=money(balance);
+          modal.classList.add("show");
+        }
+      });
+      if(credit)credit.textContent="💰 CRÉDITOS";
+    }else{
+      const tools=shell.querySelector(".cx20-tools");
+      if(tools){
+        const credit=document.createElement("button");
+        credit.type="button";credit.className="cx20-tool cx22-dev";
+        credit.textContent="💰 CRÉDITOS";
+        tools.appendChild(credit);
+        credit.addEventListener("click",function(e){
+          e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
+          const modal=shell.querySelector(".cx22-credit-modal");
+          if(modal){
+            modal.querySelector(".cx22-credit-value").textContent=money(balance);
+            modal.classList.add("show");
+          }
+        },true);
+      }
+    }
+
+    const creditModal=shell.querySelector(".cx22-credit-modal");
+    if(creditModal){
+      const close=creditModal.querySelector(".cx22-close");
+      if(close)replaceButton(close,function(){creditModal.classList.remove("show")});
+      creditModal.querySelectorAll("[data-credit]").forEach(old=>{
+        replaceButton(old,function(){
+          const action=old.dataset.credit;
+          balance=action==="reset"?10000:balance+Number(action);
+          sync();
+          const v=creditModal.querySelector(".cx22-credit-value");
+          if(v)v.textContent=money(balance);
+        });
+      });
+    }
+
+    /* Make the credit panel open from the current game only. */
+    creditModal?.addEventListener("click",function(e){
+      if(e.target===creditModal)creditModal.classList.remove("show");
+    });
+
+    sync();
+  }
+
+  const previousOpen=window.CasinoXPremiumGame && window.CasinoXPremiumGame.open;
+  if(previousOpen){
+    window.CasinoXPremiumGame.open=function(name){
+      previousOpen(name);
+      setTimeout(installControls,20);
+    };
+  }
+
+  setTimeout(installControls,300);
+})();

@@ -2645,3 +2645,20 @@ footer{background:#050506!important;color:#777!important}
   background:rgba(255,214,109,.12);
 }
 .cx22-dev{touch-action:manipulation}
+
+/* v2.4 — force controls to be interactive on mobile */
+.cx20-controls,
+.cx20-controls *{
+  pointer-events:auto;
+}
+.cx20-controls button{
+  cursor:pointer;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent;
+}
+.cx20-spin:disabled{
+  cursor:not-allowed;
+}
+.cx22-credit-modal{
+  pointer-events:auto;
+}
