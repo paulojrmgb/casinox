@@ -2911,3 +2911,32 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
   else add();
 })();
+
+
+(function(){
+  function cleanGameArt(){
+    document.querySelectorAll(
+      '.cx27-character-card,.cx27-animal-card,.cx27-animal-logo,.cx27-game-art-card'
+    ).forEach(el=>el.remove());
+
+    // If the old visual card is identified by the old logo image, remove its wrapper.
+    document.querySelectorAll('.cx20-stage img').forEach(img=>{
+      const alt=(img.getAttribute('alt')||'').toLowerCase();
+      const src=(img.getAttribute('src')||'').toLowerCase();
+      if(
+        alt.includes('dragon fortune') ||
+        alt.includes('golden bull') ||
+        alt.includes('lucky rabbit') ||
+        alt.includes('tiger riches') ||
+        alt.includes('lion king') ||
+        alt.includes('treasure panda')
+      ){
+        const parent=img.closest('.cx27-character-card,.cx27-animal-card,.cx27-animal-logo,.cx27-game-art-card');
+        if(parent) parent.remove();
+      }
+    });
+  }
+  const mo=new MutationObserver(cleanGameArt);
+  mo.observe(document.body,{childList:true,subtree:true});
+  cleanGameArt();
+})();

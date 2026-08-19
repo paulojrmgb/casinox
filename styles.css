@@ -3277,3 +3277,118 @@ footer{background:#050506!important;color:#777!important}
     font-size:30px!important;
   }
 }
+
+/* =========================================================
+   CASINOX v3.3
+   - clean artwork area: no old animal-logo card overlay
+   - artwork is scenery only; reels are our own UI
+   - persistent GIRAR button
+   ========================================================= */
+
+/* The artwork is a BACKDROP, never a second game/logo layer. */
+.cx20-stage.cx30-theme .cx20-character,
+.cx20-stage.cx30-theme .cx27-character-card,
+.cx20-stage.cx30-theme .cx27-animal-card,
+.cx20-stage.cx30-theme .cx27-animal-logo,
+.cx20-stage.cx30-theme .cx27-game-art-card{
+  display:none!important;
+}
+
+/* Full scenery layer. Keep the playable area open in the center. */
+.cx20-stage.cx30-theme{
+  position:relative!important;
+  overflow:hidden!important;
+  background-color:#170c12!important;
+  background-image:
+    linear-gradient(180deg,rgba(8,3,7,.08),rgba(8,3,7,.28)),
+    var(--cx30-bg)!important;
+  background-size:cover!important;
+  background-position:center top!important;
+  background-repeat:no-repeat!important;
+}
+
+/* Reserve a clean central "socket" for our reel machine. */
+.cx20-stage.cx30-theme::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:34%;
+  transform:translate(-50%,-50%);
+  width:min(78%,560px);
+  height:min(48%,390px);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(255,255,255,.035),transparent 55%),
+    rgba(5,4,10,.16);
+  border:1px solid rgba(255,220,130,.16);
+  box-shadow:0 16px 50px rgba(0,0,0,.22), inset 0 0 35px rgba(0,0,0,.18);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Never let the reel background become the scenery. */
+.cx20-stage.cx30-theme .cx20-machine,
+.cx20-stage.cx30-theme .cx20-reels,
+.cx20-stage.cx30-theme .cx20-reel{
+  background-color:transparent;
+}
+
+/* GIRAR must remain in layout while spinning. */
+.cx20-stage .cx20-spin,
+.cx20-stage button[data-action="spin"],
+.cx20-stage .spin-btn,
+.cx20-stage .btn-spin{
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+/* Prevent JS "hide after click" classes from removing the main spin control. */
+.cx20-stage .cx20-spin.is-hidden,
+.cx20-stage .cx20-spin.hidden,
+.cx20-stage .cx20-spin[hidden],
+.cx20-stage button[data-action="spin"].is-hidden,
+.cx20-stage button[data-action="spin"].hidden{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+/* Visual language of the reference: large gold, rounded, persistent. */
+.cx20-stage .cx20-spin,
+.cx20-stage button[data-action="spin"],
+.cx20-stage .spin-btn,
+.cx20-stage .btn-spin{
+  min-height:58px;
+  border-radius:16px!important;
+  border:1px solid rgba(255,225,135,.65)!important;
+  background:linear-gradient(180deg,#ffe28a 0%,#f2b83e 100%)!important;
+  color:#281707!important;
+  font-weight:1000!important;
+  font-size:clamp(18px,4.5vw,26px)!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.32), inset 0 1px rgba(255,255,255,.42)!important;
+}
+
+/* During spin, change only the label/state — never remove the button. */
+.cx20-stage .cx20-spin.spinning,
+.cx20-stage button[data-action="spin"].spinning{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:saturate(.82) brightness(.95);
+}
+
+/* Mobile: preserve the reference proportions. */
+@media(max-width:600px){
+  .cx20-stage.cx30-theme::before{
+    width:88%;
+    height:42%;
+    top:34%;
+  }
+  .cx20-stage .cx20-spin,
+  .cx20-stage button[data-action="spin"],
+  .cx20-stage .spin-btn,
+  .cx20-stage .btn-spin{
+    min-height:64px;
+    border-radius:17px!important;
+    font-size:22px!important;
+  }
+}
