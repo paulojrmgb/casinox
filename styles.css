@@ -3826,3 +3826,74 @@ footer{background:#050506!important;color:#777!important}
     flex-basis:clamp(42px,9vw,58px)!important;
   }
 }
+
+/* =========================================================
+   CASINOX v3.7 — QUADRO DA ROLETA CENTRALIZADO
+   Remove the legacy viewport-based offset that created empty
+   space above/below after the reel was reduced.
+   ========================================================= */
+
+.cx20-stage{
+  justify-content:center!important;
+  align-items:center!important;
+  padding:6px 8px 4px!important;
+}
+
+.cx20-stage .cx20-machine{
+  margin:0 auto!important;
+  width:min(68vw,330px)!important;
+  max-width:330px!important;
+  flex:0 0 auto!important;
+}
+
+.cx20-stage .cx20-machine-inner{
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+
+.cx20-stage .cx20-reels.cx20-reels-343{
+  width:100%!important;
+  margin:0 auto!important;
+  flex:0 0 auto!important;
+}
+
+/* Keep the machine, prize and stats together as one compact block,
+   immediately above the controls. */
+.cx20-stage .cx20-prize{
+  margin:3px 0 0!important;
+  min-height:22px!important;
+}
+.cx20-stage .cx20-stats{
+  margin:4px 0 2px!important;
+}
+
+/* Mobile: no viewport-height margin on the machine. */
+@media(max-width:600px){
+  .cx20-stage{
+    justify-content:center!important;
+    padding:4px 6px 2px!important;
+  }
+
+  .cx20-stage .cx20-machine{
+    margin:0 auto!important;
+    width:min(68vw,320px)!important;
+    max-width:320px!important;
+  }
+
+  .cx20-stage .cx20-prize{
+    margin-top:2px!important;
+    min-height:20px!important;
+  }
+
+  .cx20-stage .cx20-stats{
+    margin:3px 0 1px!important;
+  }
+}
+
+/* Short mobile screens: still center the game block instead of
+   pushing it down with the old 17vh rule. */
+@media(max-height:720px) and (max-width:600px){
+  .cx20-stage .cx20-machine{
+    margin-top:0!important;
+  }
+}
