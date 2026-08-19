@@ -3044,9 +3044,72 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     if(!top)return;
     const b=document.createElement("span");
     b.className="cx27-version";
-    b.textContent="v2.7";
+    b.textContent="v2.9";
     top.appendChild(b);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
   else add();
+})();
+
+
+/* =========================================================
+   CASINOX v2.9 — IN-GAME BACKGROUND
+   The animal artwork is applied behind the reels/machine
+   panel itself, where the old gradient was displayed.
+   ========================================================= */
+(function(){
+  function themeFromShell(shell){
+    const n=(shell.querySelector(".cx20-brand b")?.textContent||"").toLowerCase();
+    if(n.includes("golden bull")) return "bull";
+    if(n.includes("dragon fire")) return "dragon-fire";
+    if(n.includes("dragon")) return "dragon";
+    if(n.includes("tiger")) return "tiger";
+    if(n.includes("lion")) return "lion";
+    if(n.includes("panda")) return "panda";
+    return "rabbit";
+  }
+
+  function assetFor(theme){
+    return {
+      rabbit:"lucky-rabbit.jpg",
+      bull:"golden-bull.jpg",
+      dragon:"dragon-fortune.jpg",
+      "dragon-fire":"dragon-fire.jpg",
+      tiger:"tiger-riches.jpg",
+      lion:"lion-king.jpg",
+      panda:"treasure-panda.jpg"
+    }[theme]||"lucky-rabbit.jpg";
+  }
+
+  function apply(shell){
+    if(!shell || shell.dataset.cx29==="1")return;
+    shell.dataset.cx29="1";
+
+    const theme=themeFromShell(shell);
+    const asset=assetFor(theme);
+    shell.dataset.animal=theme;
+
+    // Apply directly to the machine/reel container.
+    const targets=[
+      shell.querySelector(".cx20-machine"),
+      shell.querySelector(".cx20-reels"),
+      shell.querySelector(".cx20-stage .cx20-game"),
+      shell.querySelector(".cx20-stage")
+    ].filter(Boolean);
+
+    const target=targets[0];
+    if(target){
+      target.classList.add("cx29-in-game-bg");
+      target.style.setProperty("--cx29-bg", `url("assets/characters/${asset}")`);
+      target.setAttribute("data-animal-bg",theme);
+    }
+  }
+
+  const observer=new MutationObserver(function(){
+    const shell=document.querySelector(".cx20-shell");
+    if(shell)apply(shell);
+  });
+  observer.observe(document.body,{childList:true,subtree:true});
+  const shell=document.querySelector(".cx20-shell");
+  if(shell)apply(shell);
 })();
