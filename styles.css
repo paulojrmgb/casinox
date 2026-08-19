@@ -2866,54 +2866,67 @@ footer{background:#050506!important;color:#777!important}
 }
 
 /* =========================================================
-   v2.9 — THE ACTUAL GAME PANEL BACKGROUND
-   This is intentionally behind the reels, replacing the
-   gradient area inside the machine instead of the page/stage.
+   CASINOX v3.0 — FULL IN-GAME ORIENTAL BACKGROUND
+   The background belongs to the whole playable stage:
+   behind the animal hero AND behind the slot machine.
+   It is NOT applied to the reels or machine box.
    ========================================================= */
-.cx29-in-game-bg{
+.cx20-stage.cx30-theme{
   position:relative;
   isolation:isolate;
   overflow:hidden;
   background-image:
-    linear-gradient(180deg,rgba(8,5,8,.16),rgba(8,4,8,.68)),
-    var(--cx29-bg)!important;
+    linear-gradient(180deg,rgba(8,4,8,.08),rgba(8,4,8,.48)),
+    var(--cx30-bg)!important;
   background-size:cover!important;
-  background-position:center!important;
+  background-position:center center!important;
   background-repeat:no-repeat!important;
 }
-.cx29-in-game-bg::before{
+.cx20-stage.cx30-theme::before,
+.cx20-stage.cx30-theme::after{
   content:"";
   position:absolute;
   inset:0;
-  z-index:-1;
   pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 20%,rgba(255,215,120,.20),transparent 38%),
-    linear-gradient(90deg,rgba(10,5,8,.34),transparent 35%,transparent 65%,rgba(10,5,8,.34));
 }
-.cx29-in-game-bg .cx20-reel,
-.cx29-in-game-bg .cx20-symbol{
+.cx20-stage.cx30-theme::before{
+  z-index:0;
+  background:
+    radial-gradient(circle at 50% 22%,rgba(255,218,126,.14),transparent 38%),
+    linear-gradient(90deg,rgba(10,5,8,.20),transparent 35%,transparent 65%,rgba(10,5,8,.20));
+}
+.cx20-stage.cx30-theme::after{
+  z-index:0;
+  background:linear-gradient(180deg,transparent 45%,rgba(6,4,8,.24) 100%);
+}
+.cx20-stage.cx30-theme > *{
   position:relative;
   z-index:1;
 }
 
-/* stronger animal-specific atmosphere inside the machine */
-.cx29-in-game-bg[data-animal-bg="bull"]{
-  box-shadow:inset 0 0 80px rgba(255,183,50,.20);
+/* Keep the machine dimensions exactly as the approved v2.7/v2.8 base. */
+.cx20-stage.cx30-theme .cx20-machine,
+.cx20-stage.cx30-theme .cx20-character,
+.cx20-stage.cx30-theme .cx20-stats,
+.cx20-stage.cx30-theme .cx20-prize{
+  flex-shrink:0;
 }
-.cx29-in-game-bg[data-animal-bg="dragon"],
-.cx29-in-game-bg[data-animal-bg="dragon-fire"]{
-  box-shadow:inset 0 0 90px rgba(255,65,30,.22);
+
+/* Only one visible version badge. */
+.cx27-version{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:8px;
+  padding:3px 8px;
+  border:1px solid rgba(255,214,109,.35);
+  border-radius:999px;
+  color:#ffd66d;
+  background:rgba(255,214,109,.08);
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
 }
-.cx29-in-game-bg[data-animal-bg="tiger"]{
-  box-shadow:inset 0 0 80px rgba(255,150,40,.20);
-}
-.cx29-in-game-bg[data-animal-bg="lion"]{
-  box-shadow:inset 0 0 80px rgba(255,210,70,.22);
-}
-.cx29-in-game-bg[data-animal-bg="panda"]{
-  box-shadow:inset 0 0 80px rgba(90,190,120,.18);
-}
-.cx29-in-game-bg[data-animal-bg="rabbit"]{
-  box-shadow:inset 0 0 80px rgba(210,55,45,.18);
+@media(max-width:600px){
+  .cx27-version{font-size:9px;padding:3px 6px}
 }
