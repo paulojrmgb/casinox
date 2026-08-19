@@ -2522,217 +2522,347 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 /* =========================================================
-   CASINOX v2.4 — MOBILE CONTROLS REBIND
-   Rebinds every control after the game shell is created.
-   This deliberately replaces the old button handlers so that
-   mobile and desktop use the same stable event path.
+   CASINOX v2.5 — AUTHORITATIVE MOBILE CONTROLS
+   One delegated capture handler owns the game controls.
+   This avoids cloning/replacing buttons and therefore preserves
+   the handlers and DOM created by the game engine.
    ========================================================= */
 (function(){
-  function money(n){ return Number(n||0).toLocaleString("pt-BR"); }
+  const V="2.5";
 
-  function replaceButton(old, handler){
-    if(!old) return null;
-    const fresh=old.cloneNode(true);
-    old.replaceWith(fresh);
-    fresh.disabled=false;
-    fresh.style.pointerEvents="auto";
-    fresh.style.touchAction="manipulation";
-    fresh.addEventListener("click",function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      e.stopPropagation();
-      handler(e);
-    },true);
-    return fresh;
+  function money(n){
+    return Number(n||0).toLocaleString("pt-BR");
   }
 
-  function installControls(){
-    const shell=document.querySelector(".cx20-shell");
-    if(!shell || shell.dataset.v24==="1") return;
-    shell.dataset.v24="1";
+  function gameShell(){
+    return document.querySelector(".cx20-shell");
+  }
 
-    let balance=Number(localStorage.getItem("casinox_balance")||10000);
-    let bet=Number(localStorage.getItem("casinox_bet")||100);
-    let turbo=false, auto=false, spinning=false, autoTimer=null, spinTimer=null;
+  function closeGame(shell){
+    if(!shell)return;
+    shell.querySelectorAll(".cx20-paytable").forEach(x=>x.classList.remove("show"));
+    shell.querySelectorAll(".cx22-credit-modal").forEach(x=>x.classList.remove("show"));
+    shell.remove();
+    document.body.style.overflow="";
+    document.documentElement.style.overflow="";
+  }
 
-    function sync(){
-      const w=shell.querySelector(".cx20-wallet-value");
-      const sb=shell.querySelector(".st-balance");
-      const st=shell.querySelector(".st-bet");
-      const bv=shell.querySelector(".cx20-bet-value b");
-      if(w)w.textContent=money(balance);
-      if(sb)sb.textContent=money(balance);
-      if(st)st.textContent=money(bet);
-      if(bv)bv.textContent=money(bet);
-      localStorage.setItem("casinox_balance",String(balance));
-      localStorage.setItem("casinox_bet",String(bet));
+  function state(shell){
+    if(!shell.__cx25){
+      shell.__cx25={
+        balance:Number(localStorage.getItem("casinox_balance")||10000),
+        bet:Number(localStorage.getItem("casinox_bet")||100),
+        turbo:false,
+        auto:false,
+        spinning:false,
+        timer:null,
+        autoTimer:null
+      };
+    }
+    return shell.__cx25;
+  }
+
+  function sync(shell){
+    const s=state(shell);
+    const value=money(s.balance);
+    const bet=money(s.bet);
+
+    const selectors=[
+      ".cx20-wallet-value",
+      ".st-balance"
+    ];
+    selectors.forEach(sel=>shell.querySelectorAll(sel).forEach(el=>el.textContent=value));
+    shell.querySelectorAll(".st-bet").forEach(el=>el.textContent=bet);
+
+    const betBox=shell.querySelector(".cx20-bet-value b");
+    if(betBox)betBox.textContent=bet;
+
+    localStorage.setItem("casinox_balance",String(s.balance));
+    localStorage.setItem("casinox_bet",String(s.bet));
+
+    const portal=document.querySelector("#balance");
+    if(portal)portal.textContent=money(s.balance);
+  }
+
+  function message(shell,text){
+    const p=shell.querySelector(".cx20-prize");
+    if(p)p.textContent=text;
+  }
+
+  function draw(shell){
+    const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
+    shell.querySelectorAll(".cx20-reel").forEach(reel=>{
+      reel.innerHTML=[
+        `<div class="cx20-symbol s1">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`,
+        `<div class="cx20-symbol s2">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`,
+        `<div class="cx20-symbol s3">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`
+      ].join("");
+    });
+  }
+
+  function finishSpin(shell){
+    const s=state(shell);
+    if(s.timer){clearInterval(s.timer);s.timer=null}
+    if(!shell.isConnected)return;
+
+    const middle=[...shell.querySelectorAll(".cx20-reel .s2")].map(x=>x.textContent);
+    const counts={};
+    middle.forEach(x=>counts[x]=(counts[x]||0)+1);
+    const max=Math.max(...Object.values(counts),0);
+    const mult=max>=5?10:max>=4?5:max>=3?2:0;
+    const win=s.bet*mult;
+
+    s.balance+=win;
+    s.spinning=false;
+
+    const spin=shell.querySelector(".cx20-spin");
+    if(spin){
+      spin.disabled=false;
+      spin.style.pointerEvents="auto";
+      spin.textContent="GIRAR";
     }
 
-    function draw(){
-      const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
-      shell.querySelectorAll(".cx20-reel").forEach(r=>{
-        const a=symbols[Math.floor(Math.random()*symbols.length)];
-        const b=symbols[Math.floor(Math.random()*symbols.length)];
-        const c=symbols[Math.floor(Math.random()*symbols.length)];
-        r.innerHTML=`<div class="cx20-symbol s1">${a}</div><div class="cx20-symbol s2">${b}</div><div class="cx20-symbol s3">${c}</div>`;
-      });
+    const winEl=shell.querySelector(".st-win");
+    if(winEl)winEl.textContent=money(win);
+
+    message(shell,win?`✨ PRÊMIO +${money(win)}`:"Boa rodada — tente novamente!");
+    sync(shell);
+
+    if(s.auto){
+      s.autoTimer=setTimeout(()=>startSpin(shell),700);
+    }
+  }
+
+  function startSpin(shell){
+    const s=state(shell);
+    if(s.spinning)return;
+
+    if(s.balance<s.bet){
+      message(shell,"SALDO INSUFICIENTE");
+      s.auto=false;
+      const auto=shell.querySelector('[data-tool="auto"]');
+      if(auto)auto.classList.remove("active");
+      return;
     }
 
-    function stopAuto(){
-      auto=false;
-      if(autoTimer){clearTimeout(autoTimer);autoTimer=null}
-      const b=shell.querySelector('[data-tool="auto"]');
-      if(b)b.classList.remove("active");
+    s.spinning=true;
+    s.balance-=s.bet;
+    sync(shell);
+
+    const spin=shell.querySelector(".cx20-spin");
+    if(spin){
+      spin.disabled=true;
+      spin.style.pointerEvents="none";
+      spin.textContent="GIRANDO…";
     }
 
-    function finishSpin(){
-      if(spinTimer){clearInterval(spinTimer);spinTimer=null}
-      if(!shell.isConnected)return;
-      const symbols=[...shell.querySelectorAll(".cx20-reel .s2")].map(x=>x.textContent);
-      const counts={};
-      symbols.forEach(s=>counts[s]=(counts[s]||0)+1);
-      const max=Math.max(...Object.values(counts));
-      const mult=max>=5?10:max>=4?5:max>=3?2:0;
-      const win=bet*mult;
-      balance+=win;
-      spinning=false;
-      const btn=shell.querySelector(".cx20-spin");
-      if(btn){btn.disabled=false;btn.textContent="GIRAR";btn.style.pointerEvents="auto"}
-      const prize=shell.querySelector(".cx20-prize");
-      const gain=shell.querySelector(".st-win");
-      if(gain)gain.textContent=money(win);
-      if(prize){
-        prize.textContent=win?`✨ PRÊMIO +${money(win)}`:"Boa rodada — tente novamente!";
-        prize.classList.toggle("win",!!win);
-        if(win)setTimeout(()=>prize.classList.remove("win"),1200);
-      }
-      sync();
-      if(auto)autoTimer=setTimeout(startSpin,700);
-    }
+    message(shell,s.turbo?"⚡ TURBO":"GIRANDO…");
 
-    function startSpin(){
-      if(!shell.isConnected || spinning)return;
-      if(balance<bet){
-        const p=shell.querySelector(".cx20-prize");
-        if(p)p.textContent="SALDO INSUFICIENTE";
-        stopAuto();
+    let n=0;
+    const total=s.turbo?6:14;
+    const delay=s.turbo?42:78;
+
+    s.timer=setInterval(()=>{
+      if(!shell.isConnected){
+        clearInterval(s.timer);
+        s.timer=null;
         return;
       }
-      spinning=true;
-      balance-=bet;
-      sync();
-      const btn=shell.querySelector(".cx20-spin");
-      if(btn){btn.disabled=true;btn.textContent="GIRANDO…";btn.style.pointerEvents="none"}
-      const p=shell.querySelector(".cx20-prize");
-      if(p)p.textContent=turbo?"⚡ TURBO":"GIRANDO…";
-      const cycles=turbo?6:14;
-      const delay=turbo?42:78;
-      let n=0;
-      spinTimer=setInterval(()=>{
-        draw();
-        if(++n>=cycles)finishSpin();
-      },delay);
-    }
+      draw(shell);
+      n++;
+      if(n>=total)finishSpin(shell);
+    },delay);
+  }
 
-    function showPrizes(){
-      const panel=shell.querySelector(".cx20-paytable");
-      if(panel)panel.classList.add("show");
-    }
-    function closePrizes(){
-      const panel=shell.querySelector(".cx20-paytable");
-      if(panel)panel.classList.remove("show");
-    }
+  function toggleTurbo(shell){
+    const s=state(shell);
+    s.turbo=!s.turbo;
+    const b=shell.querySelector('[data-tool="turbo"]');
+    if(b)b.classList.toggle("active",s.turbo);
+    message(shell,s.turbo?"⚡ TURBO ATIVADO":"TURBO DESATIVADO");
+  }
 
-    function closeGame(){
-      stopAuto();
-      if(spinTimer){clearInterval(spinTimer);spinTimer=null}
-      spinning=false;
-      shell.remove();
-      document.body.style.overflow="";
-    }
+  function toggleAuto(shell){
+    const s=state(shell);
+    s.auto=!s.auto;
+    const b=shell.querySelector('[data-tool="auto"]');
+    if(b)b.classList.toggle("active",s.auto);
 
-    /* Replace ALL existing controls, removing every legacy handler. */
-    replaceButton(shell.querySelector(".cx20-back"),closeGame);
-    replaceButton(shell.querySelector(".cx20-minus"),function(){
-      bet=Math.max(10,bet-10);sync();
-    });
-    replaceButton(shell.querySelector(".cx20-plus"),function(){
-      bet=Math.min(Math.max(10,balance),bet+10);sync();
-    });
-    replaceButton(shell.querySelector(".cx20-spin"),startSpin);
-    replaceButton(shell.querySelector('[data-tool="turbo"]'),function(e){
-      turbo=!turbo;
-      e.currentTarget.classList.toggle("active",turbo);
-    });
-    replaceButton(shell.querySelector('[data-tool="auto"]'),function(e){
-      auto=!auto;
-      e.currentTarget.classList.toggle("active",auto);
-      if(auto && !spinning)startSpin();
-      if(!auto && autoTimer){clearTimeout(autoTimer);autoTimer=null}
-    });
-    replaceButton(shell.querySelector('[data-tool="pay"]'),showPrizes);
-    replaceButton(shell.querySelector(".pay-close"),closePrizes);
-
-    /* Replace the old v2.2 credit button with a known-good one. */
-    const oldCredit=shell.querySelector(".cx22-dev");
-    if(oldCredit){
-      const credit=replaceButton(oldCredit,function(){
-        const modal=shell.querySelector(".cx22-credit-modal");
-        if(modal){
-          const v=modal.querySelector(".cx22-credit-value");
-          if(v)v.textContent=money(balance);
-          modal.classList.add("show");
-        }
-      });
-      if(credit)credit.textContent="💰 CRÉDITOS";
+    if(s.auto){
+      message(shell,"🔄 AUTO ATIVADO");
+      if(!s.spinning)startSpin(shell);
     }else{
-      const tools=shell.querySelector(".cx20-tools");
-      if(tools){
-        const credit=document.createElement("button");
-        credit.type="button";credit.className="cx20-tool cx22-dev";
-        credit.textContent="💰 CRÉDITOS";
-        tools.appendChild(credit);
-        credit.addEventListener("click",function(e){
-          e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
-          const modal=shell.querySelector(".cx22-credit-modal");
-          if(modal){
-            modal.querySelector(".cx22-credit-value").textContent=money(balance);
-            modal.classList.add("show");
-          }
-        },true);
+      if(s.autoTimer){clearTimeout(s.autoTimer);s.autoTimer=null}
+      message(shell,"AUTO DESATIVADO");
+    }
+  }
+
+  function openPrizes(shell){
+    const p=shell.querySelector(".cx20-paytable");
+    if(p)p.classList.add("show");
+  }
+
+  function closePrizes(shell){
+    const p=shell.querySelector(".cx20-paytable");
+    if(p)p.classList.remove("show");
+  }
+
+  function openCredits(shell){
+    let modal=shell.querySelector(".cx22-credit-modal");
+    if(!modal){
+      modal=document.createElement("div");
+      modal.className="cx22-credit-modal";
+      modal.innerHTML=`
+        <div class="cx22-credit-panel" role="dialog" aria-modal="true">
+          <button class="cx22-close" type="button">×</button>
+          <div class="cx22-credit-title">CRÉDITOS DE TESTE</div>
+          <div class="cx22-credit-value">10.000</div>
+          <div class="cx22-credit-sub">Somente virtual • offline • desenvolvimento</div>
+          <div class="cx22-credit-actions">
+            <button type="button" data-credit="1000">+ 1.000</button>
+            <button type="button" data-credit="5000">+ 5.000</button>
+            <button type="button" data-credit="10000">+ 10.000</button>
+            <button type="button" data-credit="reset">RESETAR 10.000</button>
+          </div>
+        </div>`;
+      shell.appendChild(modal);
+    }
+    const s=state(shell);
+    const v=modal.querySelector(".cx22-credit-value");
+    if(v)v.textContent=money(s.balance);
+    modal.classList.add("show");
+  }
+
+  function creditAction(shell,button){
+    const s=state(shell);
+    const action=button.dataset.credit;
+    s.balance=action==="reset"?10000:s.balance+Number(action);
+    sync(shell);
+    const modal=shell.querySelector(".cx22-credit-modal");
+    if(modal){
+      const v=modal.querySelector(".cx22-credit-value");
+      if(v)v.textContent=money(s.balance);
+    }
+  }
+
+  function install(shell){
+    if(!shell || shell.dataset.cx25==="1")return;
+    shell.dataset.cx25="1";
+    state(shell);
+    sync(shell);
+
+    /*
+      Capture on the shell fires before the old button handlers.
+      We therefore do not clone, disable, or replace any controls.
+    */
+    shell.addEventListener("click",function(e){
+      const target=e.target;
+      const button=target.closest("button");
+      if(!button || !shell.contains(button))return;
+
+      const isControl =
+        button.matches(".cx20-back,.cx20-minus,.cx20-plus,.cx20-spin,.pay-close,.cx22-close") ||
+        button.matches('[data-tool="turbo"],[data-tool="auto"],[data-tool="pay"],[data-credit]') ||
+        button.classList.contains("cx22-dev");
+
+      if(!isControl)return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      if(button.matches(".cx20-back")){
+        closeGame(shell);
+        return;
       }
+
+      if(button.matches(".cx20-minus")){
+        const s=state(shell);
+        s.bet=Math.max(10,s.bet-10);
+        sync(shell);
+        return;
+      }
+
+      if(button.matches(".cx20-plus")){
+        const s=state(shell);
+        s.bet=Math.min(Math.max(10,s.balance),s.bet+10);
+        sync(shell);
+        return;
+      }
+
+      if(button.matches(".cx20-spin")){
+        startSpin(shell);
+        return;
+      }
+
+      if(button.matches('[data-tool="turbo"]')){
+        toggleTurbo(shell);
+        return;
+      }
+
+      if(button.matches('[data-tool="auto"]')){
+        toggleAuto(shell);
+        return;
+      }
+
+      if(button.matches('[data-tool="pay"]')){
+        openPrizes(shell);
+        return;
+      }
+
+      if(button.matches(".pay-close")){
+        closePrizes(shell);
+        return;
+      }
+
+      if(button.classList.contains("cx22-dev")){
+        openCredits(shell);
+        return;
+      }
+
+      if(button.matches(".cx22-close")){
+        const modal=shell.querySelector(".cx22-credit-modal");
+        if(modal)modal.classList.remove("show");
+        return;
+      }
+
+      if(button.matches("[data-credit]")){
+        creditAction(shell,button);
+        return;
+      }
+    },true);
+
+    const pay=shell.querySelector(".cx20-paytable");
+    if(pay){
+      pay.addEventListener("click",function(e){
+        if(e.target===pay)closePrizes(shell);
+      },true);
     }
-
-    const creditModal=shell.querySelector(".cx22-credit-modal");
-    if(creditModal){
-      const close=creditModal.querySelector(".cx22-close");
-      if(close)replaceButton(close,function(){creditModal.classList.remove("show")});
-      creditModal.querySelectorAll("[data-credit]").forEach(old=>{
-        replaceButton(old,function(){
-          const action=old.dataset.credit;
-          balance=action==="reset"?10000:balance+Number(action);
-          sync();
-          const v=creditModal.querySelector(".cx22-credit-value");
-          if(v)v.textContent=money(balance);
-        });
-      });
-    }
-
-    /* Make the credit panel open from the current game only. */
-    creditModal?.addEventListener("click",function(e){
-      if(e.target===creditModal)creditModal.classList.remove("show");
-    });
-
-    sync();
   }
 
-  const previousOpen=window.CasinoXPremiumGame && window.CasinoXPremiumGame.open;
-  if(previousOpen){
-    window.CasinoXPremiumGame.open=function(name){
-      previousOpen(name);
-      setTimeout(installControls,20);
-    };
-  }
+  const observer=new MutationObserver(function(){
+    const shell=gameShell();
+    if(shell)install(shell);
+  });
 
-  setTimeout(installControls,300);
+  observer.observe(document.body,{childList:true,subtree:true});
+  const existing=gameShell();
+  if(existing)install(existing);
+})();
+
+
+/* CASINOX v2.5 — portal version badge */
+(function(){
+  function addVersion(){
+    if(document.querySelector(".cx25-version"))return;
+    const top=document.querySelector(".topbar");
+    if(!top)return;
+    const badge=document.createElement("span");
+    badge.className="cx25-version";
+    badge.textContent="v2.5";
+    badge.setAttribute("aria-label","Versão 2.5");
+    top.appendChild(badge);
+  }
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",addVersion);
+  }else addVersion();
 })();
