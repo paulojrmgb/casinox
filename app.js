@@ -2473,3 +2473,49 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
   setTimeout(installV22,250);
 })();
+
+
+/* =========================================================
+   CASINOX v2.3 — SINGLE GAME ENTRY / FIX BACK
+   IMPORTANT: the older v13 modal and the v2.x premium shell
+   were both opening from the same card click. The premium shell
+   sat on top of the older modal, so BACK appeared to "go back"
+   to an old version. This capture handler makes the premium game
+   the only game opened from a lobby card.
+   ========================================================= */
+(function(){
+  document.addEventListener("click", function(e){
+    const target=e.target;
+    if(!target || target.closest(".cx20-shell") || target.closest(".cx17-shell")) return;
+
+    // Never hijack favorite buttons.
+    if(target.closest("[data-favorite], .heart-btn, .casinox-fav")) return;
+
+    const card=target.closest("[data-game]");
+    if(!card) return;
+
+    const name=card.dataset.game;
+    if(!name) return;
+
+    // Stop the legacy card onclick/document handlers before they can
+    // create the old game-modal-v13 underneath the new game.
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if(window.CasinoXPremiumGame && typeof window.CasinoXPremiumGame.open === "function"){
+      window.CasinoXPremiumGame.open(name);
+    }
+  }, true);
+
+  // Emergency cleanup: if an old v13 modal already exists, remove it
+  // whenever a premium game is opened. This prevents the old layer from
+  // being revealed by BACK on devices that retained an older DOM state.
+  const oldOpen=window.CasinoXPremiumGame && window.CasinoXPremiumGame.open;
+  if(oldOpen){
+    window.CasinoXPremiumGame.open=function(name){
+      document.querySelectorAll(".game-modal-v13, .modal.game-modal-v13").forEach(el=>el.remove());
+      oldOpen(name);
+      document.querySelectorAll(".game-modal-v13, .modal.game-modal-v13").forEach(el=>el.remove());
+    };
+  }
+})();
