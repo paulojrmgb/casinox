@@ -2332,3 +2332,144 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     }
   };
 })();
+
+
+/* =========================================================
+   CASINOX v2.2
+   DEV CREDITS + ROBUST GAME BACK/CLOSE
+   ========================================================= */
+(function(){
+  function removeGameLayers(){
+    document.querySelectorAll(".cx20-shell").forEach(el=>el.remove());
+
+    // Remove only common game/modal layers when they are clearly game UI.
+    document.querySelectorAll(".cx20-paytable").forEach(el=>el.classList.remove("show"));
+
+    document.body.style.overflow="";
+    document.documentElement.style.overflow="";
+  }
+
+  function installV22(){
+    const shell=document.querySelector(".cx20-shell");
+    if(!shell || shell.dataset.v22Installed==="1") return;
+    shell.dataset.v22Installed="1";
+
+    /* ---- BACK: always close the current game layer ---- */
+    const back=shell.querySelector(".cx20-back");
+    if(back){
+      const fresh=back.cloneNode(true);
+      back.replaceWith(fresh);
+      const goBack=function(e){
+        if(e){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();}
+        if(window.CasinoXPremiumGame && typeof window.CasinoXPremiumGame.close==="function"){
+          window.CasinoXPremiumGame.close();
+        }
+        removeGameLayers();
+      };
+      fresh.addEventListener("click",goBack,true);
+      fresh.addEventListener("pointerup",goBack,true);
+      fresh.addEventListener("touchend",goBack,{passive:false});
+    }
+
+    /* ---- DEV CREDITS ---- */
+    const tools=shell.querySelector(".cx20-tools");
+    if(tools && !tools.querySelector(".cx22-dev")){
+      const dev=document.createElement("button");
+      dev.type="button";
+      dev.className="cx20-tool cx22-dev";
+      dev.textContent="💰 CRÉDITOS";
+      tools.appendChild(dev);
+
+      const modal=document.createElement("div");
+      modal.className="cx22-credit-modal";
+      modal.innerHTML=`
+        <div class="cx22-credit-panel" role="dialog" aria-modal="true">
+          <button class="cx22-close" type="button" aria-label="Fechar">×</button>
+          <div class="cx22-credit-title">CRÉDITOS DE TESTE</div>
+          <div class="cx22-credit-value">10.000</div>
+          <div class="cx22-credit-sub">Somente virtual • offline • desenvolvimento</div>
+          <div class="cx22-credit-actions">
+            <button type="button" data-credit="1000">+ 1.000</button>
+            <button type="button" data-credit="5000">+ 5.000</button>
+            <button type="button" data-credit="10000">+ 10.000</button>
+            <button type="button" data-credit="reset">RESETAR 10.000</button>
+          </div>
+        </div>`;
+      shell.appendChild(modal);
+
+      function updateCreditView(){
+        const balance=Number(localStorage.getItem("casinox_balance")||10000);
+        modal.querySelector(".cx22-credit-value").textContent=balance.toLocaleString("pt-BR");
+        const wallet=shell.querySelector(".cx20-wallet-value");
+        const stat=shell.querySelector(".st-balance");
+        if(wallet) wallet.textContent=balance.toLocaleString("pt-BR");
+        if(stat) stat.textContent=balance.toLocaleString("pt-BR");
+      }
+
+      function closeCredits(){
+        modal.classList.remove("show");
+      }
+
+      dev.addEventListener("click",function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        updateCreditView();
+        modal.classList.add("show");
+      },true);
+
+      modal.querySelector(".cx22-close").addEventListener("click",function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        closeCredits();
+      },true);
+
+      modal.addEventListener("click",function(e){
+        if(e.target===modal){
+          closeCredits();
+          return;
+        }
+        const button=e.target.closest("[data-credit]");
+        if(!button)return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        let balance=Number(localStorage.getItem("casinox_balance")||10000);
+        balance=button.dataset.credit==="reset"
+          ? 10000
+          : balance+Number(button.dataset.credit);
+
+        localStorage.setItem("casinox_balance",String(balance));
+        updateCreditView();
+      },true);
+
+      updateCreditView();
+    }
+
+    /* Make the game layer explicitly mobile-safe. */
+    shell.addEventListener("click",function(e){
+      if(e.target===shell)e.stopPropagation();
+    },true);
+    shell.addEventListener("pointerdown",function(e){
+      e.stopPropagation();
+    },true);
+  }
+
+  const originalOpen=window.CasinoXPremiumGame && window.CasinoXPremiumGame.open;
+  if(originalOpen){
+    window.CasinoXPremiumGame.open=function(name){
+      originalOpen(name);
+      setTimeout(installV22,0);
+    };
+  }
+
+  /* Browser/device back: close the game instead of leaving a stale layer. */
+  window.addEventListener("popstate",function(){
+    if(document.querySelector(".cx20-shell")){
+      removeGameLayers();
+    }
+  });
+
+  setTimeout(installV22,250);
+})();
