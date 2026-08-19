@@ -2765,3 +2765,102 @@ footer{background:#050506!important;color:#777!important}
   .cx27-status{font-size:10px;margin:3px auto 5px}
   .cx27-version{font-size:9px;padding:3px 6px}
 }
+
+/* =========================================================
+   CASINOX v2.8 — ORIENTAL ANIMAL THEMES + REAL REEL ANIMALS
+   ========================================================= */
+.cx20-stage{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.cx20-stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background-image:
+    linear-gradient(180deg,rgba(15,7,12,.18),rgba(10,5,10,.78)),
+    var(--cx-game-bg);
+  background-size:cover;
+  background-position:center;
+  filter:saturate(1.08) contrast(1.05);
+  transform:scale(1.04);
+}
+.cx20-stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(255,215,120,.16),transparent 34%),
+    linear-gradient(90deg,rgba(120,35,15,.12),transparent 32%,transparent 68%,rgba(120,35,15,.12));
+  mix-blend-mode:screen;
+}
+.cx20-stage[data-oriental="1"]{background:transparent}
+
+.cx20-reel{
+  position:relative;
+  overflow:hidden;
+}
+.cx20-symbol{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  line-height:1;
+}
+.cx27-reel-animal{
+  width:clamp(38px,10vw,64px);
+  height:clamp(38px,10vw,64px);
+  object-fit:contain;
+  border-radius:12px;
+  filter:drop-shadow(0 4px 7px rgba(0,0,0,.7));
+  animation:cx28AnimalIn .22s ease-out;
+}
+@keyframes cx28AnimalIn{
+  from{transform:scale(.72);opacity:.3}
+  to{transform:scale(1);opacity:1}
+}
+
+/* Individual atmosphere over the same structural layout. */
+.cx20-shell[data-animal="rabbit"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,188,92,.20),transparent 35%),
+    linear-gradient(90deg,rgba(155,36,25,.16),transparent 38%,rgba(196,52,35,.08));
+}
+.cx20-shell[data-animal="bull"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,220,100,.22),transparent 35%),
+    linear-gradient(90deg,rgba(103,45,14,.22),transparent 38%,rgba(255,186,45,.08));
+}
+.cx20-shell[data-animal="dragon"] .cx20-stage::after,
+.cx20-shell[data-animal="dragon-fire"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,75,30,.22),transparent 36%),
+    linear-gradient(90deg,rgba(120,18,18,.22),transparent 38%,rgba(255,168,40,.10));
+}
+.cx20-shell[data-animal="tiger"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,160,50,.22),transparent 36%),
+    linear-gradient(90deg,rgba(55,22,10,.25),transparent 38%,rgba(255,194,55,.08));
+}
+.cx20-shell[data-animal="lion"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,210,80,.25),transparent 36%),
+    linear-gradient(90deg,rgba(85,47,8,.25),transparent 38%,rgba(255,221,100,.09));
+}
+.cx20-shell[data-animal="panda"] .cx20-stage::after{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(120,255,175,.14),transparent 36%),
+    linear-gradient(90deg,rgba(18,62,38,.22),transparent 38%,rgba(205,240,190,.07));
+}
+
+@media(max-width:600px){
+  .cx27-reel-animal{
+    width:46px;
+    height:46px;
+    border-radius:10px;
+  }
+}

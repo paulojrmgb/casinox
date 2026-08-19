@@ -2159,7 +2159,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       </header>
       <main class="cx20-stage">
         <div class="cx20-glow"></div>
-        <div class="cx20-character"><div class="orb"></div><div class="rabbit cx26-hero">${(() => { const n=name.toLowerCase(); const f=n.includes("bull")?"golden-bull.jpg":n.includes("dragon")?"dragon-fortune.jpg":n.includes("tiger")?"tiger-riches.jpg":n.includes("panda")?"treasure-panda.jpg":n.includes("lion")?"lion-king.jpg":"lucky-rabbit.jpg"; return `<img src="assets/characters/${f}" alt="${name}" loading="eager">`; })()}</div></div>
+        <div class="cx20-character"><div class="orb"></div><div class="rabbit cx26-hero">${(() => { const n=name.toLowerCase(); const f=n.includes("bull")?"golden-bull.jpg":n.includes("dragon fire")?"dragon-fire.jpg":n.includes("dragon")?"dragon-fortune.jpg":n.includes("tiger")?"tiger-riches.jpg":n.includes("panda")?"treasure-panda.jpg":n.includes("lion")?"lion-king.jpg":"lucky-rabbit.jpg"; return `<img src="assets/characters/${f}" alt="${name}" loading="eager">`; })()}</div></div>
         <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels">${Array(5).fill('<div class="cx20-reel"></div>').join("")}<div class="cx20-line"></div></div></div></div>
         <div class="cx20-prize">BOA SORTE</div>
         <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
@@ -2589,13 +2589,50 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     if(p)p.textContent=text;
   }
 
+  function gameTheme(name){
+    const n=String(name||"").toLowerCase();
+    if(n.includes("golden bull")) return {
+      animal:"bull", img:"golden-bull.jpg", emoji:"🐂",
+      symbols:["🪙","💰","7️⃣","💎"]
+    };
+    if(n.includes("dragon fire")) return {
+      animal:"dragon-fire", img:"dragon-fire.jpg", emoji:"🐲",
+      symbols:["🔥","🪙","7️⃣","💎"]
+    };
+    if(n.includes("dragon")) return {
+      animal:"dragon", img:"dragon-fortune.jpg", emoji:"🐉",
+      symbols:["🔥","🪙","7️⃣","💎"]
+    };
+    if(n.includes("tiger")) return {
+      animal:"tiger", img:"tiger-riches.jpg", emoji:"🐯",
+      symbols:["💰","🪙","7️⃣","💎"]
+    };
+    if(n.includes("lion")) return {
+      animal:"lion", img:"lion-king.jpg", emoji:"🦁",
+      symbols:["👑","💰","7️⃣","💎"]
+    };
+    if(n.includes("panda")) return {
+      animal:"panda", img:"treasure-panda.jpg", emoji:"🐼",
+      symbols:["🎁","🪙","7️⃣","💎"]
+    };
+    return {
+      animal:"rabbit", img:"lucky-rabbit.jpg", emoji:"🐰",
+      symbols:["🥕","💰","7️⃣","💎"]
+    };
+  }
+
   function draw(shell){
-    const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
+    const name=shell.querySelector(".cx20-brand b")?.textContent||"";
+    const theme=gameTheme(name);
+    shell.dataset.animal=theme.animal;
+
     shell.querySelectorAll(".cx20-reel").forEach(reel=>{
+      const pool=[`<img class="cx27-reel-animal" src="assets/characters/${theme.img}" alt="${theme.animal}">`,...theme.symbols];
+      const pick=()=>pool[Math.floor(Math.random()*pool.length)];
       reel.innerHTML=[
-        `<div class="cx20-symbol s1">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`,
-        `<div class="cx20-symbol s2">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`,
-        `<div class="cx20-symbol s3">${symbols[Math.floor(Math.random()*symbols.length)]}</div>`
+        `<div class="cx20-symbol s1">${pick()}</div>`,
+        `<div class="cx20-symbol s2">${pick()}</div>`,
+        `<div class="cx20-symbol s3">${pick()}</div>`
       ].join("");
     });
   }
@@ -2939,6 +2976,11 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     const s=shell();
     if(!s || s.dataset.cx27==="1") return;
     s.dataset.cx27="1";
+    const gameName=s.querySelector(".cx20-brand b")?.textContent||"";
+    const theme=gameTheme(gameName);
+    s.dataset.animal=theme.animal;
+    const stage=s.querySelector(".cx20-stage");
+    if(stage) stage.style.setProperty("--cx-game-bg", `url("assets/characters/${theme.img}")`);
 
     // Add a visual status element without touching existing buttons.
     let status=s.querySelector(".cx27-status");
