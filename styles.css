@@ -3279,7 +3279,7 @@ footer{background:#050506!important;color:#777!important}
 }
 
 /* =========================================================
-   CASINOX v3.4
+   CASINOX v3.5
    - clean artwork area: no old animal-logo card overlay
    - artwork is scenery only; reels are our own UI
    - persistent GIRAR button
@@ -3394,7 +3394,7 @@ footer{background:#050506!important;color:#777!important}
 }
 
 /* =========================================================
-   CASINOX v3.4 — REFERENCE-FIRST RESPONSIVE GAME SCREEN
+   CASINOX v3.5 — REFERENCE-FIRST RESPONSIVE GAME SCREEN
    Reference: assets/reference/lucky-rabbit-reference.png
    ========================================================= */
 
@@ -3688,4 +3688,65 @@ footer{background:#050506!important;color:#777!important}
   .cx20-stat{min-height:52px!important}
   .cx20-controls{padding-top:6px!important}
   .cx20-bet,.cx20-spin{height:68px!important;min-height:68px!important}
+}
+
+
+/* =========================================================
+   CASINOX v3.5 — REELS 3 x 4 x 3
+   Three columns: 3 symbols / 4 symbols / 3 symbols.
+   The middle column is taller; side columns are centered.
+   ========================================================= */
+.cx20-reels.cx20-reels-343{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  grid-template-rows:1fr!important;
+  align-items:center!important;
+  gap:6px!important;
+  width:100%!important;
+  aspect-ratio:3/4!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.cx20-reels-343 .cx20-reel{
+  grid-row:1!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  display:grid!important;
+  grid-template-rows:repeat(var(--cells),1fr)!important;
+  gap:4px!important;
+  position:relative!important;
+  overflow:hidden!important;
+}
+.cx20-reels-343 .cx20-reel-side{
+  height:75%!important;
+  align-self:center!important;
+}
+.cx20-reels-343 .cx20-reel-center{
+  height:100%!important;
+}
+.cx20-reels-343 .cx20-symbol{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  top:auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  border-radius:9px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.025))!important;
+  font-size:clamp(22px,5.8vw,50px)!important;
+}
+.cx20-reels-343 .cx20-line{
+  z-index:8!important;
+  top:50%!important;
+  height:3px!important;
+}
+@media(max-width:600px){
+  .cx20-reels.cx20-reels-343{gap:4px!important}
+  .cx20-reels-343 .cx20-reel{gap:3px!important}
+  .cx20-reels-343 .cx20-symbol{font-size:clamp(19px,7vw,38px)!important;border-radius:8px!important}
 }

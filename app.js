@@ -2138,15 +2138,21 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
   let turbo=false,auto=false,autoTimer=null,spinning=false;
 
   function save(){localStorage.setItem("casinox_balance",String(balance));localStorage.setItem("casinox_bet",String(bet))}
-  function makeGrid(){return Array.from({length:5},()=>Array.from({length:3},()=>symbols[Math.floor(Math.random()*symbols.length)]))}
+  function makeGrid(){
+    const heights=[3,4,3];
+    return heights.map(h=>Array.from({length:h},()=>symbols[Math.floor(Math.random()*symbols.length)]));
+  }
   function middleWin(g){
     const c={};g.forEach(r=>c[r[1]]=(c[r[1]]||0)+1);
     let sym="",max=0;Object.keys(c).forEach(k=>{if(c[k]>max){max=c[k];sym=k}});
     return {count:max,sym,pay:(payoutMap[max]||0)*bet};
   }
   function draw(g){
-    shell?.querySelectorAll(".cx20-reel").forEach((r,i)=>r.innerHTML=
-      `<div class="cx20-symbol s1">${g[i][0]}</div><div class="cx20-symbol s2">${g[i][1]}</div><div class="cx20-symbol s3">${g[i][2]}</div>`);
+    shell?.querySelectorAll(".cx20-reel").forEach((r,i)=>{
+      const col=g[i]||[];
+      r.style.setProperty("--cells", String(col.length));
+      r.innerHTML=col.map((symbol,j)=>`<div class="cx20-symbol cell-${j+1}">${symbol}</div>`).join("");
+    });
   }
   function open(name){
     close();
@@ -2176,13 +2182,18 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       <header class="cx20-top">
         <button class="cx20-back" type="button">‹</button>
         <div class="cx20-brand"><b>${name}</b><small>CASINOX • CRÉDITOS VIRTUAIS</small></div>
-        <span class="cx34-version">v3.4</span>
+        <span class="cx34-version">v3.5</span>
         <div class="cx20-wallet">🪙 <span class="cx20-wallet-value">${balance.toLocaleString("pt-BR")}</span></div>
       </header>
       <main class="cx20-stage">
         <div class="cx20-glow"></div>
         <div class="cx34-art-anchor" aria-hidden="true"></div>
-        <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels">${Array(5).fill('<div class="cx20-reel"></div>').join("")}<div class="cx20-line"></div></div></div></div>
+        <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels cx20-reels-343">
+          <div class="cx20-reel cx20-reel-side"></div>
+          <div class="cx20-reel cx20-reel-center"></div>
+          <div class="cx20-reel cx20-reel-side"></div>
+          <div class="cx20-line"></div>
+        </div></div></div>
         <div class="cx20-prize">BOA SORTE</div>
         <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
       </main>
