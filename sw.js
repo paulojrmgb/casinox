@@ -1,4 +1,4 @@
-const CACHE_NAME = "casinox-v3.0";
+const CACHE_NAME = "casinox-v3.1";
 const VERSION = "3.0";
 
 const APP_SHELL = [
@@ -6,7 +6,7 @@ const APP_SHELL = [
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./CasinoX_v0.4_conta.js",
+  "./CasinoX_v3.1_conta.js",
   "./manifest.json",
   "./assets/games/moon-temple.svg",
   "./assets/games/golden-pearls.svg",
@@ -99,7 +99,7 @@ self.addEventListener("fetch", event => {
   const isAppAsset =
     url.pathname.endsWith("/app.js") ||
     url.pathname.endsWith("/styles.css") ||
-    url.pathname.endsWith("/CasinoX_v0.4_conta.js") ||
+    url.pathname.endsWith("/CasinoX_v3.1_conta.js") ||
     url.pathname.endsWith("/manifest.json");
 
   if (isAppAsset) {

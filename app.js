@@ -2625,6 +2625,11 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     const name=shell.querySelector(".cx20-brand b")?.textContent||"";
     const theme=gameTheme(name);
     shell.dataset.animal=theme.animal;
+    const stage=shell.querySelector(".cx20-stage");
+    if(stage){
+      stage.classList.add("cx30-theme");
+      stage.style.setProperty("--cx31-bg", `url("assets/characters/bg-${theme.img}")`);
+    }
 
     shell.querySelectorAll(".cx20-reel").forEach(reel=>{
       const pool=[`<img class="cx27-reel-animal" src="assets/characters/${theme.img}" alt="${theme.animal}">`,...theme.symbols];
@@ -2887,15 +2892,15 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 })();
 
 
-/* v3.0 portal badge */
+
+/* v3.1 portal badge — single authoritative version */
 (function(){
   function add(){
-    if(document.querySelector(".cx27-version"))return;
     const top=document.querySelector(".topbar");
-    if(!top)return;
+    if(!top || top.querySelector(".cx31-version"))return;
     const b=document.createElement("span");
-    b.className="cx27-version";
-    b.textContent="v3.0";
+    b.className="cx31-version";
+    b.textContent="v3.1";
     top.appendChild(b);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
