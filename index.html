@@ -49,9 +49,9 @@
     content="black-translucent"
   >
 
-  <title>CasinoX — Hub Social de Jogos • v4.0</title>
+  <title>CasinoX — Hub Social de Jogos • v4.1</title>
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=4.1">
 </head>
 
 <body>
@@ -214,7 +214,7 @@
     </b>
 
     <span>
-      Protótipo social • créditos virtuais • v4.0
+      Protótipo social • créditos virtuais • v4.1
     </span>
 
   </footer>
@@ -232,13 +232,22 @@
   </div>
 
 
+  <script>
+/* CasinoX v4.1 boot guard: do not allow a stale service worker to keep v3.x UI alive. */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ try{ r.update(); }catch(e){} });
+  });
+})();
+</script>
+
   <!-- =========================================
        JAVASCRIPT
   ========================================== -->
 
-  <script src="app.js"></script>
-  <script src="CasinoX_v4.0_conta.js"></script>
-
+  <script src="app.js?v=4.1"></script>
+  
 <script>
 
 if ("serviceWorker" in navigator) {
@@ -248,7 +257,7 @@ if ("serviceWorker" in navigator) {
     () => {
 
       navigator.serviceWorker
-        .register("./sw.js")
+        .register("./sw.js?v=4.1", { updateViaCache: "none" })
         .then(
           registration => {
 
@@ -284,14 +293,16 @@ if ("serviceWorker" in navigator) {
 
   navigator.serviceWorker.addEventListener("message", function (event) {
     if (!event.data || event.data.type !== "CASINOX_UPDATED") return;
+    if (event.data.version !== "4.1") return;
+    if (sessionStorage.getItem("casinox_sw_reloaded") === "4.1") return;
+    sessionStorage.setItem("casinox_sw_reloaded", "4.1");
+    setTimeout(function () { window.location.reload(); }, 120);
+  });
 
-    if (sessionStorage.getItem("casinox_sw_reloaded") === "1.0") return;
-
-    sessionStorage.setItem("casinox_sw_reloaded", "1.0");
-
-    setTimeout(function () {
-      window.location.reload();
-    }, 250);
+  navigator.serviceWorker.addEventListener("controllerchange", function () {
+    if (sessionStorage.getItem("casinox_controller_reloaded") === "4.1") return;
+    sessionStorage.setItem("casinox_controller_reloaded", "4.1");
+    setTimeout(function () { window.location.reload(); }, 120);
   });
 
   navigator.serviceWorker.ready.then(function (registration) {

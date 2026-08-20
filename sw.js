@@ -1,136 +1,97 @@
-const CACHE_NAME = "casinox-v4.0";
-const VERSION = "4.0";
+const CACHE_NAME = "casinox-v4.1";
+const VERSION = "4.1";
 
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./CasinoX_v3.9_conta.js",
   "./manifest.json",
-  "./assets/reference/lucky-rabbit-reference.png",
-  "./assets/games/moon-temple.svg",
-  "./assets/games/golden-pearls.svg",
-  "./assets/games/wild-jungle.svg",
-  "./assets/games/neon-roulette.svg",
-  "./assets/games/rocket-cash.svg",
-  "./assets/games/fortune-gems.svg",
-  "./assets/games/royal-crown.svg",
-  "./assets/games/dragon-gold.svg",
-  "./assets/characters/hero-dragon-fortune.jpg",
-  "./assets/characters/lucky-rabbit.jpg",
-  "./assets/characters/golden-bull.jpg",
-  "./assets/characters/dragon-fortune.jpg",
-  "./assets/characters/tiger-riches.jpg",
-  "./assets/characters/lion-king.jpg",
-  "./assets/characters/royal-bunny.jpg",
-  "./assets/characters/fox-fortune.jpg",
-  "./assets/characters/dragon-fire.jpg",
-  "./assets/characters/golden-toad.jpg",
-  "./assets/characters/treasure-panda.jpg",
-  "./assets/characters/moon-temple.jpg",
-  "./assets/characters/neon-roulette.jpg"
+  "./assets/game-art/lucky-rabbit.png"
 ];
 
 self.addEventListener("install", event => {
-  self.skipWaiting();
-
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(APP_SHELL))
       .catch(() => {})
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(keys =>
-        Promise.all(
-          keys
-            .filter(key => key.startsWith("casinox-") && key !== CACHE_NAME)
-            .map(key => caches.delete(key))
-        )
-      )
+      .then(keys => Promise.all(
+        keys
+          .filter(key => key.startsWith("casinox-") && key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      ))
       .then(() => self.clients.claim())
-      .then(() =>
-        self.clients.matchAll({
-          type: "window",
-          includeUncontrolled: true
-        })
-      )
-      .then(clients =>
-        clients.forEach(client =>
-          client.postMessage({
-            type: "CASINOX_UPDATED",
-            version: VERSION
-          })
-        )
-      )
+      .then(() => self.clients.matchAll({type:"window", includeUncontrolled:true}))
+      .then(clients => clients.forEach(client => client.postMessage({
+        type:"CASINOX_UPDATED", version:VERSION
+      })))
   );
 });
 
 self.addEventListener("fetch", event => {
   const request = event.request;
+  if(request.method !== "GET") return;
 
-  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  const local = url.origin === self.location.origin;
+  if(!local) return;
 
-  // HTML: network first so deployments appear immediately.
-  if (request.mode === "navigate" ||
-      request.destination === "document") {
+  // Never let an old cached document boot the old game UI.
+  if(request.mode === "navigate" || request.destination === "document"){
     event.respondWith(
-      fetch(request, { cache: "no-store" })
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put("./index.html", copy);
-          });
-          return response;
-        })
-        .catch(() =>
-          caches.match(request)
-            .then(cached => cached || caches.match("./index.html"))
-        )
+      fetch(request, {cache:"no-store"})
+        .then(response => response)
+        .catch(() => caches.match("./index.html"))
     );
     return;
   }
 
-  // Versioned application assets: network first.
-  const url = new URL(request.url);
-  const isAppAsset =
-    url.pathname.endsWith("/app.js") ||
-    url.pathname.endsWith("/styles.css") ||
-    url.pathname.endsWith("/CasinoX_v3.9_conta.js") ||
-    url.pathname.endsWith("/manifest.json");
+  // JS/CSS must always come from the deployed version first.
+  const path=url.pathname.toLowerCase();
+  const critical = path.endsWith("/app.js") ||
+                   path.endsWith("/styles.css") ||
+                   path.endsWith("/manifest.json") ||
+                   path.endsWith(".html");
 
-  if (isAppAsset) {
+  if(critical){
     event.respondWith(
-      fetch(request, { cache: "no-store" })
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-          }
-          return response;
-        })
+      fetch(request,{cache:"no-store"})
+        .then(response => response)
         .catch(() => caches.match(request))
     );
     return;
   }
 
-  // Other resources: cache first with network fallback.
-  event.respondWith(
-    caches.match(request)
-      .then(cached => {
-        if (cached) return cached;
-
-        return fetch(request).then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+  // Game artwork: network first, cache fallback.
+  if(path.includes("/assets/game-art/") || path.includes("/assets/characters/")){
+    event.respondWith(
+      fetch(request,{cache:"no-store"})
+        .then(response => {
+          if(response.ok){
+            const copy=response.clone();
+            caches.open(CACHE_NAME).then(c=>c.put(request,copy));
           }
           return response;
-        });
-      })
+        })
+        .catch(()=>caches.match(request))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request).then(cached => cached || fetch(request).then(response=>{
+      if(response.ok){
+        const copy=response.clone();
+        caches.open(CACHE_NAME).then(c=>c.put(request,copy));
+      }
+      return response;
+    }))
   );
 });
