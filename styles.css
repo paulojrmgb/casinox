@@ -4149,3 +4149,76 @@ footer{background:#050506!important;color:#777!important}
 .cx20-stage.cx39-integrated-art .cx34-art-anchor{
   display:none!important;
 }
+
+
+/* =========================================================
+   CASINOX v4.2 — LUCKY RABBIT / FULL-WIDTH MOBILE COMPOSITION
+   Ajuste solicitado: eliminar as margens laterais do canvas e
+   aproximar a base da moldura dourada dos controles.
+
+   A arte continua preservando a proporção 2:3. Em mobile o
+   canvas usa a largura real da viewport e o stage recorta apenas
+   o excesso vertical pelo próprio limite do espaço do jogo.
+   Assim a arte + roleta continuam sendo UMA composição, sem
+   posicionamentos dependentes de um aparelho específico.
+   ========================================================= */
+
+@media (max-width:800px){
+  .cx20-stage.cx39-integrated-art{
+    width:100vw!important;
+    max-width:100vw!important;
+    margin:0!important;
+    padding:0!important;
+    align-items:stretch!important;
+    overflow:hidden!important;
+  }
+
+  .cx20-stage.cx39-integrated-art .cx39-game-canvas{
+    width:100vw!important;
+    max-width:none!important;
+    min-width:100vw!important;
+    height:auto!important;
+    aspect-ratio:2/3!important;
+    align-self:flex-start!important;
+    flex:0 0 auto!important;
+  }
+
+  /* A moldura dourada interna cresce junto com a arte.
+     Não alteramos X/Y da roleta; ela continua presa ao canvas. */
+  .cx20-stage.cx39-integrated-art .cx20-machine{
+    left:15%!important;
+    top:35%!important;
+    width:70%!important;
+    height:45.5%!important;
+  }
+
+  /* Evita que os cartões de estatística criem uma folga extra
+     entre a arte e a barra de controles. */
+  .cx20-stage.cx39-integrated-art .cx20-prize{
+    margin:0!important;
+    min-height:18px!important;
+    line-height:18px!important;
+  }
+
+  .cx20-stage.cx39-integrated-art .cx20-stats{
+    margin:0 auto!important;
+  }
+}
+
+@media (max-width:420px){
+  .cx20-stage.cx39-integrated-art .cx39-game-canvas{
+    width:100vw!important;
+    min-width:100vw!important;
+  }
+}
+
+/* =========================================================
+   v4.2 — desktop permanece contido; somente mobile recebe
+   o preenchimento total solicitado.
+   ========================================================= */
+@media (min-width:801px){
+  .cx20-stage.cx39-integrated-art .cx39-game-canvas{
+    width:min(100%,620px)!important;
+    max-width:620px!important;
+  }
+}
