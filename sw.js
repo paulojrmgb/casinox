@@ -1,5 +1,5 @@
-const CACHE_NAME = "casinox-v3.7";
-const VERSION = "3.7";
+const CACHE_NAME = "casinox-v3.8";
+const VERSION = "3.8";
 
 const APP_SHELL = [
   "./",

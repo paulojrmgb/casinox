@@ -3897,3 +3897,88 @@ footer{background:#050506!important;color:#777!important}
     margin-top:0!important;
   }
 }
+
+/* =========================================================
+   CASINOX v3.8 — QUADRO DA ROLETA SEM ESPAÇOS VAZIOS
+   Foco exclusivo no espaço interno do quadro 3x4x3.
+   A arte de referência ao fundo é preservada e NÃO é alterada.
+   ========================================================= */
+
+/* O quadro externo acompanha a altura real da grade. */
+.cx20-stage .cx20-machine{
+  height:auto!important;
+  box-sizing:border-box!important;
+  padding:7px!important;
+  align-self:center!important;
+}
+
+/* O miolo não reserva altura artificial. */
+.cx20-stage .cx20-machine-inner{
+  height:auto!important;
+  min-height:0!important;
+  padding:6px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* A grade deixa de usar aspect-ratio.
+   A altura vem da coluna central de 4 células. */
+.cx20-stage .cx20-reels.cx20-reels-343{
+  aspect-ratio:auto!important;
+  height:clamp(218px,58vw,292px)!important;
+  min-height:0!important;
+  max-height:292px!important;
+  box-sizing:border-box!important;
+  align-self:center!important;
+  margin:0 auto!important;
+}
+
+/* Quatro células reais na coluna central, ocupando toda a altura. */
+.cx20-stage .cx20-reels-343 .cx20-reel-center{
+  height:100%!important;
+  min-height:0!important;
+  align-self:stretch!important;
+}
+
+/* Laterais: exatamente 3 células, centralizadas verticalmente. */
+.cx20-stage .cx20-reels-343 .cx20-reel-side{
+  height:75%!important;
+  min-height:0!important;
+  align-self:center!important;
+}
+
+/* As células ocupam integralmente a altura de cada coluna. */
+.cx20-stage .cx20-reels-343 .cx20-reel{
+  min-height:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Mantém o 3x4x3 sem sobra interna causada por altura herdada. */
+.cx20-stage .cx20-reels-343 .cx20-reel-center{
+  grid-template-rows:repeat(4,minmax(0,1fr))!important;
+}
+.cx20-stage .cx20-reels-343 .cx20-reel-side{
+  grid-template-rows:repeat(3,minmax(0,1fr))!important;
+}
+
+/* Mobile: quadro compacto e centrado. */
+@media(max-width:600px){
+  .cx20-stage .cx20-machine{
+    width:min(68vw,320px)!important;
+    max-width:320px!important;
+  }
+
+  .cx20-stage .cx20-reels.cx20-reels-343{
+    height:clamp(190px,56vw,255px)!important;
+    max-height:255px!important;
+  }
+}
+
+/* Telas muito baixas: reduz apenas a grade, sem criar espaços. */
+@media(max-height:720px) and (max-width:600px){
+  .cx20-stage .cx20-reels.cx20-reels-343{
+    height:clamp(176px,52vw,235px)!important;
+  }
+}
