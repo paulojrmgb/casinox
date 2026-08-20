@@ -3982,3 +3982,170 @@ footer{background:#050506!important;color:#777!important}
     height:clamp(176px,52vw,235px)!important;
   }
 }
+
+/* =========================================================
+   CASINOX v4.0 — ARTE + ROLETA INTEGRADAS
+   A referência do Lucky Rabbit deixa de ser um "reference":
+   ela é o próprio cenário do canvas do jogo.
+   O canvas preserva a proporção original 1024x1536 (2:3),
+   então a composição escala inteira em qualquer dispositivo.
+   A roleta é posicionada em porcentagens do canvas e encaixa
+   exatamente no espaço vazio da moldura da arte.
+   ========================================================= */
+
+.cx20-stage.cx39-integrated-art{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  overflow:hidden!important;
+  padding:0!important;
+  background:#08070b!important;
+}
+
+.cx20-stage.cx39-integrated-art .cx39-game-canvas{
+  position:relative!important;
+  flex:0 0 auto!important;
+  width:min(100%,560px)!important;
+  aspect-ratio:2/3!important;
+  height:auto!important;
+  overflow:hidden!important;
+  background-image:var(--cx39-art)!important;
+  background-repeat:no-repeat!important;
+  background-position:center top!important;
+  background-size:100% 100%!important;
+}
+
+/* The artwork itself supplies the gold frame. Our machine is only
+   the transparent functional layer that sits inside the opening. */
+.cx20-stage.cx39-integrated-art .cx20-machine{
+  position:absolute!important;
+  left:15.0%!important;
+  top:35.0%!important;
+  width:70.0%!important;
+  height:45.5%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  z-index:4!important;
+}
+
+.cx20-stage.cx39-integrated-art .cx20-machine-inner{
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+.cx20-stage.cx39-integrated-art .cx20-reels.cx20-reels-343{
+  width:100%!important;
+  height:100%!important;
+  max-height:none!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  gap:1.4%!important;
+  aspect-ratio:auto!important;
+  background:transparent!important;
+  overflow:visible!important;
+}
+
+/* The dark panels of the reels remain subtle so the artwork's
+   central opening stays visible around them. */
+.cx20-stage.cx39-integrated-art .cx20-reel{
+  background:rgba(18,7,8,.22)!important;
+  border:1px solid rgba(255,220,145,.16)!important;
+  border-radius:8px!important;
+  overflow:hidden!important;
+  box-shadow:inset 0 0 14px rgba(0,0,0,.16)!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-reel-side{
+  height:75%!important;
+  align-self:center!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-reel-center{
+  height:100%!important;
+  align-self:stretch!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-reel-side,
+.cx20-stage.cx39-integrated-art .cx20-reel-center{
+  display:grid!important;
+  grid-template-rows:repeat(var(--rows),minmax(0,1fr))!important;
+  gap:1.2%!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-symbol{
+  position:relative!important;
+  inset:auto!important;
+  left:auto!important;
+  top:auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.10),rgba(0,0,0,.13))!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  font-size:clamp(18px,4.5vw,36px)!important;
+  overflow:hidden!important;
+}
+.cx20-stage.cx39-integrated-art .cx27-reel-animal{
+  max-width:78%!important;
+  max-height:78%!important;
+  object-fit:contain!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-line{
+  z-index:9!important;
+  top:50%!important;
+  height:2px!important;
+  background:#ffd66d!important;
+  box-shadow:0 0 10px #ffd66d!important;
+}
+
+/* Keep the controls/stats below the canvas. */
+.cx20-stage.cx39-integrated-art .cx20-prize{
+  flex:0 0 auto!important;
+  margin:2px 0 0!important;
+  min-height:20px!important;
+}
+.cx20-stage.cx39-integrated-art .cx20-stats{
+  flex:0 0 auto!important;
+  margin:2px 0 1px!important;
+  width:min(94%,560px)!important;
+}
+
+/* On short phones, scale the complete art canvas down instead of
+   distorting it or letting CSS independently resize its pieces. */
+@media(max-height:760px){
+  .cx20-stage.cx39-integrated-art .cx39-game-canvas{
+    width:auto!important;
+    height:min(calc(100svh - 54px - 160px), 120vw)!important;
+  }
+}
+
+/* Desktop: keep the whole artwork visible and centered. */
+@media(min-width:801px){
+  .cx20-stage.cx39-integrated-art .cx39-game-canvas{
+    width:auto!important;
+    height:min(calc(100svh - 62px - 170px), 72vw)!important;
+  }
+}
+
+/* No artificial viewport margins from earlier versions. */
+.cx20-stage.cx39-integrated-art .cx20-machine{
+  transform:none!important;
+}
+
+/* Single integrated-art source: no reference overlay layer. */
+.cx20-stage.cx39-integrated-art .cx34-art-anchor{
+  display:none!important;
+}

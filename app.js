@@ -1,5 +1,5 @@
 /* =========================================================
-   CASINOX — v3.9
+   CASINOX — v4.0
    MOBILE FIRST
    LOBBY + PROVEDORES + CATEGORIAS + FAVORITOS
    ========================================================= */
@@ -1972,7 +1972,7 @@ document.addEventListener("click", event => {
 
 window.CASINOX_VERSION="1.8";
 
-/* CASINOX v3.9 — GAME ENGINE IMERSIVO / OFFLINE DEMO */
+/* CASINOX v4.0 — GAME ENGINE IMERSIVO / OFFLINE DEMO */
 (function(){
   const games={
     "Lucky Rabbit":{img:"assets/characters/lucky-rabbit.jpg",tag:"FORTUNE RABBIT",accent:"gold",symbols:["🐰","🧧","🪙","🥇","💎","👑","🍀","7️⃣"],pay:"🐰 3× = 2x • 4× = 5x • 5× = 12x"},
@@ -2082,7 +2082,7 @@ window.CASINOX_VERSION="1.8";
   window.CasinoXDemoGame={open,close};
 })();
 
-/* CASINOX v3.9 — lobby dinâmica */
+/* CASINOX v4.0 — lobby dinâmica */
 (function(){
 const G=[
 ["Lucky Rabbit","assets/characters/lucky-rabbit.jpg","Slots"],["Golden Bull","assets/characters/golden-bull.jpg","Slots"],
@@ -2130,7 +2130,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 })();
 
 
-/* CASINOX v3.9 — engine visual próprio. O sistema de toque da v3.9 permanece intacto. */
+/* CASINOX v4.0 — engine visual próprio. O sistema de toque da v4.0 permanece intacto. */
 (function(){
   const symbols=["🐰","🪙","💎","🧧","👑","🥕","🔔","🟡","🌸","💰"];
   const payoutMap={3:2,4:5,5:10};
@@ -2168,7 +2168,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       return "lucky-rabbit";
     })();
     const bgMap={
-      "lucky-rabbit":"assets/reference/lucky-rabbit-reference.png",
+      "lucky-rabbit":"assets/game-art/lucky-rabbit.png",
       "golden-bull":"assets/characters/bg-golden-bull.jpg",
       "dragon-fortune":"assets/characters/bg-dragon-fortune.jpg",
       "dragon-fire":"assets/characters/bg-dragon-fire.jpg",
@@ -2182,18 +2182,19 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
       <header class="cx20-top">
         <button class="cx20-back" type="button">‹</button>
         <div class="cx20-brand"><b>${name}</b><small>CASINOX • CRÉDITOS VIRTUAIS</small></div>
-        <span class="cx34-version">v3.9</span>
+        <span class="cx34-version">v4.0</span>
         <div class="cx20-wallet">🪙 <span class="cx20-wallet-value">${balance.toLocaleString("pt-BR")}</span></div>
       </header>
       <main class="cx20-stage">
-        <div class="cx20-glow"></div>
-        <div class="cx34-art-anchor" aria-hidden="true"></div>
-        <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels cx20-reels-343">
-          <div class="cx20-reel cx20-reel-side"></div>
-          <div class="cx20-reel cx20-reel-center"></div>
-          <div class="cx20-reel cx20-reel-side"></div>
-          <div class="cx20-line"></div>
-        </div></div></div>
+        <div class="cx39-game-canvas" aria-label="${name}">
+          <div class="cx20-glow"></div>
+          <div class="cx20-machine"><div class="cx20-machine-inner"><div class="cx20-reels cx20-reels-343">
+            <div class="cx20-reel cx20-reel-side"></div>
+            <div class="cx20-reel cx20-reel-center"></div>
+            <div class="cx20-reel cx20-reel-side"></div>
+            <div class="cx20-line"></div>
+          </div></div></div>
+        </div>
         <div class="cx20-prize">BOA SORTE</div>
         <div class="cx20-stats"><div class="cx20-stat"><small>SALDO</small><b class="st-balance">${balance.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>APOSTA</small><b class="st-bet">${bet.toLocaleString("pt-BR")}</b></div><div class="cx20-stat"><small>GANHO</small><b class="st-win">0</b></div></div>
       </main>
@@ -2256,7 +2257,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 })();
 
 
-/* CASINOX v3.9 PATCH — mobile stability */
+/* CASINOX v4.0 PATCH — mobile stability */
 (function(){
   const oldPremium=window.CasinoXPremiumGame;
   if(!oldPremium) return;
@@ -2323,7 +2324,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 /* =========================================================
-   CASINOX v3.9
+   CASINOX v4.0
    DEV CREDITS + ROBUST GAME BACK/CLOSE
    ========================================================= */
 (function(){
@@ -2464,7 +2465,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 /* =========================================================
-   CASINOX v3.9 — SINGLE GAME ENTRY / FIX BACK
+   CASINOX v4.0 — SINGLE GAME ENTRY / FIX BACK
    IMPORTANT: the older v13 modal and the v2.x premium shell
    were both opening from the same card click. The premium shell
    sat on top of the older modal, so BACK appeared to "go back"
@@ -2510,7 +2511,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 /* =========================================================
-   CASINOX v3.9 — AUTHORITATIVE MOBILE CONTROLS
+   CASINOX v4.0 — AUTHORITATIVE MOBILE CONTROLS
    One delegated capture handler owns the game controls.
    This avoids cloning/replacing buttons and therefore preserves
    the handlers and DOM created by the game engine.
@@ -2613,25 +2614,30 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
     const name=shell.querySelector(".cx20-brand b")?.textContent||"";
     const theme=gameTheme(name);
     shell.dataset.animal=theme.animal;
+
     const stage=shell.querySelector(".cx20-stage");
+    const canvas=shell.querySelector(".cx39-game-canvas");
     if(stage){
-      stage.classList.add("cx30-theme","cx32-responsive-game");
-      const refBg = theme.animal === "rabbit"
-        ? 'url("assets/reference/lucky-rabbit-reference.png")'
+      stage.classList.add("cx30-theme","cx32-responsive-game","cx39-integrated-art");
+      const artBg = theme.animal === "rabbit"
+        ? 'url("assets/game-art/lucky-rabbit.png")'
         : `url("assets/characters/bg-${theme.img}")`;
-      stage.style.setProperty("--cx31-bg", refBg);
-      stage.style.setProperty("--cx32-bg", refBg);
+      stage.style.setProperty("--cx39-art", artBg);
       stage.dataset.themeAnimal = theme.animal;
     }
+    if(canvas){
+      canvas.style.setProperty("--cx39-art", theme.animal === "rabbit"
+        ? 'url("assets/game-art/lucky-rabbit.png")'
+        : `url("assets/characters/bg-${theme.img}")`);
+    }
 
-    shell.querySelectorAll(".cx20-reel").forEach(reel=>{
+    const reels=[...shell.querySelectorAll(".cx20-reels-343 .cx20-reel")];
+    reels.forEach((reel,col)=>{
+      const count=col===1?4:3;
       const pool=[`<img class="cx27-reel-animal" src="assets/characters/${theme.img}" alt="${theme.animal}">`,...theme.symbols];
       const pick=()=>pool[Math.floor(Math.random()*pool.length)];
-      reel.innerHTML=[
-        `<div class="cx20-symbol s1">${pick()}</div>`,
-        `<div class="cx20-symbol s2">${pick()}</div>`,
-        `<div class="cx20-symbol s3">${pick()}</div>`
-      ].join("");
+      reel.dataset.rows=String(count);
+      reel.innerHTML=Array.from({length:count},(_,i)=>`<div class="cx20-symbol cx39-symbol s${i+1}">${pick()}</div>`).join("");
     });
   }
 
@@ -2886,14 +2892,14 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 
 
 
-/* v3.9 portal badge — single authoritative version */
+/* v4.0 portal badge — single authoritative version */
 (function(){
   function add(){
     const top=document.querySelector(".topbar");
     if(!top || top.querySelector(".cx31-version"))return;
     const b=document.createElement("span");
     b.className="cx31-version";
-    b.textContent="v3.9";
+    b.textContent="v4.0";
     top.appendChild(b);
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",add);
@@ -2930,7 +2936,7 @@ document.addEventListener("DOMContentLoaded",mount);setTimeout(mount,500);setTim
 })();
 
 /* =========================================================
-   CASINOX v3.9 — ROLETE 3x4x3
+   CASINOX v4.0 — ROLETE 3x4x3
    10 posições visíveis:
      coluna 1 = 3
      coluna 2 = 4
